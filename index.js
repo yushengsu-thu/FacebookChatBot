@@ -46,7 +46,6 @@ function sendText(sender, text) {
 	//let messageData = {text: text}
 	////
     let messageData = {
-    message: {
       attachment: {
         type: "template",
         payload: {
@@ -80,7 +79,6 @@ function sendText(sender, text) {
               payload: "Payload for second bubble",
             }]
             }]
-        }
         }
         }
     };  
