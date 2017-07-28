@@ -43,31 +43,9 @@ app.post('/webhook/', function(req, res) {
 })
 
 function sendText(sender, text) {
-	let messageData = {text: text}
-	request({
-		url: "https://graph.facebook.com/v2.6/me/messages",
-		qs : {access_token: token},
-		method: "POST",
-		json: {
-			recipient: {id: sender},
-			message : messageData,
-		}
-	}, function(error, response, body) {
-		if (error) {
-			console.log("sending error")
-		} else if (response.body.error) {
-			console.log("response body error")
-		}
-	})
-}
-
-
-///////
-function sendGenericMessage(recipientId) {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
+	//let messageData = {text: text}
+	////
+    let messageData = {
     message: {
       attachment: {
         type: "template",
@@ -101,16 +79,29 @@ function sendGenericMessage(recipientId) {
               title: "Call Postback",
               payload: "Payload for second bubble",
             }]
-          }]
+            }]
         }
-      }
-    }
-  };  
-
-  callSendAPI(messageData);
+        }
+        }
+    };  
+	////
+    request({
+		url: "https://graph.facebook.com/v2.6/me/messages",
+		qs : {access_token: token},
+		method: "POST",
+		json: {
+			recipient: {id: sender},
+			message : messageData,
+		}
+	}, function(error, response, body) {
+		if (error) {
+			console.log("sending error")
+		} else if (response.body.error) {
+			console.log("response body error")
+		}
+	})
 }
 
-///////
 
 app.listen(app.get('port'), function() {
 	console.log("running: port",app.get('port')) //app,get('port')
