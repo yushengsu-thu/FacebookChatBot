@@ -28,7 +28,7 @@ app.get('/webhook/', function(req, res) {
 	}
 	res.send("Wrong token")
 })
-
+//!!!Rewrite
 app.post('/webhook/', function(req, res) {
 	let messaging_events = req.body.entry[0].messaging
 	for (let i = 0; i < messaging_events.length; i++) {
@@ -41,8 +41,8 @@ app.post('/webhook/', function(req, res) {
 	}
 	res.sendStatus(200)
 })
-
-function sendText(sender, text) {
+//
+function sendText(sender, text) {  //sendText ==> sendMessage
 	//let messageData = {text: text}
 	////
     let messageData = {
