@@ -43,6 +43,11 @@ app.post('/webhook/', function(req, res) {
 })
 //
 function sendText(sender, text) {  //sendText ==> sendMessage
+    /*Read a Links.json*/
+    var fs = require('fs');
+    var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
+    ////////////////////
+    ///////////////////
 	//let messageData = {text: text}
 	////
     let messageData = {
@@ -53,11 +58,11 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                 elements: [{
                     title: "rift",
                     subtitle: "Next-generation virtual reality",
-                    item_url: "https://www.oculus.com/en-us/rift/",               
+                    item_url: links["迪士尼財報分析"],//"https://www.oculus.com/en-us/rift/",               
                     image_url: "http://messengerdemo.parseapp.com/img/rift.png",
                     buttons: [{
                         type: "web_url",
-                        url: "https://www.oculus.com/en-us/rift/",
+                        url: links["迪士尼財報分析"],//"https://www.oculus.com/en-us/rift/",
                         title: "Open Web URL"
                     }, {
                         type: "postback",
