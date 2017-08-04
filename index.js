@@ -92,24 +92,20 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                 }]
             }
         }
-    }; 
-
-    //////
-    //////
-    /*Get the Postback and send back*/
+    ////////////
     if (event.postback) {
-        var text = JSON.stringify(event.postback.payload)
+    var text = JSON.stringify(event.postback.payload)
 
-        if(text === "\"payload_1\""){
+    if(text === "\"payload_1\""){
         sendTextMessage(sender, "One day Chatbots will control the Internet of Things! You will be able to control your homes temperature with a text")
-        }
-        else if (text === "\"payload_2\""){
-            sendTextMessage(sender, "Chatbots are fun! One day your BFF might be a Chatbot")
-        }
+    }
     }
 
-    //////
-    //////
+    ///////////
+    
+    }; 
+
+    
     request({
 		url: "https://graph.facebook.com/v2.6/me/messages",
 		qs : {access_token: token},
