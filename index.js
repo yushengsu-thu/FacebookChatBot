@@ -92,17 +92,6 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                 }]
             }
         }
-    ////////////
-    if (event.postback) {
-    var text = JSON.stringify(event.postback.payload)
-
-    if(text === "\"payload_1\""){
-        sendTextMessage(sender, "One day Chatbots will control the Internet of Things! You will be able to control your homes temperature with a text")
-    }
-    }
-
-    ///////////
-    
     }; 
 
     
