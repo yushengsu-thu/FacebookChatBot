@@ -8,6 +8,7 @@ const app = express()
 
 app.set('port', (process.env.PORT || 5000))
 
+
 // Allows us to process the data
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
@@ -44,8 +45,13 @@ app.post('/webhook/', function(req, res) {
 //
 function sendText(sender, text) {  //sendText ==> sendMessage
     /*Read a Links.json*/
+    /*Synchronous version*/
     var fs = require('fs');
     var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
+
+    /*Asynchronous version*/
+    
+    
     ////////////////////
     ///////////////////
 	//let messageData = {text: text}
