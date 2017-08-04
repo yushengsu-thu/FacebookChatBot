@@ -19,7 +19,7 @@ app.get('/', function(req, res) {
 	res.send("Hi I am a chatbot")
 })
 
-let token = "EAAZAznrny0WQBAEmB7LW5S5nZA688ZBJmOkPz6JTRo8pIFTG0d5O8nZAEZCHCPteLGf96dmPt1HQqfoHjWYouvNZArFQV32i2g9HhjrTJZA6vp4MkwhFrPndYFrm4HYRT8fBiRONuwOUdY3K7bW7mFYhzAXxW0PcZApTDgr4hx9CFR7nOyMiPjIf"
+var token = "EAAZAznrny0WQBAEmB7LW5S5nZA688ZBJmOkPz6JTRo8pIFTG0d5O8nZAEZCHCPteLGf96dmPt1HQqfoHjWYouvNZArFQV32i2g9HhjrTJZA6vp4MkwhFrPndYFrm4HYRT8fBiRONuwOUdY3K7bW7mFYhzAXxW0PcZApTDgr4hx9CFR7nOyMiPjIf"
 
 // Facebook
 
@@ -31,12 +31,12 @@ app.get('/webhook/', function(req, res) {
 })
 //!!!Rewrite
 app.post('/webhook/', function(req, res) {
-	let messaging_events = req.body.entry[0].messaging
-	for (let i = 0; i < messaging_events.length; i++) {
-		let event = messaging_events[i]
-		let sender = event.sender.id
+	var messaging_events = req.body.entry[0].messaging
+	for (var i = 0; i < messaging_events.length; i++) {
+		var event = messaging_events[i]
+		var sender = event.sender.id
 		if (event.message && event.message.text) {
-			let text = event.message.text
+			var text = event.message.text
 			sendText(sender, "Text echo: " + text.substring(0, 100))
 		}
 	}
@@ -54,10 +54,10 @@ function sendText(sender, text) {  //sendText ==> sendMessage
     
     ////////////////////
     ///////////////////
-	//let messageData = {text: text}
+	//var messageData = {text: text}
 	////                               
     var name_of_airticle = "迪士尼財報分析"
-    let messageData = {
+    var messageData = {
         attachment: {
             type: "template",
             payload: {
