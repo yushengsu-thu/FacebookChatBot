@@ -55,7 +55,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
     ////////////////////
     ///////////////////
 	//let messageData = {text: text}
-	////
+	////                               
+    var name_of_airticle = "迪士尼財報分析"
     let messageData = {
         attachment: {
             type: "template",
@@ -64,11 +65,11 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                 elements: [{
                     title: "rift",
                     subtitle: "Next-generation virtual reality",
-                    item_url: links["迪士尼財報分析"],//"https://www.oculus.com/en-us/rift/",               
+                    item_url: links[name_of_airticle],//"https://www.oculus.com/en-us/rift/",               
                     image_url: "http://messengerdemo.parseapp.com/img/rift.png",
                     buttons: [{
                         type: "web_url",
-                        url: links["迪士尼財報分析"],//"https://www.oculus.com/en-us/rift/",
+                        url: links[name_of_airticle],//"https://www.oculus.com/en-us/rift/",
                         title: "Open Web URL"
                     }, {
                         type: "postback",
