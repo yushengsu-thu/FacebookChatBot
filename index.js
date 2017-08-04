@@ -93,13 +93,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
             }
         }
     }; 
-    //////
-    //////
-    if(messageData.attachment.payload.elements.bottons.payload === "Payload_1"){
-        sendTextMessage(sender, "One day)
-    }
-    //////
-    /////
+
+    
     request({
 		url: "https://graph.facebook.com/v2.6/me/messages",
 		qs : {access_token: token},
