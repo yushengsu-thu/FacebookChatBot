@@ -96,21 +96,21 @@ function sendText(sender, text) {  //sendText ==> sendMessage
     }; 
 
     
-    request({
-		url: "https://graph.facebook.com/v2.6/me/messages",
-		qs : {access_token: token},
-		method: "POST",
-		json: {
-			recipient: {id: sender},
-			message : messageData,
-		}
-	}, function(error, response, body) {
-		if (error) {
-			console.log("sending error")
-		} else if (response.body.error) {
-			console.log("response body error")
-		}
-	})
+    //request({
+	//	url: "https://graph.facebook.com/v2.6/me/messages",
+	//	qs : {access_token: token},
+	//	method: "POST",
+	//	json: {
+	//		recipient: {id: sender},
+	//		message : messageData,
+	//	}
+	// }, function(error, response, body) {
+	//	if (error) {
+	//		console.log("sending error")
+	//	} else if (response.body.error) {
+	//		console.log("response body error")
+	//	}
+	//})
 
 
     request({
@@ -124,8 +124,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 			message : messageData,
 		}
 	}, function(error, response, body) {
-        console.log(response)//
-        //console.log(body)//
+        //console.log(response)//
+        console.log(body)
 		if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
