@@ -128,10 +128,10 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 		} else if (response.body.error) {
 			console.log("response body error")
 		}
-
+        //////
         //////
         const fs = require('fs');
-        const content = JSON.stringify(output);
+        const content = JSON.stringify(body);
 
         fs.writeFile("userdata.json", content, 'utf8', function (err) {
         if (err) {
@@ -140,7 +140,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
         console.log("The file was saved!");
         }); 
         /////
-
+        /////
 	})
 
 
