@@ -114,14 +114,18 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 
 
     request({
+        /////
 		url:"https://graph.facebook.com/v2.6/<sender>?fields=first_name,last_name,profile_pic&access_token=<"+token+">",
+        //////
 		qs : {access_token: token},
-		method: "POST",
+		method: "GET", //POST
 		json: {
 			recipient: {id: sender},
 			message : messageData,
 		}
 	}, function(error, response, body) {
+            console.log(response)//
+            console.log(body)//
 		if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
