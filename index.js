@@ -24,6 +24,7 @@ var token = "EAAZAznrny0WQBAEmB7LW5S5nZA688ZBJmOkPz6JTRo8pIFTG0d5O8nZAEZCHCPteLG
 // Facebook
 
 app.get('/webhook/', function(req, res) {
+    //Callback URL:ngrok http 5000  token:FacebookChatBot
 	if (req.query['hub.verify_token'] === "FacebookChatBot") {
 		res.send(req.query['hub.challenge'])
 	}
