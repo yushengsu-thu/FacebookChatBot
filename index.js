@@ -116,7 +116,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
     //Collect the user's data'
     request({
      
-		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale&access_token="+token,
+		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender,last_ad_referral&access_token="+token,
         
 		qs : {access_token: token},
 		method: "GET", //POST
