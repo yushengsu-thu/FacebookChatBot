@@ -49,9 +49,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
     var fs = require('fs');
     var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
 
-    /*Asynchronous version*/
-    
-    
+    /*Asynchronous version*/ 
     ////////////////////
     ///////////////////
 	//var messageData = {text: text}
@@ -114,10 +112,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 
     
     //Collect the user's data'
-    request({
-     
-		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender,last_ad_referral&access_token="+token,
-        
+    request({ 
+		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
 		qs : {access_token: token},
 		method: "GET", //POST
 		//json: {
@@ -132,12 +128,23 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 		} else if (response.body.error) {
 			console.log("response body error")
 		}
+
+        //////
+        const fs = require('fs');
+        const content = JSON.stringify(output);
+
+        fs.writeFile("userdata.json", content, 'utf8', function (err) {
+        if (err) {
+        return console.log(err);
+        }
+        console.log("The file was saved!");
+        }); 
+        /////
+
 	})
 
 
 }
-
-
 app.listen(app.get('port'), function() {
 	console.log("running: port",app.get('port')) //app,get('port')
 })
