@@ -113,6 +113,17 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 	})
 }
 
+////
+    MessengerExtensions.getUserID(function success(uids) {
+  	// User ID was successfully obtained. 
+      	var psid = uids.psid;
+  
+    }, function error(err, errorMessage) {      
+  	// Error handling code
+    }); 
+////
+
+////
 
 app.listen(app.get('port'), function() {
 	console.log("running: port",app.get('port')) //app,get('port')
