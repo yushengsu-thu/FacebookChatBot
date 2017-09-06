@@ -105,7 +105,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 			message : messageData,
 		}
 	 }, function(error, response, body) {
-		console.log(body)
+		console.log(1)
+        console.log(body)
         if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
