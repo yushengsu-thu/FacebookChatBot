@@ -100,10 +100,10 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 		url: "https://graph.facebook.com/v2.6/me/messages",
 		qs : {access_token: token},
 		method: "POST",
-		json: {
-			recipient: {id: sender},
-			message : messageData,
-		}
+        //json: {
+		//	recipient: {id: sender},
+		//	message : messageData,
+		//}
 	 }, function(error, response, body) {
 		if (error) {
 			console.log("sending error")
