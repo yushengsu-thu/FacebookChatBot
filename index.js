@@ -124,8 +124,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 		//	message : messageData,
 		//}
 	}, function(error, response, body) {
-            console.log(response)//
-            console.log(body)//
+            //console.log(response)//
+            //console.log(body)//
 		if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
