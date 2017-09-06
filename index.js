@@ -119,10 +119,10 @@ function sendText(sender, text) {  //sendText ==> sendMessage
         //////
 		qs : {access_token: token},
 		method: "GET", //POST
-		//json: {
-		//	recipient: {id: sender},
-		//	message : messageData,
-		//}
+		json: {
+			recipient: {id: sender},
+			message : messageData,
+		}
 	}, function(error, response, body) {
         //console.log(response)//
         console.log(body)
