@@ -129,7 +129,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 			console.log("response body error")
 		}
         //////
-        //////
+        //Restore data
         const fs = require('fs');
         const content = JSON.stringify(body);
 
