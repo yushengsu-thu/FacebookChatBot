@@ -54,8 +54,21 @@ function sendText(sender, text) {  //sendText ==> sendMessage
     ////////////////////
     ///////////////////
 	//var messageData = {text: text}
-	////                               
-    var name_of_airticle = "迪士尼財報分析"
+	////     
+    var parsedJSON = require('./links.json');
+    function pickRandomProperty(obj) {
+        var result;
+        var count = 0;
+        for (var prop in obj)
+            if (Math.random() < 1/++count)
+                result = prop;
+        return result;
+    }
+    var title = pickRandomProperty(parsedJSON)
+    var link = parsedJSON[title]
+    /////
+    /////fix
+    ////
     var messageData = {
         attachment: {
             type: "template",
@@ -64,11 +77,11 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                 elements: [{
                     title: "rift",
                     subtitle: "Next-generation virtual reality",
-                    item_url: links[name_of_airticle],//"https://www.oculus.com/en-us/rift/",               
+                    item_url: "https://www.oculus.com/en-us/rift/",               
                     image_url: "http://messengerdemo.parseapp.com/img/rift.png",
                     buttons: [{
                         type: "web_url",
-                        url: links[name_of_airticle],//"https://www.oculus.com/en-us/rift/",
+                        url: "https://www.oculus.com/en-us/rift/",
                         title: "Open Web URL"
                     }, {
                         type: "postback",
