@@ -64,8 +64,10 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                 result = prop;
         return result;
     }
-    var title = pickRandomProperty(parsedJSON)
-    var link = parsedJSON[title]
+    var title1 = pickRandomProperty(parsedJSON)
+    var link1 = parsedJSON[title]
+    var title2 = pickRandomProperty(parsedJSON)
+    var link2 = parsedJSON[title]
     /////
     /////fix
     ////
@@ -77,12 +79,12 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                 elements: [{
                     title: "rift",
                     subtitle: "Next-generation virtual reality",
-                    item_url: "https://www.oculus.com/en-us/rift/",               
+                    //item_url: "https://www.oculus.com/en-us/rift/",               
                     image_url: "http://messengerdemo.parseapp.com/img/rift.png",
                     buttons: [{
                         type: "web_url",
-                        url: "https://www.oculus.com/en-us/rift/",
-                        title: "Open Web URL"
+                        url: link1,
+                        title: "Read this airticle"
                     }, {
                         type: "postback",
                         title: "Call Postback1",
@@ -91,12 +93,12 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                 }, {
                     title: "touch",
                     subtitle: "Your Hands, Now in VR",
-                    item_url: "https://www.oculus.com/en-us/touch/",               
+                    //item_url: "https://www.oculus.com/en-us/touch/",               
                     image_url: "http://messengerdemo.parseapp.com/img/touch.png",
                     buttons: [{
                         type: "web_url",
-                        url: "https://www.oculus.com/en-us/touch/",
-                        title: "Open Web URL"
+                        url: link2,
+                        title: "Read this airticle"
                     }, {
                         type: "postback",
                         title: "Call Postback2",
