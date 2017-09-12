@@ -66,8 +66,12 @@ function sendText(sender, text) {  //sendText ==> sendMessage
     }
     var title1 = pickRandomProperty(parsedJSON)
     var link1 = parsedJSON[title]
+    var airticle1 = link1[0]
+    var photo1 = link1[1]
     var title2 = pickRandomProperty(parsedJSON)
     var link2 = parsedJSON[title]
+    var airticle2 = link2[0]
+    var photo2 = link2[1]
     /////
     /////fix
     ////
@@ -77,13 +81,13 @@ function sendText(sender, text) {  //sendText ==> sendMessage
             payload: {
                 template_type: "generic",
                 elements: [{
-                    title: "rift",
+                    title: title1,
                     subtitle: "Next-generation virtual reality",
                     //item_url: "https://www.oculus.com/en-us/rift/",               
-                    image_url: "http://messengerdemo.parseapp.com/img/rift.png",
+                    image_url: photo2,
                     buttons: [{
                         type: "web_url",
-                        url: link1,
+                        url: airticle1,
                         title: "Read this airticle"
                     }, {
                         type: "postback",
@@ -92,12 +96,12 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                     }],
                 }, {
                     title: "touch",
-                    subtitle: "Your Hands, Now in VR",
+                    subtitle: title2,
                     //item_url: "https://www.oculus.com/en-us/touch/",               
-                    image_url: "http://messengerdemo.parseapp.com/img/touch.png",
+                    image_url: photo2,
                     buttons: [{
                         type: "web_url",
-                        url: link2,
+                        url: airticle2,
                         title: "Read this airticle"
                     }, {
                         type: "postback",
