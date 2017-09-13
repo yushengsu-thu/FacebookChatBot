@@ -25,7 +25,7 @@ var token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYNfp
 
 app.get('/webhook/', function(req, res) {
     //Callback URL:ngrok http 5000  token:FacebookChatBot
-	if (req.query['hub.verify_token'] === token) { //FacebookChatBot
+	if (req.query['hub.verify_token'] === "FacebookChatBot") { //FacebookChatBot
 		res.send(req.query['hub.challenge'])
 	}
 	res.send("Wrong token")
@@ -65,6 +65,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
         return result;
     }
     var title1 = pickRandomProperty(parsedJSON)
+    console.log(title1)//////////
     var link1 = parsedJSON[title]
     var airticle1 = link1[0]
     var photo1 = link1[1]
