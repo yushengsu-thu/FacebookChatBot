@@ -65,8 +65,11 @@ function sendText(sender, text) {  //sendText ==> sendMessage
         return result;
     }
     var title1 = pickRandomProperty(parsedJSON)
+    console.log(title1)
     var link1 = parsedJSON[title1]
+    console.log(link1)
     var airticle1 = link1[0]
+    console.log(airticle1) 
     var photo1 = link1[1]
     var title2 = pickRandomProperty(parsedJSON)
     var link2 = parsedJSON[title2]
