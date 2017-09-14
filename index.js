@@ -95,8 +95,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         payload: "Payload_1",
                     }],
                 }, {
-                    title: "touch",
-                    subtitle: title2,
+                    title: title2,
+                    subtitle: "Add the description",
                     //item_url: "https://www.oculus.com/en-us/touch/",               
                     image_url: photo2,
                     buttons: [{
