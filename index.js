@@ -92,7 +92,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                     buttons: [{
                         type: "web_url",
                         url: airticle1,
-                        title: "Read this airticle"
+                        title: "Read this airticle",
                         webview_height_ratio: "compact" 
                     }, {
                         type: "postback",
