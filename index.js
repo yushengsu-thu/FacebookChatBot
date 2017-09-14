@@ -93,7 +93,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         type: "web_url",
                         url: airticle1,
                         title: "Read this airticle",
-                        messenger_extensions: true,
+                        //messenger_extensions: true,
                         //fallback_url: "https://petersfancyapparel.com/fallback",
                         webview_height_ratio: "compact" //compact, tall, full 
                     }, {
