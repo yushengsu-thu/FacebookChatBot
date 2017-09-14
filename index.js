@@ -72,6 +72,10 @@ function sendText(sender, text) {  //sendText ==> sendMessage
     var link2 = parsedJSON[title2]
     var airticle2 = link2[0]
     var photo2 = link2[1]
+    var title3 = pickRandomProperty(parsedJSON)
+    var link3 = parsedJSON[title3]
+    var airticle3 = link3[0]
+    var photo3 = link3[1]
     /////
     /////fix
     ////
@@ -83,7 +87,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                 elements: [{
                     title: title1,
                     subtitle: "Next-generation virtual reality",
-                    //item_url: "https://www.oculus.com/en-us/rift/",               
+                    item_url: airticle1,               
                     image_url: photo1,
                     buttons: [{
                         type: "web_url",
@@ -97,7 +101,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                 }, {
                     title: title2,
                     subtitle: "Add the description",
-                    //item_url: "https://www.oculus.com/en-us/touch/",               
+                    item_url: airticle2,               
                     image_url: photo2,
                     buttons: [{
                         type: "web_url",
@@ -107,6 +111,20 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         type: "postback",
                         title: "Call Postback2",
                         payload: "Payload_2",
+                    }]
+                },{
+                    title: title3,
+                    subtitle: "Add the description",
+                    item_url: airticle3,               
+                    image_url: photo3,
+                    buttons: [{
+                        type: "web_url",
+                        url: airticle3,
+                        title: "Read this airticle"
+                    }, {
+                        type: "postback",
+                        title: "Call Postback3",
+                        payload: "Payload_3",
                     }]
                 }]
             }
