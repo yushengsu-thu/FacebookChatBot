@@ -93,7 +93,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         type: "web_url",
                         url: airticle1,
                         title: "Read this airticle",
-                        webview_height_ratio: "tall" 
+                        webview_height_ratio: "full" 
                     }, {
                         type: "postback",
                         title: "Call Postback1",
@@ -107,7 +107,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                     buttons: [{
                         type: "web_url",
                         url: airticle2,
-                        title: "Read this airticle"
+                        title: "Read this airticle",
+                        webview_height_ratio: "full" 
                     }, {
                         type: "postback",
                         title: "Call Postback2",
@@ -121,7 +122,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                     buttons: [{
                         type: "web_url",
                         url: airticle3,
-                        title: "Read this airticle"
+                        title: "Read this airticle",
+                        webview_height_ratio: "full" 
                     }, {
                         type: "postback",
                         title: "Call Postback3",
