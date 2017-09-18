@@ -176,11 +176,11 @@ function sendText(sender, text) {  //sendText ==> sendMessage
         const fs = require('fs');
         const content = JSON.stringify(body);
 
-        fs.writeFile("userdata.json", content, 'utf8', function (err) {
+        fs.writeFile("userdata.json", body, 'utf8', function (err) {
         if (err) {
-        return console.log(err);
+            return console.log(err);
         }
-        console.log("The file was saved!");
+            console.log("The file was saved!");
         }); 
         /////
         /////
