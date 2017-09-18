@@ -96,7 +96,10 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         //messenger_extensions: true,
                         //fallback_url: "https://petersfancyapparel.com/fallback",
                         webview_height_ratio: "compact" //compact, tall, full 
-                    }, {
+                    },{
+                        type:"element_share"
+                        title:"Share"
+                    },{
                         type: "postback",
                         title: "Call Postback1",
                         payload: "Payload_1",
@@ -111,7 +114,10 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         url: airticle2,
                         title: "Read this airticle",
                         webview_height_ratio: "tall" 
-                    }, {
+                    },{ 
+                        type:"element_share"
+                        title:"Share"
+                    },{
                         type: "postback",
                         title: "Call Postback2",
                         payload: "Payload_2",
@@ -126,7 +132,10 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         url: airticle3,
                         title: "Read this airticle",
                         webview_height_ratio: "full" 
-                    }, {
+                    },{ 
+                        type:"element_share"
+                        title:"Share"
+                    },{
                         type: "postback",
                         title: "Call Postback3",
                         payload: "Payload_3",
@@ -176,7 +185,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
         const fs = require('fs');
         const content = JSON.stringify(body);
 
-        fs.writeFile("userdata.json", body, 'utf8', function (err) {
+        fs.writeFile("userdata.json", content, 'utf8', function (err) {
         if (err) {
             return console.log(err);
         }
