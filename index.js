@@ -121,7 +121,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         webview_height_ratio: "tall" 
                     },{ 
                         type:"element_share"
-                        title:"Share"
+                        //title:"Share"
                     },{
                         type: "postback",
                         title: "Call Postback2",
@@ -139,7 +139,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         webview_height_ratio: "full" 
                     },{ 
                         type:"element_share"
-                        title:"Share"
+                        //title:"Share"
                     },{
                         type: "postback",
                         title: "Call Postback3",
