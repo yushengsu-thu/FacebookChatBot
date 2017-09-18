@@ -98,11 +98,12 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         webview_height_ratio: "compact" //compact, tall, full 
                     },{
                         type:"element_share"
-                        share_contents:{
+                        title:"Share"
+                        /*share_contents:{
                             type: "web_url",
                             url: "https://m.me/petershats?ref=invited_by_24601", 
                             title: "Take Quiz"
-                        } 
+                        }*/ 
                     },{
                         type: "postback",
                         title: "Call Postback1",
