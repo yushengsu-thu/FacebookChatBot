@@ -250,7 +250,7 @@ function sendHome(sender, text){
               {
                 "type": "web_url",
                 "url": airticle1,
-                "title":"Read this airticle",
+                "title":"Read a airticle!",
 								"webview_height_ratio": "full" //compact, tall, full
               }
             ]
