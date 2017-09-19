@@ -34,14 +34,23 @@ app.get('/webhook/', function(req, res) {
 app.post('/webhook/', function(req, res) {
 	console.log("req.body.entry[0]");
 	console.log(req.body.entry[0]);
-	var messaging_events = req.body.entry[0].messaging
-	for (var i = 0; i < messaging_events.length; i++) {
-		var event = messaging_events[i]
-		var sender = event.sender.id
-		if (event.message && event.message.text) {
-			var text = event.message.text
-			sendText(sender, "Text echo: " + text.substring(0, 100))
+	// Subscribes to Message Received events
+	if(req.body.entry[0].messaging){
+		var messaging_events = req.body.entry[0].messaging
+		for (var i = 0; i < messaging_events.length; i++) {
+			var event = messaging_events[i]
+			var sender = event.sender.id
+			if (event.message && event.message.text) {
+				var text = event.message.text
+				sendText(sender, "Text echo: " + text.substring(0, 100))
+			}
 		}
+	} else if (req.body.entry[0].messaging_postbacks) {// Subscribes to Postback Received events
+		console.log("=== req.body.entry[0].messaging_postbacks ===");
+		console.log(req.body.entry[0].messaging_postbacks);
+	} else if(req.body.entry[0].standby) {
+		console.log("=== req.body.entry[0].standby ===");
+		console.log("obj = ", req.body.entry[0].standby);
 	}
 	res.sendStatus(200)
 })
@@ -91,20 +100,25 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                     subtitle: "Next-generation virtual reality",
                     item_url: airticle1,
                     image_url: photo1,
-                    buttons: [{
+                    buttons: [
+											{
                         type: "web_url",
                         url: airticle1,
                         title: "Read this airticle",
                         //messenger_extensions: true,
                         //fallback_url: "https://petersfancyapparel.com/fallback",
                         webview_height_ratio: "full" //compact, tall, full
-                    },{
-                        type:"element_share"
-                    },{
-                        type: "postback",
-                        title: "Call Postback1",
-                        payload: "Payload_1",
-                    }],
+	                    },{
+	                        type:"element_share"
+	                    },{
+	                        type: "postback",
+	                        title: "Back Home",
+	                        payload: {
+														"tytle": "home",
+														"prop2": "content"
+													}
+                  	  }
+										],
                 }, {
                     title: title2,
                     subtitle: "Add the description",
