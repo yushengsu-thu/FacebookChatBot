@@ -30,8 +30,12 @@ app.get('/webhook/', function(req, res) {
 	}
 	res.send("Wrong token")
 })
-//!!!Rewrite/////
+//!!!Rewrite
 app.post('/webhook/', function(req, res) {
+	console.log("req");
+	console.log(req);
+	console.log("res");
+	console.log(res);
 	var messaging_events = req.body.entry[0].messaging
 	for (var i = 0; i < messaging_events.length; i++) {
 		var event = messaging_events[i]
@@ -52,9 +56,9 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 
     /*Asynchronous version*/
     ////////////////////
-    ///////////////////////
+    ///////////////////
 	//var messageData = {text: text}
-	//////////
+	////
     var parsedJSON = require('./links.json');
     function pickRandomProperty(obj) {
         var result;
@@ -80,64 +84,84 @@ function sendText(sender, text) {  //sendText ==> sendMessage
     /////fix
     ////
     var messageData = {
-			"persistent_menu":[
-	{
-		"locale":"default",
-		"composer_input_disabled":true,
-		"call_to_actions":[
-			{
-				"title":"My Account",
-				"type":"nested",
-				"call_to_actions":[
-					{
-						"title":"Pay Bill",
-						"type":"postback",
-						"payload":"PAYBILL_PAYLOAD"
-					},
-					{
-						"title":"History",
-						"type":"postback",
-						"payload":"HISTORY_PAYLOAD"
-					},
-					{
-						"title":"Contact Info",
-						"type":"postback",
-						"payload":"CONTACT_INFO_PAYLOAD"
-					}
-				]
-			},
-			{
-				"type":"web_url",
-				"title":"Latest News",
-				"url":"http://petershats.parseapp.com/hat-news",
-				"webview_height_ratio":"full"
-			}
-		]
-	},
-	{
-		"locale":"zh_CN",
-		"composer_input_disabled":false
-	}
-]
+        attachment: {
+            type: "template",
+            payload: {
+                template_type: "generic",
+                elements: [{
+                    title: title1,
+                    subtitle: "Next-generation virtual reality",
+                    item_url: airticle1,
+                    image_url: photo1,
+                    buttons: [{
+                        type: "web_url",
+                        url: airticle1,
+                        title: "Read this airticle",
+                        //messenger_extensions: true,
+                        //fallback_url: "https://petersfancyapparel.com/fallback",
+                        webview_height_ratio: "full" //compact, tall, full
+                    },{
+                        type:"element_share"
+                    },{
+                        type: "postback",
+                        title: "Call Postback1",
+                        payload: "Payload_1",
+                    }],
+                }, {
+                    title: title2,
+                    subtitle: "Add the description",
+                    item_url: airticle2,
+                    image_url: photo2,
+                    buttons: [{
+                        type: "web_url",
+                        url: airticle2,
+                        title: "Read this airticle",
+                        webview_height_ratio: "full"
+                    },{
+                        type:"element_share"
+                    },{
+                        type: "postback",
+                        title: "Call Postback2",
+                        payload: "Payload_2",
+                    }]
+                },{
+                    title: title3,
+                    subtitle: "Add the description",
+                    item_url: airticle3,
+                    image_url: photo3,
+                    buttons: [{
+                        type: "web_url",
+                        url: airticle3,
+                        title: "Read this airticle",
+                        webview_height_ratio: "full"
+                    },{
+                        type:"element_share"
+                    },{
+                        type: "postback",
+                        title: "Call Postback3",
+                        payload: "Payload_3",
+                    }]
+                }]
+            }
+        }
     };
 
 
     request({
-			url: "https://graph.facebook.com/v2.6/me/messages",
-			qs : {access_token: token},
-			method: "POST",
-	    json: {
-				recipient: {id: sender},
-				message : messageData,
-			}
-		}, function(error, response, body) {
-			if (error) {
-				console.log("sending error")
-			} else if (response.body.error) {
-				console.log(response.body.error)
-				console.log("response body error")
-			}
-		})
+		url: "https://graph.facebook.com/v2.6/me/messages",
+		qs : {access_token: token},
+		method: "POST",
+        json: {
+			recipient: {id: sender},
+			message : messageData,
+		}
+	 }, function(error, response, body) {
+        if (error) {
+			console.log("sending error")
+		} else if (response.body.error) {
+			console.log("response body error")
+		}
+	})
 
 
     //Collect the user's data'
