@@ -54,7 +54,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
     ////////////////////
     ///////////////////
 	//var messageData = {text: text}
-	///////
+	//////////
     var parsedJSON = require('./links.json');
     function pickRandomProperty(obj) {
         var result;
