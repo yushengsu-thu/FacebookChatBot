@@ -36,6 +36,8 @@ app.post('/webhook/', function(req, res) {
 	console.log(req.body.entry[0]);
 	// Subscribes to Message Received events
 	if(req.body.entry[0].messaging){
+		console.log("\n\n\n\n=== req.body.entry[0].messaging ===");
+		console.log(req.body.entry[0].messaging);
 		var messaging_events = req.body.entry[0].messaging
 		for (var i = 0; i < messaging_events.length; i++) {
 			var event = messaging_events[i]
@@ -46,10 +48,10 @@ app.post('/webhook/', function(req, res) {
 			}
 		}
 	} else if (req.body.entry[0].messaging_postbacks) {// Subscribes to Postback Received events
-		console.log("=== req.body.entry[0].messaging_postbacks ===");
+		console.log("\n\n\n\n=== req.body.entry[0].messaging_postbacks ===");
 		console.log(req.body.entry[0].messaging_postbacks);
 	} else if(req.body.entry[0].standby) {
-		console.log("=== req.body.entry[0].standby ===");
+		console.log("\n\n\n\n=== req.body.entry[0].standby ===");
 		console.log("obj = ", req.body.entry[0].standby);
 	}
 	res.sendStatus(200)
@@ -113,10 +115,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 	                    },{
 	                        type: "postback",
 	                        title: "Back Home",
-	                        payload: {
-														"tytle": "home",
-														"prop2": "content"
-													}
+	                        payload: "Back Home payload content"
                   	  }
 										],
                 }, {
@@ -171,7 +170,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
         if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
-			console.log("response body error")
+			console.log("\n\n\n\n=== response body error ===");
+			console.log(response.body.error);
 		}
 	})
 
