@@ -32,27 +32,34 @@ app.get('/webhook/', function(req, res) {
 })
 //!!!Rewrite
 app.post('/webhook/', function(req, res) {
-	console.log("\n\n\n\nreq.body.entry[0]");
-	console.log(req.body.entry[0]);
+	var event_entry = req.body.entry[0];
+	console.log("\n\n\n\nevent_entry = ");
+	console.log(event_entry);
 	// Subscribes to Message Received events
-	if(req.body.entry[0].messaging){
-		console.log("\n\n\n\n=== req.body.entry[0].messaging ===");
-		console.log(req.body.entry[0].messaging);
-		var messaging_events = req.body.entry[0].messaging
+	if(event_entry.messaging){
+		var messaging_events = event_entry.messaging;
+		console.log("\n\n\n\n=== messaging_events ===");
+		console.log(messaging_events);
+
 		for (var i = 0; i < messaging_events.length; i++) {
-			var event = messaging_events[i]
-			var sender = event.sender.id
+			var event = messaging_events[i];
+			var sender = event.sender.id;
+			// For messages
 			if (event.message && event.message.text) {
 				var text = event.message.text
 				sendText(sender, "Text echo: " + text.substring(0, 100))
 			}
+			// For buttons
+			if (event.postback && event.postback.title) {
+				switch (event.postback.title) {
+					case "Back Home":
+						sendHome(sender, "Text echo: Back Home")
+						break;
+					default:
+						break;
+				}
+			}
 		}
-	} else if (req.body.entry[0].messaging_postbacks) {// Subscribes to Postback Received events
-		console.log("\n\n\n\n=== req.body.entry[0].messaging_postbacks ===");
-		console.log(req.body.entry[0].messaging_postbacks);
-	} else if(req.body.entry[0].standby) {
-		console.log("\n\n\n\n=== req.body.entry[0].standby ===");
-		console.log("obj = ", req.body.entry[0].standby);
 	}
 	res.sendStatus(200)
 })
@@ -209,6 +216,53 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 	})
 
 
+}
+
+function sendHome(sender, text){
+	var messageData = {
+		attachment: {
+			type: "template",
+			payload: {
+				template_type: "generic",
+				elements: [
+					{
+            "title":"Welcome to TradingValley!",
+            "image_url":"https://petersfancybrownhats.com/company_image.png",
+            "subtitle":"Let\'s create the life you want, together.",
+            "default_action": {
+              "type": "web_url",
+              "url": "https://www.tradingvalley.com",
+              "messenger_extensions": true,
+              "webview_height_ratio": "tall",
+            },
+            "buttons":[
+              {
+                "type":"web_url",
+                "url":"https://www.tradingvalley.com",
+                "title":"View Website"
+              }
+            ]
+					}
+				]
+			}
+		}
+	};
+	request({
+		url: "https://graph.facebook.com/v2.6/me/messages",
+		qs : {access_token: token},
+		method: "POST",
+		json: {
+			recipient: {id: sender},
+			message : messageData,
+		}
+	}, function(error, response, body) {
+		if (error) {
+			console.log("sending error")
+		} else if (response.body.error) {
+			console.log("\n\n\n\n=== response body error ===");
+			console.log(response.body.error);
+		}
+	})
 }
 app.listen(app.get('port'), function() {
 	console.log("running: port",app.get('port')) //app,get('port')
