@@ -30,7 +30,7 @@ app.get('/webhook/', function(req, res) {
 	}
 	res.send("Wrong token")
 })
-//!!!Rewrite
+//!!!Rewrite/////
 app.post('/webhook/', function(req, res) {
 	var messaging_events = req.body.entry[0].messaging
 	for (var i = 0; i < messaging_events.length; i++) {
@@ -50,11 +50,11 @@ function sendText(sender, text) {  //sendText ==> sendMessage
     var fs = require('fs');
     var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
 
-    /*Asynchronous version*/ 
+    /*Asynchronous version*/
     ////////////////////
     ///////////////////
 	//var messageData = {text: text}
-	////     
+	////
     var parsedJSON = require('./links.json');
     function pickRandomProperty(obj) {
         var result;
@@ -87,7 +87,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                 elements: [{
                     title: title1,
                     subtitle: "Next-generation virtual reality",
-                    item_url: airticle1,               
+                    item_url: airticle1,
                     image_url: photo1,
                     buttons: [{
                         type: "web_url",
@@ -95,7 +95,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         title: "Read this airticle",
                         //messenger_extensions: true,
                         //fallback_url: "https://petersfancyapparel.com/fallback",
-                        webview_height_ratio: "full" //compact, tall, full 
+                        webview_height_ratio: "full" //compact, tall, full
                     },{
                         type:"element_share"
                     },{
@@ -106,14 +106,14 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                 }, {
                     title: title2,
                     subtitle: "Add the description",
-                    item_url: airticle2,               
+                    item_url: airticle2,
                     image_url: photo2,
                     buttons: [{
                         type: "web_url",
                         url: airticle2,
                         title: "Read this airticle",
-                        webview_height_ratio: "full" 
-                    },{ 
+                        webview_height_ratio: "full"
+                    },{
                         type:"element_share"
                     },{
                         type: "postback",
@@ -123,14 +123,14 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                 },{
                     title: title3,
                     subtitle: "Add the description",
-                    item_url: airticle3,               
+                    item_url: airticle3,
                     image_url: photo3,
                     buttons: [{
                         type: "web_url",
                         url: airticle3,
                         title: "Read this airticle",
-                        webview_height_ratio: "full" 
-                    },{ 
+                        webview_height_ratio: "full"
+                    },{
                         type:"element_share"
                     },{
                         type: "postback",
@@ -140,9 +140,9 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                 }]
             }
         }
-    }; 
+    };
 
-   
+
     request({
 		url: "https://graph.facebook.com/v2.6/me/messages",
 		qs : {access_token: token},
@@ -159,9 +159,9 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 		}
 	})
 
-    
+
     //Collect the user's data'
-    request({ 
+    request({
 		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
 		qs : {access_token: token},
 		method: "GET", //POST
@@ -187,7 +187,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
             return console.log(err);
         }
             console.log("The file was saved!");
-        }); 
+        });
         /////
         /////
 	})
