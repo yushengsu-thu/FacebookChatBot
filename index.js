@@ -32,10 +32,8 @@ app.get('/webhook/', function(req, res) {
 })
 //!!!Rewrite
 app.post('/webhook/', function(req, res) {
-	console.log("req");
-	console.log(req);
-	console.log("res");
-	console.log(res);
+	console.log("req.body.entry[0]");
+	console.log(req.body.entry[0]);
 	var messaging_events = req.body.entry[0].messaging
 	for (var i = 0; i < messaging_events.length; i++) {
 		var event = messaging_events[i]
