@@ -142,6 +142,11 @@ function sendText(sender, text) {  //sendText ==> sendMessage
         // }
 
         ////
+        attachment: {
+        type: "template",
+        payload: {
+        template_type: "generic",
+
         persistent_menu:[{
             locale:"default",
             composer_input_disabled: true,
@@ -180,6 +185,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
             composer_input_disabled:false
           }
         ]
+        }}
         ////
     }; 
 
