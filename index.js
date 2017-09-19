@@ -244,22 +244,16 @@ function sendHome(sender, text){
 				elements: [
 					{
             "title":"Welcome to TradingValley!",
-						"image_url": photo1,
+						// "image_url": photo1,
             "subtitle":"Let\'s create the life you want, together.",
-            "default_action": {
-              "type": "web_url",
-              // "url": "https://www.tradingvalley.com",
-              "messenger_extensions": true,
-              "webview_height_ratio": "tall",
-            },
-            "buttons":[
-              {
-                "type": "web_url",
-                "url": airticle1,
-                "title":"Read this airticle",
-								"webview_height_ratio": "full" //compact, tall, full
-              }
-            ]
+            // "buttons":[
+            //   {
+            //     "type": "web_url",
+            //     "url": airticle1,
+            //     "title":"Read this airticle",
+						// 		"webview_height_ratio": "full" //compact, tall, full
+            //   }
+            // ]
 					}
 				]
 			}
