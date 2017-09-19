@@ -32,7 +32,7 @@ app.get('/webhook/', function(req, res) {
 })
 //!!!Rewrite
 app.post('/webhook/', function(req, res) {
-	console.log("req.body.entry[0]");
+	console.log("\n\n\n\nreq.body.entry[0]");
 	console.log(req.body.entry[0]);
 	// Subscribes to Message Received events
 	if(req.body.entry[0].messaging){
