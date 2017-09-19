@@ -134,6 +134,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 			if (error) {
 				console.log("sending error")
 			} else if (response.body.error) {
+				console.log(response.body.error)
 				console.log("response body error")
 			}
 		})
