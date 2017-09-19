@@ -52,7 +52,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 
     /*Asynchronous version*/
     ////////////////////
-    ///////////////////
+    ///////////////////////
 	//var messageData = {text: text}
 	//////////
     var parsedJSON = require('./links.json');
