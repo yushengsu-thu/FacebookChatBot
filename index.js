@@ -219,6 +219,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 }
 
 function sendHome(sender, text){
+	console.log("=== sendHome ===");
 	var messageData = {
 		attachment: {
 			type: "template",
@@ -227,7 +228,7 @@ function sendHome(sender, text){
 				elements: [
 					{
             "title":"Welcome to TradingValley!",
-            "image_url":"https://petersfancybrownhats.com/company_image.png",
+            // "image_url":"https://petersfancybrownhats.com/company_image.png",
             "subtitle":"Let\'s create the life you want, together.",
             "default_action": {
               "type": "web_url",
