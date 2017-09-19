@@ -95,15 +95,9 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         title: "Read this airticle",
                         //messenger_extensions: true,
                         //fallback_url: "https://petersfancyapparel.com/fallback",
-                        webview_height_ratio: "compact" //compact, tall, full 
+                        webview_height_ratio: "full" //compact, tall, full 
                     },{
                         type:"element_share"
-                        //title:"Share"
-                        /*share_contents:{
-                            type: "web_url",
-                            url: "https://m.me/petershats?ref=invited_by_24601", 
-                            title: "Take Quiz"
-                        }*/
                     },{
                         type: "postback",
                         title: "Call Postback1",
@@ -118,10 +112,9 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         type: "web_url",
                         url: airticle2,
                         title: "Read this airticle",
-                        webview_height_ratio: "tall" 
+                        webview_height_ratio: "full" 
                     },{ 
                         type:"element_share"
-                        //title:"Share"
                     },{
                         type: "postback",
                         title: "Call Postback2",
@@ -139,7 +132,6 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         webview_height_ratio: "full" 
                     },{ 
                         type:"element_share"
-                        //title:"Share"
                     },{
                         type: "postback",
                         title: "Call Postback3",
@@ -148,6 +140,48 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                 }]
             }
         }
+
+        ////
+        "persistent_menu":[
+  {
+    "locale":"default",
+    "composer_input_disabled": true,
+    "call_to_actions":[
+      {
+        "title":"My Account",
+        "type":"nested",
+        "call_to_actions":[
+          {
+            "title":"Pay Bill",
+            "type":"postback",
+            "payload":"PAYBILL_PAYLOAD"
+          },
+          {
+            "title":"History",
+            "type":"postback",
+            "payload":"HISTORY_PAYLOAD"
+          },
+          {
+            "title":"Contact Info",
+            "type":"postback",
+            "payload":"CONTACT_INFO_PAYLOAD"
+          }
+        ]
+      },
+      {
+        "type":"web_url",
+        "title":"Latest News",
+        "url":"http://petershats.parseapp.com/hat-news",
+        "webview_height_ratio":"full"
+      }
+    ]
+  },
+  {
+    "locale":"zh_CN",
+    "composer_input_disabled":false
+  }
+]
+        ////
     }; 
 
    
