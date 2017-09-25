@@ -33,13 +33,13 @@ app.get('/webhook/', function(req, res) {
 //!!!Rewrite
 app.post('/webhook/', function(req, res) {
 	var event_entry = req.body.entry[0];
-	console.log("\n\n\n\nevent_entry = ");
-	console.log(event_entry);
+	////console.log("\n\n\n\nevent_entry = ");
+	////console.log(event_entry);
 	// Subscribes to Message Received events
 	if(event_entry.messaging){
 		var messaging_events = event_entry.messaging;
-		console.log("\n\n\n\n=== messaging_events ===");
-		console.log(messaging_events);
+		//console.log("\n\n\n\n=== messaging_events ===");
+		//console.log(messaging_events);
 
 		for (var i = 0; i < messaging_events.length; i++) {
 			var event = messaging_events[i];
@@ -109,8 +109,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                     subtitle: "Next-generation virtual reality",
                     item_url: airticle1,
                     image_url: photo1,
-                    buttons: [
-											{
+                    buttons: [{
                         type: "web_url",
                         url: airticle1,
                         title: "Read this airticle",
@@ -139,8 +138,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         type:"element_share"
                     },{
                         type: "postback",
-                        title: "Call Postback2",
-                        payload: "Payload_2",
+                        title: "Back Home",
+                        payload: "Back Home payload content",
                     }]
                 },{
                     title: title3,
@@ -156,8 +155,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         type:"element_share"
                     },{
                         type: "postback",
-                        title: "Call Postback3",
-                        payload: "Payload_3",
+                        title: "Back Home",
+                        payload: "Back Home payload content",
                     }]
                 }]
             }
@@ -177,7 +176,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
         if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
-			console.log("\n\n\n\n=== response body error ===");
+			//console.log("\n\n\n\n=== response body error ===");
 			console.log(response.body.error);
 		}
 	})
@@ -219,7 +218,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 }
 
 function sendHome(sender, text){
-	console.log("\n\n\n\n=== sendHome ===");
+	//console.log("\n\n\n\n=== sendHome ===");
 	var fs = require('fs');
 	var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
 
@@ -241,21 +240,17 @@ function sendHome(sender, text){
 			type: "template",
 			payload: {
 				template_type: "generic",
-				elements: [
-					{
-            "title":"Welcome to TradingValley!",
-						// "image_url": photo1,
-            "subtitle":"Let\'s create the life you want, together.",
-            "buttons":[
-              {
-                "type": "web_url",
-                "url": airticle1,
-                "title":"Read a airticle!",
-								"webview_height_ratio": "full" //compact, tall, full
-              }
-            ]
-					}
-				]
+				elements: [{
+                    "title":"Welcome to TradingValley!",
+					"image_url":./photo/tradingvalley.png,
+                    "subtitle":"Let\'s create the life you want, together.",
+                    "buttons":[{
+                        "type": "web_url",
+                        "url": airticle1,
+                        "title":"Read a airticle!",
+					    "webview_height_ratio": "full" //compact, tall, full
+                    }]
+				}]
 			}
 		}
 	};
@@ -271,7 +266,7 @@ function sendHome(sender, text){
 		if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
-			console.log("\n\n\n\n=== response body error ===");
+			//console.log("\n\n\n\n=== response body error ===");
 			console.log(response.body.error);
 		}
 	})
