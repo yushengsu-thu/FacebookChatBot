@@ -41,6 +41,10 @@ app.post('/webhook/', function(req, res) {
 		var messaging_events = event_entry.messaging;
 		//console.log("\n\n\n\n=== messaging_events ===");
 		//console.log(messaging_events);
+        
+        //
+        greetingText(sender)
+        //
 
 		for (var i = 0; i < messaging_events.length; i++) {
 			var event = messaging_events[i];
@@ -72,10 +76,6 @@ app.post('/webhook/', function(req, res) {
 
 ///////
 //////
-//////
-/////
-
-
 
 
 //
@@ -310,7 +310,7 @@ function goHome(sender, text){
 
 
 //*Haven't call this function*//
-/*
+
 function greetingText(sender){
 	var messageData = {
         setting_type:"greeting",
@@ -337,9 +337,10 @@ function greetingText(sender){
 	})
 }
 
-*/
 
 
+//////
+//////
 
 app.listen(app.get('port'), function() {
 	console.log("running: port",app.get('port')) //app,get('port')
