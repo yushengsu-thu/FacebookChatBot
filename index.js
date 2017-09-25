@@ -264,10 +264,11 @@ function sendHome(sender, text){
                         type: "postback",
                         title: "美股清單",
                         payload: "browse"
-                    }
-				}]
-			]}
-	};
+                   }]
+                }]
+            }
+	    }
+    };
 
 	request({
 		url: "https://graph.facebook.com/v2.6/me/messages",
