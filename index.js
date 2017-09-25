@@ -290,6 +290,7 @@ function mainMenue(sender, text){
 	                        type: "web_url",
 	                        url: "https://www.tradingvalley.com"
                             title: "關於我們",
+                            webview_height_ratio: "full"
                   	    }
 										],
                 }, {
