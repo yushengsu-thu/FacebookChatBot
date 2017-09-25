@@ -42,9 +42,6 @@ app.post('/webhook/', function(req, res) {
 		//console.log("\n\n\n\n=== messaging_events ===");
 		//console.log(messaging_events);
         
-        //
-        greetingText(sender)
-        //
 
 		for (var i = 0; i < messaging_events.length; i++) {
 			var event = messaging_events[i];
