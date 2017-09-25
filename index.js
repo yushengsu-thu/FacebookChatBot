@@ -264,6 +264,7 @@ function sendHome(sender, text){
 
 ///////////
 ///////////
+/*
 function mainMenue(sender, text){
     
 
@@ -284,7 +285,7 @@ function mainMenue(sender, text){
 		}
     }
 }
-
+*/
 //////////
 //////////
 
