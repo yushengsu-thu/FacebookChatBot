@@ -230,7 +230,7 @@ function sendHome(sender, text){
 			payload: {
 				template_type: "generic",
 				elements: [{
-                    title:"Welcome to TradingValley!",
+                    title:"TradingValley bot",
                     subtitle:"Let's create the life you want,together.",
                     image_url:photo,
                     buttons:[{
@@ -243,6 +243,28 @@ function sendHome(sender, text){
                         title: "訂閱管理",
                         payload: "subscribe"
                     }]
+				},{
+                    title:"最新文章",
+                    //subtitle:"Let's create the life you want,together.",
+                    image_url:photo,
+                    buttons:[{
+                        type: "postback",
+                        title: "瀏覽",
+                        payload: "browse"
+                    },{
+                        type: "postback",
+                        title: "訂閱",
+                        payload: "subscribe"
+                    }]
+				},{
+                    title:"Welcome to TradingValley!",
+                    subtitle:"Let's create the life you want,together.",
+                    image_url:photo,
+                    buttons:[{
+                        type: "postback",
+                        title: "美股清單",
+                        payload: "browse"
+                    }
 				}]
 			}
 		}
