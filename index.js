@@ -67,9 +67,9 @@ app.post('/webhook/', function(req, res) {
 })
 
 
-app.listen(app.get('port'), function() {
-	console.log("running: port",app.get('port')) //app,get('port')
-})
+//app.listen(app.get('port'), function() {
+//	console.log("running: port",app.get('port')) //app,get('port')
+//})
 //
 function sendText(sender, text) {  //sendText ==> sendMessage
     /*Read a Links.json*/
@@ -372,3 +372,7 @@ function greetingText(sender){
 		}
 	})
 }
+
+app.listen(app.get('port'), function() {
+	console.log("running: port",app.get('port')) //app,get('port')
+})
