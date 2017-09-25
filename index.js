@@ -220,9 +220,9 @@ function sendText(sender, text) {  //sendText ==> sendMessage
         /////
         /////
 	})
-
-
 }
+
+
 
 function sendHome(sender, text){
 	var link = "https://www.tradingvalley.com"
