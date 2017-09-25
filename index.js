@@ -38,7 +38,7 @@ app.post('/webhook/', function(req, res) {
 	// Subscribes to Message Received events
 	if(event_entry.messaging){
 		var messaging_events = event_entry.messaging;
-		console.log("\n\n\n\n=== messaging_events ===");
+		//console.log("\n\n\n\n=== messaging_events ===");
 		//console.log(messaging_events);
 
 		for (var i = 0; i < messaging_events.length; i++) {
@@ -242,7 +242,7 @@ function sendHome(sender, text){
 				template_type: "generic",
 				elements: [{
                     "title":"Welcome to TradingValley!",
-					"image_url":"./photo/tradingvalley.png",
+					//"image_url":"./photo/tradingvalley.png",
                     "subtitle":"Let\'s create the life you want, together.",
                     "buttons":[{
                         "type": "web_url",
