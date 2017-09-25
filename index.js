@@ -30,6 +30,7 @@ app.get('/webhook/', function(req, res) {
 	}
 	res.send("Wrong token")
 })
+
 //!!!Rewrite
 app.post('/webhook/', function(req, res) {
 	var event_entry = req.body.entry[0];
@@ -47,10 +48,11 @@ app.post('/webhook/', function(req, res) {
 			// For messages
 			if (event.message && event.message.text) {
 				var text = event.message.text
-				sendText(sender, "Text echo: " + text.substring(0, 100))
+				mainMenue(sender,"Text echo: mainMenue")
+                //sendText(sender, "Text echo: " + text.substring(0, 100))
 			}
 			// For buttons
-            else if(event.postback && event.postback.title) {
+            if (event.postback && event.postback.title) {
 				switch (event.postback.title) {
 					case "Back Home":
 						sendHome(sender, "Text echo: Back Home")
@@ -62,6 +64,11 @@ app.post('/webhook/', function(req, res) {
 		}
 	}
 	res.sendStatus(200)
+})
+
+
+app.listen(app.get('port'), function() {
+	console.log("running: port",app.get('port')) //app,get('port')
 })
 //
 function sendText(sender, text) {  //sendText ==> sendMessage
@@ -256,6 +263,112 @@ function sendHome(sender, text){
 		}
 	})
 }
-app.listen(app.get('port'), function() {
-	console.log("running: port",app.get('port')) //app,get('port')
-})
+
+///////////
+///////////
+function mainMenue(sender, text){
+    var messageData = {
+        attachment: {
+            type: "template",
+            payload: {
+                template_type: "generic",
+                elements: [{
+                    title: "TradingValley bot",
+                    //subtitle: "Next-generation virtual reality",
+                    //item_url: airticle1,
+                    //image_url: photo1,
+                    buttons: [{
+                        type: "postback",
+                        //url: airticle1,
+                        title: "訂閱我們",
+                        //messenger_extensions: true,
+                        //fallback_url: "https://petersfancyapparel.com/fallback",
+                        //webview_height_ratio: "full" //compact, tall, full
+                        payload: "Back Home payload content",
+	                    },{
+	                        type: "web_url",
+	                        url: "https://www.tradingvalley.com"
+                            title: "關於我們",
+                  	    }
+										],
+                }, {
+                    title: "最新文章",
+                    //subtitle: "Add the description",
+                    //item_url: airticle2,
+                    //image_url: photo2,
+                    buttons: [{
+                        type: "postback",
+                        title: "瀏覽",
+                        payload: "Back Home payload content",
+                    },{
+                        type: "postback",
+                        title: "訂閱",
+                        payload: "Back Home payload content",
+                    }]
+                },{
+                    title: "個股介紹",
+                    //subtitle: "Add the description",
+                    //item_url: airticle3,
+                    //image_url: photo3,
+                    buttons: [{
+                        type: "postback",
+                        //url: airticle3,
+                        title: "美股清單",
+                        payload: "Back Home payload content",
+                    }]
+                }]
+            }
+        }
+    };
+
+
+    request({
+		url: "https://graph.facebook.com/v2.6/me/messages",
+		qs : {access_token: token},
+		method: "POST",
+        json: {
+			recipient: {id: sender},
+			message : messageData,
+		}
+	 }, function(error, response, body) {
+        if (error) {
+			console.log("sending error")
+		} else if (response.body.error) {
+			//console.log("\n\n\n\n=== response body error ===");
+			console.log(response.body.error);
+		}
+}
+//////////
+//////////
+
+//////////
+/////////
+////////
+////////
+///////
+//*Haven't call this function*//
+function greetingText(sender){
+	var messageData = {
+        setting_type:"greeting",
+        greeting:{
+            text:"Hi {{user_first_name}}, 我是TradingValley的智能小助手。我會寄給你每週精選的美股文摘！"
+        }
+    };
+
+	request({
+		url: "https://graph.facebook.com/v2.6/me/thread_settings?",
+		qs : {access_token: token},
+		method: "POST",
+		json: {
+			recipient: {id: sender},
+			message : messageData,
+		}
+	}, function(error, response, body) {
+		if (error) {
+			console.log("sending error")
+		} else if (response.body.error) {
+			//console.log("\n\n\n\n=== response body error ===");
+			console.log(response.body.error);
+		}
+	})
+}
