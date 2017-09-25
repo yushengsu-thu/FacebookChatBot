@@ -223,7 +223,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 
 function sendHome(sender, text){
 	var link = "https://www.tradingvalley.com"
-    var photo = "./photo/tradingvalley.png"
+    var photo = "https://www.tradingvalley.com/images/sitethumb.jpg"
 	var messageData = {
 		attachment: {
 			type: "template",
