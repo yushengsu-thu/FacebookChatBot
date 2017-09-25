@@ -66,10 +66,11 @@ app.post('/webhook/', function(req, res) {
 	res.sendStatus(200)
 })
 
-
+/*
 app.listen(app.get('port'), function() {
 	console.log("running: port",app.get('port')) //app,get('port')
 })
+*/
 
 //
 function sendText(sender, text) {  //sendText ==> sendMessage
@@ -381,7 +382,8 @@ function greetingText(sender){
 	})
 }
 
+*/
 app.listen(app.get('port'), function() {
 	console.log("running: port",app.get('port')) //app,get('port')
 })
-*/
+
