@@ -35,7 +35,7 @@ app.get('/webhook/', function(req, res) {
 app.post('/webhook/', function(req, res) {
 	var event_entry = req.body.entry[0];
 	////console.log("\n\n\n\nevent_entry = ");
-	////console.log(event_entry);
+	console.log(event_entry);
 	// Subscribes to Message Received events
 	if(event_entry.messaging){
 		var messaging_events = event_entry.messaging;
