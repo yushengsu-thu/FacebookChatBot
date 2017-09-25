@@ -66,11 +66,6 @@ app.post('/webhook/', function(req, res) {
 	res.sendStatus(200)
 })
 
-/*
-app.listen(app.get('port'), function() {
-	console.log("running: port",app.get('port')) //app,get('port')
-})
-*/
 
 //
 function sendText(sender, text) {  //sendText ==> sendMessage
@@ -237,7 +232,7 @@ function sendHome(sender, text){
 				elements: [{
                     title:"Welcome to TradingValley!",
                     subtitle:"Let's create the life you want,together.",
-                    //"image_url":photo,
+                    image_url:photo,
                     buttons:[{
                         type: "web_url",
                         url: link,
@@ -269,61 +264,8 @@ function sendHome(sender, text){
 
 ///////////
 ///////////
-/*
 function mainMenue(sender, text){
-    var messageData = {
-        attachment: {
-            type: "template",
-            payload: {
-                template_type: "generic",
-                elements: [{
-                    title: "TradingValley bot",
-                    //subtitle: "Next-generation virtual reality",
-                    //item_url: airticle1,
-                    //image_url: photo1,
-                    buttons: [{
-                        type: "postback",
-                        url: "https://www.tradingvalley.com",
-                        title: "關於我們",
-                        //messenger_extensions: true,
-                        //fallback_url: "https://petersfancyapparel.com/fallback",
-                        webview_height_ratio: "full" //compact, tall, full
-	                    },{
-	                        type: "postback",
-                            title: "訂閱我們",
-                            payload: "Back Home payload content"
-                  	    }
-										],
-                }, {
-                    title: "最新文章",
-                    //subtitle: "Add the description",
-                    //item_url: airticle2,
-                    //image_url: photo2,
-                    buttons: [{
-                        type: "postback",
-                        title: "瀏覽",
-                        payload: "Back Home payload content",
-                    },{
-                        type: "postback",
-                        title: "訂閱",
-                        payload: "Back Home payload content",
-                    }]
-                },{
-                    title: "個股介紹",
-                    //subtitle: "Add the description",
-                    //item_url: airticle3,
-                    //image_url: photo3,
-                    buttons: [{
-                        type: "postback",
-                        //url: airticle3,
-                        title: "美股清單",
-                        payload: "Back Home payload content",
-                    }]
-                }]
-            }
-        }
-    };
-
+    
 
     request({
 		url: "https://graph.facebook.com/v2.6/me/messages",
@@ -342,7 +284,6 @@ function mainMenue(sender, text){
 		}
     }
 }
-*/
 
 //////////
 //////////
@@ -383,6 +324,9 @@ function greetingText(sender){
 }
 
 */
+
+
+
 app.listen(app.get('port'), function() {
 	console.log("running: port",app.get('port')) //app,get('port')
 })
