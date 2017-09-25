@@ -351,7 +351,10 @@ function mainMenue(sender, text){
 ////////
 ////////
 ///////
+
+
 //*Haven't call this function*//
+/*
 function greetingText(sender){
 	var messageData = {
         setting_type:"greeting",
@@ -381,3 +384,4 @@ function greetingText(sender){
 app.listen(app.get('port'), function() {
 	console.log("running: port",app.get('port')) //app,get('port')
 })
+*/
