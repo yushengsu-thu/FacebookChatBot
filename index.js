@@ -138,8 +138,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         type:"element_share"
                     },{
                         type: "postback",
-                        //title: "Back Home",
-                        //payload: "Back Home payload content",
+                        title: "Back Home",
+                        payload: "Back Home payload content",
                     }]
                 },{
                     title: title3,
@@ -155,8 +155,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                         type:"element_share"
                     },{
                         type: "postback",
-                        //title: "Back Home",
-                        //payload: "Back Home payload content",
+                        title: "Back Home",
+                        payload: "Back Home payload content",
                     }]
                 }]
             }
