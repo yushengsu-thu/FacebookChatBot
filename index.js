@@ -227,9 +227,9 @@ function sendHome(sender, text){
 				template_type: "generic",
 				elements: [{
                     "title":"Welcome to TradingValley!",
-                    "subtitle":"Let's create the life you want, together.",
+                    "subtitle":"Let's create the life you want,together.",
+                    "image_url":photo,
                     "buttons":[{
-					    "image_url":photo,
                         "type": "web_url",
                         "url": link,
                         "title":"Read a airticle!",
