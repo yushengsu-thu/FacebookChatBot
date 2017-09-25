@@ -48,7 +48,7 @@ app.post('/webhook/', function(req, res) {
 			// For messages
 			if (event.message && event.message.text) {
 				var text = event.message.text
-			    sendHome(sender, "Text echo: Back Home")
+			    goHome(sender, "Text echo: Back Home")
                 //mainMenue(sender,"Text echo: mainMenue")
                 //browseAirticle(sender, "Text echo: " + text.substring(0, 100))
 			}
@@ -56,9 +56,10 @@ app.post('/webhook/', function(req, res) {
             if (event.postback && event.postback.title) {
 				switch (event.postback.title) {
                     case "瀏覽文章":
+						goHome(sender, "Text echo: 瀏覽文章")
                         break;
 					case "Back Home":
-						sendHome(sender, "Text echo: Back Home")
+						goHome(sender, "Text echo: Back Home")
 						break;
 					default:
 						break;
@@ -231,7 +232,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
 
 
 
-function sendHome(sender, text){
+function goHome(sender, text){
 	var link = "https://www.tradingvalley.com"
     var photo = "https://www.tradingvalley.com/images/sitethumb.jpg"
 	var messageData = {
