@@ -310,7 +310,7 @@ function goHome(sender, text){
 
 
 //*Haven't call this function*//
-
+/*
 function greetingText(sender){
 	var messageData = {
         setting_type:"greeting",
@@ -336,7 +336,7 @@ function greetingText(sender){
 		}
 	})
 }
-
+*/
 
 
 //////
