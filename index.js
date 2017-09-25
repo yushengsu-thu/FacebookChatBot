@@ -218,23 +218,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
 }
 
 function sendHome(sender, text){
-	//console.log("\n\n\n\n=== sendHome ===");
-	var fs = require('fs');
-	var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
-
-	var parsedJSON = require('./links.json');
-	function pickRandomProperty(obj) {
-		var result;
-		var count = 0;
-		for (var prop in obj)
-			if (Math.random() < 1/++count)
-				result = prop;
-		return result;
-	}
-	var title1 = pickRandomProperty(parsedJSON)
-	var link1 = parsedJSON[title1]
-	var airticle1 = link1[0]
-	var photo1 = link1[1]
+	var link = "https://www.tradingvalley.com"
+    var photo = "./photo/tradingvalley.png"
 	var messageData = {
 		attachment: {
 			type: "template",
@@ -242,11 +227,11 @@ function sendHome(sender, text){
 				template_type: "generic",
 				elements: [{
                     "title":"Welcome to TradingValley!",
-					//"image_url":"./photo/tradingvalley.png",
-                    "subtitle":"Let\'s create the life you want, together.",
+					"image_url":photo,
+                    "subtitle":"Let's create the life you want, together.",
                     "buttons":[{
                         "type": "web_url",
-                        "url": airticle1,
+                        "url": link,
                         "title":"Read a airticle!",
 					    "webview_height_ratio": "full" //compact, tall, full
                     }]
