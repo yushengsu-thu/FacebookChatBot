@@ -48,7 +48,7 @@ app.post('/webhook/', function(req, res) {
 			// For messages
 			if (event.message && event.message.text) {
 				var text = event.message.text
-				mainMenue(sender,"Text echo: mainMenue")
+                //mainMenue(sender,"Text echo: mainMenue")
                 sendText(sender, "Text echo: " + text.substring(0, 100))
 			}
 			// For buttons
@@ -234,14 +234,14 @@ function sendHome(sender, text){
 			payload: {
 				template_type: "generic",
 				elements: [{
-                    "title":"Welcome to TradingValley!",
-                    "subtitle":"Let's create the life you want,together.",
+                    title:"Welcome to TradingValley!",
+                    subtitle:"Let's create the life you want,together.",
                     //"image_url":photo,
-                    "buttons":[{
-                        "type": "web_url",
-                        "url": link,
-                        "title":"Weclome to TradingValley",
-					    "webview_height_ratio": "full" //compact, tall, full
+                    buttons:[{
+                        type: "web_url",
+                        url: link,
+                        title:"Weclome to TradingValley",
+					    webview_height_ratio: "full" //compact, tall, full
                     }]
 				}]
 			}
@@ -280,17 +280,15 @@ function mainMenue(sender, text){
                     //image_url: photo1,
                     buttons: [{
                         type: "postback",
-                        //url: airticle1,
-                        title: "訂閱我們",
+                        url: "https://www.tradingvalley.com",
+                        title: "關於我們",
                         //messenger_extensions: true,
                         //fallback_url: "https://petersfancyapparel.com/fallback",
-                        //webview_height_ratio: "full" //compact, tall, full
-                        payload: "Back Home payload content",
+                        webview_height_ratio: "full" //compact, tall, full
 	                    },{
-	                        type: "web_url",
-	                        url: "https://www.tradingvalley.com"
-                            title: "關於我們",
-                            webview_height_ratio: "full"
+	                        type: "postback",
+                            title: "訂閱我們",
+                            payload: "Back Home payload content"
                   	    }
 										],
                 }, {
