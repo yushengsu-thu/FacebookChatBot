@@ -265,8 +265,10 @@ function sendHome(sender, text){
 	})
 }
 
+
 ///////////
 ///////////
+/*
 function mainMenue(sender, text){
     var messageData = {
         attachment: {
@@ -339,6 +341,8 @@ function mainMenue(sender, text){
 		}
     }
 }
+*/
+
 //////////
 //////////
 
