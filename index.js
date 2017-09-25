@@ -48,7 +48,7 @@ app.post('/webhook/', function(req, res) {
 			// For messages
 			if (event.message && event.message.text) {
 				var text = event.message.text
-                //mainMenue(sender,"Text echo: mainMenue")
+				mainMenue(sender,"Text echo: mainMenue")
                 sendText(sender, "Text echo: " + text.substring(0, 100))
 			}
 			// For buttons
@@ -67,9 +67,10 @@ app.post('/webhook/', function(req, res) {
 })
 
 
-//app.listen(app.get('port'), function() {
-//	console.log("running: port",app.get('port')) //app,get('port')
-//})
+app.listen(app.get('port'), function() {
+	console.log("running: port",app.get('port')) //app,get('port')
+})
+
 //
 function sendText(sender, text) {  //sendText ==> sendMessage
     /*Read a Links.json*/
