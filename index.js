@@ -56,7 +56,7 @@ app.post('/webhook/', function(req, res) {
             if (event.postback && event.postback.title) {
 				switch (event.postback.title) {
                     case "瀏覽文章":
-                        browseAirticle(sender, "Text echo:" + text.substring(0, 100))
+                        browseAirticle(sender, "Text echo: 瀏覽文章")
                         break;
 					case "Back Home":
 						goHome(sender, "Text echo: Back Home")
