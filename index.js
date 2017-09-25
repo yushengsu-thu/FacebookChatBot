@@ -266,9 +266,9 @@ function sendHome(sender, text){
                         payload: "browse"
                     }
 				}]
-			}
-		}
+			]}
 	};
+
 	request({
 		url: "https://graph.facebook.com/v2.6/me/messages",
 		qs : {access_token: token},
@@ -287,31 +287,6 @@ function sendHome(sender, text){
 	})
 }
 
-
-///////////
-///////////
-/*
-function mainMenue(sender, text){
-    
-
-    request({
-		url: "https://graph.facebook.com/v2.6/me/messages",
-		qs : {access_token: token},
-		method: "POST",
-        json: {
-			recipient: {id: sender},
-			message : messageData,
-		}
-	 }, function(error, response, body) {
-        if (error) {
-			console.log("sending error")
-		} else if (response.body.error) {
-			//console.log("\n\n\n\n=== response body error ===");
-			console.log(response.body.error);
-		}
-    }
-}
-*/
 //////////
 //////////
 
