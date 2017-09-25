@@ -49,7 +49,7 @@ app.post('/webhook/', function(req, res) {
 			if (event.message && event.message.text) {
 				var text = event.message.text
 				mainMenue(sender,"Text echo: mainMenue")
-                //sendText(sender, "Text echo: " + text.substring(0, 100))
+                sendText(sender, "Text echo: " + text.substring(0, 100))
 			}
 			// For buttons
             if (event.postback && event.postback.title) {
