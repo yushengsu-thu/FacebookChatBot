@@ -236,8 +236,12 @@ function sendHome(sender, text){
                     buttons:[{
                         type: "web_url",
                         url: link,
-                        title:"Weclome to TradingValley",
+                        title: "關於我們",
 					    webview_height_ratio: "full" //compact, tall, full
+                    },{
+                        type: "postback",
+                        title: "訂閱管理",
+                        payload: "subscribe"
                     }]
 				}]
 			}
