@@ -50,11 +50,13 @@ app.post('/webhook/', function(req, res) {
 				var text = event.message.text
 			    sendHome(sender, "Text echo: Back Home")
                 //mainMenue(sender,"Text echo: mainMenue")
-                //sendText(sender, "Text echo: " + text.substring(0, 100))
+                //browseAirticle(sender, "Text echo: " + text.substring(0, 100))
 			}
 			// For buttons
             if (event.postback && event.postback.title) {
 				switch (event.postback.title) {
+                    case "瀏覽文章":
+                        break;
 					case "Back Home":
 						sendHome(sender, "Text echo: Back Home")
 						break;
@@ -67,9 +69,16 @@ app.post('/webhook/', function(req, res) {
 	res.sendStatus(200)
 })
 
+///////
+//////
+//////
+/////
+
+
+
 
 //
-function sendText(sender, text) {  //sendText ==> sendMessage
+function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     /*Read a Links.json*/
     /*Synchronous version*/
     var fs = require('fs');
@@ -250,11 +259,11 @@ function sendHome(sender, text){
                     image_url:"https://cw1.tw/CW/images/article/201611/article-583561e0eb39a.jpg",
                     buttons:[{
                         type: "postback",
-                        title: "瀏覽",
+                        title: "瀏覽文章",
                         payload: "browse"
                     },{
                         type: "postback",
-                        title: "訂閱",
+                        title: "訂閱文章",
                         payload: "subscribe"
                     }]
 				},{
