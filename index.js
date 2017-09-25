@@ -246,7 +246,7 @@ function sendHome(sender, text){
 				},{
                     title:"最新文章",
                     //subtitle:"Let's create the life you want,together.",
-                    image_url:photo,
+                    image_url:"https://www.google.com.tw/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwif8L3O67_WAhUCopQKHYIpCDMQjRwIBw&url=http%3A%2F%2Fwww.readingclub.com.tw%2F&psig=AFQjCNEXN3WyhSU3qtUVKrVlCJUTyaCUoA&ust=1506411853268583",
                     buttons:[{
                         type: "postback",
                         title: "瀏覽",
@@ -257,9 +257,9 @@ function sendHome(sender, text){
                         payload: "subscribe"
                     }]
 				},{
-                    title:"Welcome to TradingValley!",
-                    subtitle:"Let's create the life you want,together.",
-                    image_url:photo,
+                    title:"個股介紹",
+                    //subtitle:"Let's create the life you want,together.",
+                    image_url:"https://stockfeel-1.azureedge.net/wp-content/themes/stockfeel_2016_theme/images/banner/category/ban_stock-usa.jpg",
                     buttons:[{
                         type: "postback",
                         title: "美股清單",
