@@ -242,7 +242,7 @@ function sendHome(sender, text){
 				template_type: "generic",
 				elements: [{
                     "title":"Welcome to TradingValley!",
-					"image_url":"/Users/sheng_mac/Downloads/chatbot/blondeChatBot/photo/tradingvalley.png",
+					"image_url":"./photo/tradingvalley.png",
                     "subtitle":"Let\'s create the life you want, together.",
                     "buttons":[{
                         "type": "web_url",
