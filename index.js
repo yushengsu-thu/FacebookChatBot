@@ -50,7 +50,7 @@ app.post('/webhook/', function(req, res) {
 				sendText(sender, "Text echo: " + text.substring(0, 100))
 			}
 			// For buttons
-			if (event.postback && event.postback.title) {
+            else if(event.postback && event.postback.title) {
 				switch (event.postback.title) {
 					case "Back Home":
 						sendHome(sender, "Text echo: Back Home")
@@ -228,11 +228,11 @@ function sendHome(sender, text){
 				elements: [{
                     "title":"Welcome to TradingValley!",
                     "subtitle":"Let's create the life you want,together.",
-                    "image_url":photo,
+                    //"image_url":photo,
                     "buttons":[{
                         "type": "web_url",
                         "url": link,
-                        "title":"Read a airticle!",
+                        "title":"Weclome to TradingValley",
 					    "webview_height_ratio": "full" //compact, tall, full
                     }]
 				}]
