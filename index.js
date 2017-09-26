@@ -82,6 +82,7 @@ app.post('/webhook/', function(req, res) {
 function checkStocklist(sender, text){
    
     var messageData = {
+        text: "Here's a quick reply!",
         quick_replies:[{
             content_type:"text",
             title:"Red",
