@@ -84,20 +84,15 @@ function checkStocklist(sender, text){
     var messageData = {
         text: "我們列出部分美股如下，你也可以點選‘更多’來找尋你感興趣的公司",
         quick_replies:[{
-            //content_type:"text",
-            //title:"Red",
-            //image_url:"http://example.com/img/red.png",
-            //payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-            "content_type":"text",
-            "title":"Search",
-            "payload":"<POSTBACK_PAYLOAD>",
-            "image_url":"http://example.com/img/red.png"
+            content_type:"text",
+            title:"3M",
+            image_url:"https://stockfeel-1.azureedge.net/wp-content/themes/stockfeel_2016_theme/images/stock_company/usa/logo_stock-usa-3m.svg",
+            payload:"3M"
         }]
     }
 
     request({
-		//url: "https://graph.facebook.com/v2.6/me/messages",
-		url: "https://graph.facebook.com/v2.6/me/messages?access_token="+token, 
+		url: "https://graph.facebook.com/v2.6/me/messages",
         qs : {access_token: token},
 		method: "POST",
 		json: {
