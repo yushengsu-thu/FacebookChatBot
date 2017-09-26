@@ -97,7 +97,7 @@ function checkStocklist(sender, text){
 
     request({
 		//url: "https://graph.facebook.com/v2.6/me/messages",
-		url: "https://graph.facebook.com/v2.6/me/messages/access_token="+token, 
+		url: "https://graph.facebook.com/v2.6/me/messages?access_token="+token, 
         qs : {access_token: token},
 		method: "POST",
 		json: {
