@@ -34,14 +34,13 @@ app.get('/webhook/', function(req, res) {
 //!!!Rewrite
 app.post('/webhook/', function(req, res) {
 	var event_entry = req.body.entry[0];
-	////console.log("\n\n\n\nevent_entry = ");
+	//console.log("\n\n\n\nevent_entry = ");
 	//console.log(event_entry);
 	// Subscribes to Message Received events
 	if(event_entry.messaging){
 		var messaging_events = event_entry.messaging;
 		//console.log("\n\n\n\n=== messaging_events ===");
 		//console.log(messaging_events);
-        
 
 		for (var i = 0; i < messaging_events.length; i++) {
 			var event = messaging_events[i];
@@ -65,6 +64,9 @@ app.post('/webhook/', function(req, res) {
 					case "回首頁":
 						backHome(sender, "Text echo: 回首頁")
 						break;
+					case "美股清單":
+						checkStocklist(sender, "Text echo: 美股清單")
+						break;
 					default:
 						break;
 				}
@@ -74,10 +76,45 @@ app.post('/webhook/', function(req, res) {
 	res.sendStatus(200)
 })
 
+
 ///////
 //////
+function checkStocklist(sender, text){
+    var brands_ans_photos = require('fs');
+    var brands_ans_photos = JSON.parse(fs.readFileSync('brands_ans_photos.json', 'utf8'));
 
-function subscribeAirticle(sender, text){ 
+    var messageData = {
+        text: "我們列出部分美股如下，你也可以點選‘更多’來找尋你感興趣的公司",
+        quick_replies:[{
+            content_type:"text",
+            title:"3M",
+            image_url:"https://stockfeel-1.azureedge.net/wp-content/themes/stockfeel_2016_theme/images/stock_company/usa/logo_stock-usa-3m.svg",
+            payload:"3M"
+        }]
+    }
+
+    request({
+		url: "https://graph.facebook.com/v2.6/me/messages",
+        qs : {access_token: token},
+		method: "POST",
+		json: {
+			recipient: {id: sender},
+			message : messageData,
+		}
+	}, function(error, response, body) {
+		if (error) {
+			console.log("sending error")
+		} else if (response.body.error) {
+			//console.log("\n\n\n\n=== response body error ===");
+			console.log(response.body.error);
+		}
+	})
+}
+
+//////
+//////
+function subscribeAirticle(sender, text){
+
     request({
 		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
 		qs : {access_token: token},
@@ -90,13 +127,15 @@ function subscribeAirticle(sender, text){
 		} else if (response.body.error) {
 			console.log("response body error")
 		}
-        //////
-        //Restore data
+        /*Restore data*/
         const fs = require('fs');
         const content = body;
         //const content = JSON.stringify(body);
         console.log(content)
-
+        
+        /*Check the user if exist in the list*/
+       /*====================================*/ 
+        /*Write in*/
         fs.writeFile("subscribeUser.json",content,'utf8', function (err){
         if (err) {
             return console.log(err);
@@ -105,7 +144,8 @@ function subscribeAirticle(sender, text){
         });
     })
 }
-//
+
+
 function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     /*Read a Links.json*/
     /*Synchronous version*/
@@ -113,10 +153,8 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
 
     /*Asynchronous version*/
-    ////////////////////
-    ///////////////////
-	//var messageData = {text: text}
-	////
+	/*=====================*/
+    //var messageData = {text: text}
     var parsedJSON = require('./links.json');
     function pickRandomProperty(obj) {
         var result;
@@ -139,7 +177,6 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     var airticle3 = link3[0]
     var photo3 = link3[1]
     /////
-    /////fix
     ////
     var messageData = {
         attachment: {
@@ -230,15 +267,12 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
 		qs : {access_token: token},
 		method: "GET", 
 	}, function(error, response, body) {
-        //console.log(response)//
-        //console.log(body)
 		if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
 			console.log("response body error")
 		}
-        //////
-        //Restore data
+        /*Restore data*/
         const fs = require('fs');
         const content = body;
         //const content = JSON.stringify(body);
