@@ -30,21 +30,83 @@ app.get('/webhook/', function(req, res) {
 	}
 	res.send("Wrong token")
 })
-//!!!Rewrite/////
+
+//!!!Rewrite
 app.post('/webhook/', function(req, res) {
-	var messaging_events = req.body.entry[0].messaging
-	for (var i = 0; i < messaging_events.length; i++) {
-		var event = messaging_events[i]
-		var sender = event.sender.id
-		if (event.message && event.message.text) {
-			var text = event.message.text
-			sendText(sender, "Text echo: " + text.substring(0, 100))
+	var event_entry = req.body.entry[0];
+	////console.log("\n\n\n\nevent_entry = ");
+	//console.log(event_entry);
+	// Subscribes to Message Received events
+	if(event_entry.messaging){
+		var messaging_events = event_entry.messaging;
+		//console.log("\n\n\n\n=== messaging_events ===");
+		//console.log(messaging_events);
+        
+
+		for (var i = 0; i < messaging_events.length; i++) {
+			var event = messaging_events[i];
+			var sender = event.sender.id;
+			// For messages
+			if (event.message && event.message.text) {
+				var text = event.message.text
+			    backHome(sender, "Text echo: 回首頁")
+                //mainMenue(sender,"Text echo: mainMenue")
+                //browseAirticle(sender, "Text echo: " + text.substring(0, 100))
+			}
+			// For buttons
+            if (event.postback && event.postback.title) {
+				switch (event.postback.title) {
+                    case "瀏覽文章":
+                        browseAirticle(sender, "Text echo: 瀏覽文章")
+                        break;
+                    case "訂閱文章": 
+                        subscribeAirticle(sender, "Text echo: 訂閱文章")
+                        break;
+					case "回首頁":
+						backHome(sender, "Text echo: 回首頁")
+						break;
+					default:
+						break;
+				}
+			}
 		}
 	}
 	res.sendStatus(200)
 })
+
+///////
+//////
+
+function subscribeAirticle(sender, text){ 
+    request({
+		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
+		qs : {access_token: token},
+		method: "GET", 
+	}, function(error, response, body) {
+        //console.log(response)//
+        //console.log(body)
+		if (error) {
+			console.log("sending error")
+		} else if (response.body.error) {
+			console.log("response body error")
+		}
+        //////
+        //Restore data
+        const fs = require('fs');
+        const content = body;
+        //const content = JSON.stringify(body);
+        console.log(content)
+
+        fs.writeFile("subscribeUser.json",content,'utf8', function (err){
+        if (err) {
+            return console.log(err);
+        }
+            console.log("The file was saved!");
+        });
+    })
+}
 //
-function sendText(sender, text) {  //sendText ==> sendMessage
+function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     /*Read a Links.json*/
     /*Synchronous version*/
     var fs = require('fs');
@@ -54,7 +116,7 @@ function sendText(sender, text) {  //sendText ==> sendMessage
     ////////////////////
     ///////////////////
 	//var messageData = {text: text}
-	///////
+	////
     var parsedJSON = require('./links.json');
     function pickRandomProperty(obj) {
         var result;
@@ -92,17 +154,18 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                     buttons: [{
                         type: "web_url",
                         url: airticle1,
-                        title: "Read this airticle",
+                        title: "閱讀此文章",
                         //messenger_extensions: true,
                         //fallback_url: "https://petersfancyapparel.com/fallback",
                         webview_height_ratio: "full" //compact, tall, full
-                    },{
-                        type:"element_share"
-                    },{
-                        type: "postback",
-                        title: "Call Postback1",
-                        payload: "Payload_1",
-                    }],
+	                    },{
+	                        type:"element_share",
+	                    },{
+	                        type: "postback",
+	                        title: "回首頁",
+	                        payload: "回首頁 payload content"
+                  	  }
+										],
                 }, {
                     title: title2,
                     subtitle: "Add the description",
@@ -111,14 +174,14 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                     buttons: [{
                         type: "web_url",
                         url: airticle2,
-                        title: "Read this airticle",
+                        title: "閱讀此文章",
                         webview_height_ratio: "full"
                     },{
                         type:"element_share"
                     },{
                         type: "postback",
-                        title: "Call Postback2",
-                        payload: "Payload_2",
+                        title: "回首頁",
+                        payload: "回首頁 payload content",
                     }]
                 },{
                     title: title3,
@@ -128,14 +191,14 @@ function sendText(sender, text) {  //sendText ==> sendMessage
                     buttons: [{
                         type: "web_url",
                         url: airticle3,
-                        title: "Read this airticle",
+                        title: "閱讀此文章",
                         webview_height_ratio: "full"
                     },{
                         type:"element_share"
                     },{
                         type: "postback",
-                        title: "Call Postback3",
-                        payload: "Payload_3",
+                        title: "回首頁",
+                        payload: "回首頁 payload content",
                     }]
                 }]
             }
@@ -155,7 +218,8 @@ function sendText(sender, text) {  //sendText ==> sendMessage
         if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
-			console.log("response body error")
+			//console.log("\n\n\n\n=== response body error ===");
+			console.log(response.body.error);
 		}
 	})
 
@@ -164,14 +228,10 @@ function sendText(sender, text) {  //sendText ==> sendMessage
     request({
 		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
 		qs : {access_token: token},
-		method: "GET", //POST
-		//json: {
-		//	recipient: {id: sender},
-		//	message : messageData,
-		//}
+		method: "GET", 
 	}, function(error, response, body) {
         //console.log(response)//
-        console.log(body)
+        //console.log(body)
 		if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
@@ -180,7 +240,9 @@ function sendText(sender, text) {  //sendText ==> sendMessage
         //////
         //Restore data
         const fs = require('fs');
-        const content = JSON.stringify(body);
+        const content = body;
+        //const content = JSON.stringify(body);
+        //console.log(content)
 
         fs.writeFile("userdata.json", content, 'utf8', function (err) {
         if (err) {
@@ -191,9 +253,121 @@ function sendText(sender, text) {  //sendText ==> sendMessage
         /////
         /////
 	})
-
-
 }
+
+
+
+function backHome(sender, text){
+	var link = "https://www.tradingvalley.com"
+    var photo = "https://www.tradingvalley.com/images/sitethumb.jpg"
+	var messageData = {
+		attachment: {
+			type: "template",
+			payload: {
+				template_type: "generic",
+				elements: [{
+                    title:"TradingValley bot",
+                    subtitle:"Let's create the life you want,together.",
+                    image_url:photo,
+                    buttons:[{
+                        type: "web_url",
+                        url: link,
+                        title: "關於我們",
+					    webview_height_ratio: "full" //compact, tall, full
+                    },{
+                        type: "postback",
+                        title: "訂閱管理",
+                        payload: "subscribe"
+                    }]
+				},{
+                    title:"最新文章",
+                    //subtitle:"Let's create the life you want,together.",
+                    image_url:"https://cw1.tw/CW/images/article/201611/article-583561e0eb39a.jpg",
+                    buttons:[{
+                        type: "postback",
+                        title: "瀏覽文章",
+                        payload: "browse"
+                    },{
+                        type: "postback",
+                        title: "訂閱文章",
+                        payload: "subscribe"
+                    }]
+				},{
+                    title:"個股介紹",
+                    //subtitle:"Let's create the life you want,together.",
+                    image_url:"https://cw1.tw/CW/images/article/201612/article-5850de3be54b4.jpg",
+                    buttons:[{
+                        type: "postback",
+                        title: "美股清單",
+                        payload: "browse"
+                   }]
+                }]
+            }
+	    }
+    };
+
+	request({
+		url: "https://graph.facebook.com/v2.6/me/messages",
+		qs : {access_token: token},
+		method: "POST",
+		json: {
+			recipient: {id: sender},
+			message : messageData,
+		}
+	}, function(error, response, body) {
+		if (error) {
+			console.log("sending error")
+		} else if (response.body.error) {
+			//console.log("\n\n\n\n=== response body error ===");
+			console.log(response.body.error);
+		}
+	})
+}
+
+//////////
+//////////
+
+//////////
+/////////
+////////
+////////
+///////
+
+
+//*Haven't call this function*//
+/*
+function greetingText(sender){
+	var messageData = {
+        setting_type:"greeting",
+        greeting:{
+            text:"Hi {{user_first_name}}, 我是TradingValley的智能小助手。我會寄給你每週精選的美股文摘！"
+        }
+    };
+
+	request({
+		url: "https://graph.facebook.com/v2.6/me/thread_settings?",
+		qs : {access_token: token},
+		method: "POST",
+		json: {
+			recipient: {id: sender},
+			message : messageData,
+		}
+	}, function(error, response, body) {
+		if (error) {
+			console.log("sending error")
+		} else if (response.body.error) {
+			//console.log("\n\n\n\n=== response body error ===");
+			console.log(response.body.error);
+		}
+	})
+}
+*/
+
+
+//////
+//////
+
 app.listen(app.get('port'), function() {
 	console.log("running: port",app.get('port')) //app,get('port')
 })
+
