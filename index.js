@@ -73,9 +73,42 @@ app.post('/webhook/', function(req, res) {
 	res.sendStatus(200)
 })
 
+
 ///////
 //////
+function checkStocklist(sender, text){
+   var messageData = {
+       message:{
+           text:"美股清單",
+           "quick_replies":[
+                content_type:"text",
+                title:"Red",
+                image_url:"http://example.com/img/red.png",
+                payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+           ]
+       }
+   };
 
+   request({
+		url: "https://graph.facebook.com/v2.6/me/messages",
+		qs : {access_token: token},
+		method: "POST",
+		json: {
+			recipient: {id: sender},
+			message : messageData,
+		}
+	}, function(error, response, body) {
+		if (error) {
+			console.log("sending error")
+		} else if (response.body.error) {
+			//console.log("\n\n\n\n=== response body error ===");
+			console.log(response.body.error);
+		}
+	})
+}
+
+//////
+//////
 function subscribeAirticle(sender, text){ 
     request({
 		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
