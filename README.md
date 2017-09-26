@@ -14,8 +14,8 @@ git push heroku develop:master
 
 1. Use Heroku: change(A.callback url to heroku B.turn on:Dyno formation) : https://developers.facebook.com/apps/1815975421989220/webhooks/ 
 Herku: https://nameless-hamlet-50172.herokuapp.com/webhook/
-2. Use ngrok: cahge (A.call back url  B.turn on: ngrok http 5000)
-website+ /webhooks
+2. Use ngrok: change (A.call back url  B.turn on: ngrok http 5000)
+website add: /webhooks
 token:FacebookChatBot
 
 

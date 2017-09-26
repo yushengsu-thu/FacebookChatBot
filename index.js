@@ -78,10 +78,6 @@ app.post('/webhook/', function(req, res) {
 //////
 
 function subscribeAirticle(sender, text){ 
-    console.log("1111111111111")
-    console.log("1111111111111")
-    console.log("1111111111111")
-    console.log("1111111111111")
     request({
 		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
 		qs : {access_token: token},
@@ -101,7 +97,7 @@ function subscribeAirticle(sender, text){
         //const content = JSON.stringify(body);
         console.log(content)
 
-        fs.writeFile("subscribeUser.json",content,'utf8', function (err) {
+        fs.writeFile("subscribeUser.json",content,'utf8', function (err){
         if (err) {
             return console.log(err);
         }
@@ -158,12 +154,13 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                     buttons: [{
                         type: "web_url",
                         url: airticle1,
-                        title: "Read this airticle",
+                        title: "閱讀此文章",
                         //messenger_extensions: true,
                         //fallback_url: "https://petersfancyapparel.com/fallback",
                         webview_height_ratio: "full" //compact, tall, full
 	                    },{
-	                        type:"element_share"
+	                        type:"element_share",
+                            title: "分享"
 	                    },{
 	                        type: "postback",
 	                        title: "Back Home",
@@ -178,7 +175,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                     buttons: [{
                         type: "web_url",
                         url: airticle2,
-                        title: "Read this airticle",
+                        title: "閱讀此文章",
                         webview_height_ratio: "full"
                     },{
                         type:"element_share"
@@ -195,7 +192,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                     buttons: [{
                         type: "web_url",
                         url: airticle3,
-                        title: "Read this airticle",
+                        title: "閱讀此文章",
                         webview_height_ratio: "full"
                     },{
                         type:"element_share"
