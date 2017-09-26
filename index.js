@@ -160,6 +160,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                         webview_height_ratio: "full" //compact, tall, full
 	                    },{
 	                        type:"element_share",
+                            elements:[{title:"分享"}],
 	                    },{
 	                        type: "postback",
 	                        title: "回首頁",
