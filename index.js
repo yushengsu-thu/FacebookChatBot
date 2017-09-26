@@ -84,10 +84,14 @@ function checkStocklist(sender, text){
     var messageData = {
         text: "我們列出部分美股如下，你也可以點選‘更多’來找尋你感興趣的公司",
         quick_replies:[{
-            content_type:"text",
-            title:"Red",
-            image_url:"http://example.com/img/red.png",
-            payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            //content_type:"text",
+            //title:"Red",
+            //image_url:"http://example.com/img/red.png",
+            //payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+            "content_type":"text",
+            "title":"Search",
+            "payload":"<POSTBACK_PAYLOAD>",
+            "image_url":"http://example.com/img/red.png"
         }]
     }
 
