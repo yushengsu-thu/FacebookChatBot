@@ -64,6 +64,9 @@ app.post('/webhook/', function(req, res) {
 					case "回首頁":
 						backHome(sender, "Text echo: 回首頁")
 						break;
+					case "美股清單":
+						backHome(sender, "Text echo: 美股清單")
+						break;
 					default:
 						break;
 				}
@@ -77,19 +80,17 @@ app.post('/webhook/', function(req, res) {
 ///////
 //////
 function checkStocklist(sender, text){
-   var messageData = {
-       message:{
-           text:"美股清單",
-           "quick_replies":[
-                content_type:"text",
-                title:"Red",
-                image_url:"http://example.com/img/red.png",
-                payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
-           ]
-       }
-   };
+   
+    var messageData = {
+        quick_replies:[{
+            content_type:"text",
+            title:"Red",
+            image_url:"http://example.com/img/red.png",
+            payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
+        }]
+    }
 
-   request({
+    request({
 		url: "https://graph.facebook.com/v2.6/me/messages",
 		qs : {access_token: token},
 		method: "POST",
@@ -109,7 +110,8 @@ function checkStocklist(sender, text){
 
 //////
 //////
-function subscribeAirticle(sender, text){ 
+function subscribeAirticle(sender, text){
+
     request({
 		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
 		qs : {access_token: token},
