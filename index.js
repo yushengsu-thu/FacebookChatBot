@@ -60,7 +60,7 @@ app.post('/webhook/', function(req, res) {
                         browseAirticle(sender, "Text echo: 瀏覽文章")
                         break;
                     case "訂閱文章": 
-                        subscribeAirticle(sender, "Text echo: 已訂閱")
+                        subscribeAirticle(sender, "Text echo: 訂閱文章")
                         break;
 					case "Back Home":
 						goHome(sender, "Text echo: Back Home")
