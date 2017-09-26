@@ -82,7 +82,7 @@ app.post('/webhook/', function(req, res) {
 function checkStocklist(sender, text){
    
     var messageData = {
-        text: "Here's a quick reply!",
+        text: "我們列出部分美股如下，你也可以點選‘更多’來找尋你感興趣的公司",
         quick_replies:[{
             content_type:"text",
             title:"Red",
