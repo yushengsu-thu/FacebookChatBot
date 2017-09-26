@@ -49,7 +49,7 @@ app.post('/webhook/', function(req, res) {
 			// For messages
 			if (event.message && event.message.text) {
 				var text = event.message.text
-			    backHome(sender, "Text echo: Back Home")
+			    backHome(sender, "Text echo: 回首頁")
                 //mainMenue(sender,"Text echo: mainMenue")
                 //browseAirticle(sender, "Text echo: " + text.substring(0, 100))
 			}
@@ -62,8 +62,8 @@ app.post('/webhook/', function(req, res) {
                     case "訂閱文章": 
                         subscribeAirticle(sender, "Text echo: 訂閱文章")
                         break;
-					case "Back Home":
-						backHome(sender, "Text echo: Back Home")
+					case "回首頁":
+						backHome(sender, "Text echo: 回首頁")
 						break;
 					default:
 						break;
@@ -162,8 +162,8 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
 	                        type:"element_share",
 	                    },{
 	                        type: "postback",
-	                        title: "Back Home",
-	                        payload: "Back Home payload content"
+	                        title: "回首頁",
+	                        payload: "回首頁 payload content"
                   	  }
 										],
                 }, {
@@ -180,8 +180,8 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                         type:"element_share"
                     },{
                         type: "postback",
-                        title: "Back Home",
-                        payload: "Back Home payload content",
+                        title: "回首頁",
+                        payload: "回首頁 payload content",
                     }]
                 },{
                     title: title3,
@@ -197,8 +197,8 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                         type:"element_share"
                     },{
                         type: "postback",
-                        title: "Back Home",
-                        payload: "Back Home payload content",
+                        title: "回首頁",
+                        payload: "回首頁 payload content",
                     }]
                 }]
             }
