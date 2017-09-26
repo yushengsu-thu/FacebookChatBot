@@ -214,7 +214,8 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
         //////
         //Restore data
         const fs = require('fs');
-        const content = JSON.stringify(body);
+        const content = body;
+        //const content = JSON.stringify(body);
         console.log("1111111111111111")
         console.log(content)/////////
         console.log("1111111111111111")
