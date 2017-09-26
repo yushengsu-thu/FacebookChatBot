@@ -82,18 +82,12 @@ app.post('/webhook/', function(req, res) {
 function checkStocklist(sender, text){
    
     var messageData = {
-        attachment:{
-            type:"template",
-            payload:{
         quick_replies:[{
             content_type:"text",
             title:"Red",
             image_url:"http://example.com/img/red.png",
             payload:"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED"
         }]
-        }
-        }
-        }
     }
 
     request({
