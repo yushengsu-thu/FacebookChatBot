@@ -215,6 +215,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
         //Restore data
         const fs = require('fs');
         const content = JSON.stringify(body);
+        console.log(content)/////////
 
         fs.writeFile("userdata.json", content, 'utf8', function (err) {
         if (err) {
