@@ -65,7 +65,7 @@ app.post('/webhook/', function(req, res) {
 						backHome(sender, "Text echo: 回首頁")
 						break;
 					case "美股清單":
-						backHome(sender, "Text echo: 美股清單")
+						checkStocklist(sender, "Text echo: 美股清單")
 						break;
 					default:
 						break;
