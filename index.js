@@ -205,22 +205,22 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     };
 
 
-    //request({
-	//	url: "https://graph.facebook.com/v2.6/me/messages",
-	//	qs : {access_token: token},
-	//	method: "POST",
-    //    json: {
-	//		recipient: {id: sender},
-	//		message : messageData,
-	//	}
-	// }, function(error, response, body) {
-    //    if (error) {
-	//		console.log("sending error")
-	//	} else if (response.body.error) {
-	//		//console.log("\n\n\n\n=== response body error ===");
-	//		console.log(response.body.error);
-	//	}
-	//})
+    request({
+		url: "https://graph.facebook.com/v2.6/me/messages",
+		qs : {access_token: token},
+		method: "POST",
+        json: {
+			recipient: {id: sender},
+			message : messageData,
+		}
+	 }, function(error, response, body) {
+        if (error) {
+			console.log("sending error")
+		} else if (response.body.error) {
+			//console.log("\n\n\n\n=== response body error ===");
+			console.log(response.body.error);
+		}
+	})
 
 
     //Collect the user's data'
