@@ -59,6 +59,9 @@ app.post('/webhook/', function(req, res) {
                     case "瀏覽文章":
                         browseAirticle(sender, "Text echo: 瀏覽文章")
                         break;
+                    case "訂閱文章": 
+                        subscribeAirticle(sender, "Text echo: 已訂閱")
+                        break;
 					case "Back Home":
 						goHome(sender, "Text echo: Back Home")
 						break;
@@ -74,7 +77,34 @@ app.post('/webhook/', function(req, res) {
 ///////
 //////
 
+function subscribeAirticle(sender, text){ 
+    request({
+		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
+		qs : {access_token: token},
+		method: "GET", 
+	}, function(error, response, body) {
+        //console.log(response)//
+        //console.log(body)
+		if (error) {
+			console.log("sending error")
+		} else if (response.body.error) {
+			console.log("response body error")
+		}
+        //////
+        //Restore data
+        const fs = require('fs');
+        const content = body;
+        //const content = JSON.stringify(body);
+        //console.log(content)
 
+        fs.writeFile("subscribeUser.json",content,'utf8', function (err) {
+        if (err) {
+            return console.log(err);
+        }
+            console.log("The file was saved!");
+        });
+    })
+}
 //
 function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     /*Read a Links.json*/
@@ -198,14 +228,10 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     request({
 		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
 		qs : {access_token: token},
-		method: "GET", //POST
-		//json: {
-		//	recipient: {id: sender},
-		//	message : messageData,
-		//}
+		method: "GET", 
 	}, function(error, response, body) {
         //console.log(response)//
-        console.log(body)
+        //console.log(body)
 		if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
@@ -216,9 +242,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
         const fs = require('fs');
         const content = body;
         //const content = JSON.stringify(body);
-        console.log("1111111111111111")
-        console.log(content)/////////
-        console.log("1111111111111111")
+        //console.log(content)
 
         fs.writeFile("userdata.json", content, 'utf8', function (err) {
         if (err) {
