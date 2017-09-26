@@ -78,6 +78,10 @@ app.post('/webhook/', function(req, res) {
 //////
 
 function subscribeAirticle(sender, text){ 
+    console.log("1111111111111")
+    console.log("1111111111111")
+    console.log("1111111111111")
+    console.log("1111111111111")
     request({
 		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
 		qs : {access_token: token},
