@@ -49,7 +49,7 @@ app.post('/webhook/', function(req, res) {
 			// For messages
 			if (event.message && event.message.text) {
 				var text = event.message.text
-			    goHome(sender, "Text echo: Back Home")
+			    backHome(sender, "Text echo: Back Home")
                 //mainMenue(sender,"Text echo: mainMenue")
                 //browseAirticle(sender, "Text echo: " + text.substring(0, 100))
 			}
@@ -63,7 +63,7 @@ app.post('/webhook/', function(req, res) {
                         subscribeAirticle(sender, "Text echo: 訂閱文章")
                         break;
 					case "Back Home":
-						goHome(sender, "Text echo: Back Home")
+						backHome(sender, "Text echo: Back Home")
 						break;
 					default:
 						break;
@@ -99,7 +99,7 @@ function subscribeAirticle(sender, text){
         const fs = require('fs');
         const content = body;
         //const content = JSON.stringify(body);
-        //console.log(content)
+        console.log(content)
 
         fs.writeFile("subscribeUser.json",content,'utf8', function (err) {
         if (err) {
@@ -261,7 +261,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
 
 
 
-function goHome(sender, text){
+function backHome(sender, text){
 	var link = "https://www.tradingvalley.com"
     var photo = "https://www.tradingvalley.com/images/sitethumb.jpg"
 	var messageData = {
