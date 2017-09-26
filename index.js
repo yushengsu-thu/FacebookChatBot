@@ -34,14 +34,13 @@ app.get('/webhook/', function(req, res) {
 //!!!Rewrite
 app.post('/webhook/', function(req, res) {
 	var event_entry = req.body.entry[0];
-	////console.log("\n\n\n\nevent_entry = ");
+	//console.log("\n\n\n\nevent_entry = ");
 	//console.log(event_entry);
 	// Subscribes to Message Received events
 	if(event_entry.messaging){
 		var messaging_events = event_entry.messaging;
 		//console.log("\n\n\n\n=== messaging_events ===");
 		//console.log(messaging_events);
-        
 
 		for (var i = 0; i < messaging_events.length; i++) {
 			var event = messaging_events[i];
@@ -90,13 +89,15 @@ function subscribeAirticle(sender, text){
 		} else if (response.body.error) {
 			console.log("response body error")
 		}
-        //////
-        //Restore data
+        /*Restore data*/
         const fs = require('fs');
         const content = body;
         //const content = JSON.stringify(body);
         console.log(content)
-
+        
+        /*Check the user if exist in the list*/
+       /*====================================*/ 
+        /*Write in*/
         fs.writeFile("subscribeUser.json",content,'utf8', function (err){
         if (err) {
             return console.log(err);
@@ -105,7 +106,8 @@ function subscribeAirticle(sender, text){
         });
     })
 }
-//
+
+
 function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     /*Read a Links.json*/
     /*Synchronous version*/
@@ -113,10 +115,8 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
 
     /*Asynchronous version*/
-    ////////////////////
-    ///////////////////
-	//var messageData = {text: text}
-	////
+	/*=====================*/
+    //var messageData = {text: text}
     var parsedJSON = require('./links.json');
     function pickRandomProperty(obj) {
         var result;
@@ -139,7 +139,6 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     var airticle3 = link3[0]
     var photo3 = link3[1]
     /////
-    /////fix
     ////
     var messageData = {
         attachment: {
@@ -206,22 +205,22 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     };
 
 
-    request({
-		url: "https://graph.facebook.com/v2.6/me/messages",
-		qs : {access_token: token},
-		method: "POST",
-        json: {
-			recipient: {id: sender},
-			message : messageData,
-		}
-	 }, function(error, response, body) {
-        if (error) {
-			console.log("sending error")
-		} else if (response.body.error) {
-			//console.log("\n\n\n\n=== response body error ===");
-			console.log(response.body.error);
-		}
-	})
+    //request({
+	//	url: "https://graph.facebook.com/v2.6/me/messages",
+	//	qs : {access_token: token},
+	//	method: "POST",
+    //    json: {
+	//		recipient: {id: sender},
+	//		message : messageData,
+	//	}
+	// }, function(error, response, body) {
+    //    if (error) {
+	//		console.log("sending error")
+	//	} else if (response.body.error) {
+	//		//console.log("\n\n\n\n=== response body error ===");
+	//		console.log(response.body.error);
+	//	}
+	//})
 
 
     //Collect the user's data'
@@ -230,15 +229,12 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
 		qs : {access_token: token},
 		method: "GET", 
 	}, function(error, response, body) {
-        //console.log(response)//
-        //console.log(body)
 		if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
 			console.log("response body error")
 		}
-        //////
-        //Restore data
+        /*Restore data*/
         const fs = require('fs');
         const content = body;
         //const content = JSON.stringify(body);
