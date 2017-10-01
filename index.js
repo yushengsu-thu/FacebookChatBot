@@ -91,23 +91,6 @@ function checkStocklist(sender, text){
             image_url:"https://stockfeel-1.azureedge.net/wp-content/themes/stockfeel_2016_theme/images/stock_company/usa/logo_stock-usa-3m.svg",
             payload:"3M"
         }],
-
-        ////
-        "attachment":{
-  "type":"template",
-  "payload":{
-    "template_type":"button",
-    "text":"your text",
-    "buttons":[
-      {
-        "type":"postback",
-        "title":"Confirm",
-        "payload":"USER_DEFINED_PAYLOAD"
-      }
-    ]
-  }
- }
-        /////
     }
 
     request({
