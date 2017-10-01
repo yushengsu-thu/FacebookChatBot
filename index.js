@@ -83,8 +83,8 @@ function checkStocklist(sender, text){
     //var brands_ans_photos = require('fs');
     //var brands_ans_photos = JSON.parse(fs.readFileSync('brands_ans_photos.json', 'utf8'));
 
-    var messageData = {
-        //text: "我們列出部分美股如下，你也可以點選‘更多’來找尋你感興趣的公司",
+    var message = {
+        text: "我們列出部分美股如下，你也可以點選‘更多’來找尋你感興趣的公司",
         quick_replies:[{
             content_type:"text",
             title:"3M",
@@ -99,7 +99,7 @@ function checkStocklist(sender, text){
 		method: "POST",
 		json: {
 			recipient: {id: sender},
-			message : messageData,
+			message : message,
 		}
 	}, function(error, response, body) {
 		if (error) {
