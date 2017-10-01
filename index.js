@@ -88,7 +88,7 @@ function checkStocklist(sender, text){
         quick_replies:[{
             content_type:"text",
             title:"3M",
-            image_url:"https://stockfeel-1.azureedge.net/wp-content/themes/stockfeel_2016_theme/images/stock_company/usa/logo_stock-usa-3m.svg",
+            //image_url:"https://stockfeel-1.azureedge.net/wp-content/themes/stockfeel_2016_theme/images/stock_company/usa/logo_stock-usa-3m.svg",
             payload:"3M"
         }]
     }
