@@ -90,6 +90,11 @@ function checkStocklist(sender, text){
             title:"3M",
             image_url:"https://stockfeel-1.azureedge.net/wp-content/themes/stockfeel_2016_theme/images/stock_company/usa/logo_stock-usa-3m.svg",
             payload:"3M"
+        },{
+            content_type:"text",
+            title:"A&F",
+            image_url:"https://stockfeel-1.azureedge.net/wp-content/themes/stockfeel_2016_theme/images/stock_company/usa/logo_stock-usa-3m.svg",
+            payload:"A&F"
         }],
     }
 
