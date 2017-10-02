@@ -82,7 +82,7 @@ app.post('/webhook/', function(req, res) {
 function checkStocklist(sender, text){
     var fs = require('fs');
     var brands_ans_photos = JSON.parse(fs.readFileSync('brands_and_photos.json', 'utf8'));
-    console.log(brands_ans_photos)//
+    console.log(brands_ans_photos[0])//
 
     var messageData = {
         text: "我們列出部分美股如下，你也可以點選‘更多’來找尋你感興趣的公司",
