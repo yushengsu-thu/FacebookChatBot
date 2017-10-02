@@ -81,12 +81,21 @@ app.post('/webhook/', function(req, res) {
 //////
 function checkStocklist(sender, text){
     var fs = require('fs');
-    var brands_ans_photos = JSON.parse(fs.readFileSync('brands_and_photos.json', 'utf8'));
-    console.log(brands_ans_photos[0])//
+    var brands_and_photos = JSON.parse(fs.readFileSync('brands_and_photos.json', 'utf8'));
+    
+    var data=[];
+    for(var i=0;i<brands_and_photos.length;i++){
+        dict.push({ 
+            content_type:"text",
+            title:brands_and_photos[i].key,
+            image_url:brands_and_photos[i].value,
+            payload:"brands"
+        })
+    }
 
     var messageData = {
         text: "我們列出部分美股如下，你也可以點選‘更多’來找尋你感興趣的公司",
-        quick_replies:[{
+        quick_replies:data/*[{
             content_type:"text",
             title:"3M",
             image_url:"https://stockfeel-1.azureedge.net/wp-content/themes/stockfeel_2016_theme/images/stock_company/usa/logo_stock-usa-3m.svg",
@@ -96,7 +105,7 @@ function checkStocklist(sender, text){
             title:"A&F",
             image_url:"https://stockfeel-1.azureedge.net/wp-content/themes/stockfeel_2016_theme/images/stock_company/usa/logo_stock-usa-3m.svg",
             payload:"A&F"
-        }],
+        }]*/,
     }
 
     request({
