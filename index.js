@@ -164,7 +164,7 @@ function subscribeAirticle(sender, text){
             responseType:"application/json"
         }).then(function(response) {
            console.log(response) 
-        })
+        });
         //
     })
 }
