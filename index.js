@@ -81,22 +81,14 @@ app.post('/webhook/', function(req, res) {
 //////
 function checkStocklist(sender, text){
     var fs = require('fs');
-    var brands_and_photos = JSON.parse(fs.readFileSync('brands_and_photos.json', 'utf8'));
+    var brands_and_photos = JSON.parse(fs.readFileSync('brands_and_photos_test.json', 'utf8'));
      
     var data=[]; 
-    //for(var key in brands_and_photos){
-    //    console.log()
-        /*data.push({
-            comoany:,
-            link:
-        });*/
-    //}
-    
-    for(var key in brands_and_photos){
+    for(var key in brands_and_photos_test){
         data.push({ 
             content_type:"text",
             title:key,
-            image_url:brands_and_photos[key],
+            image_url:brands_and_photos_test[key],
             payload:"brands"
         })
     }
