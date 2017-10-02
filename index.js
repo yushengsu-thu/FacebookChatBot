@@ -92,13 +92,13 @@ function checkStocklist(sender, text){
         });*/
     //}
     
-    for(var key,value in brands_and_photos.iteritems()){
+    for(var key in brands_and_photos){
         console.log(key)
         console.log(value)
         data.push({ 
             content_type:"text",
             title:key,
-            image_url:value,
+            image_url:brands_and_photos[key],
             payload:"brands"
         })
     }
