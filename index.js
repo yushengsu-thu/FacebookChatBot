@@ -93,8 +93,6 @@ function checkStocklist(sender, text){
     //}
     
     for(var key in brands_and_photos){
-        console.log(key)
-        console.log(value)
         data.push({ 
             content_type:"text",
             title:key,
