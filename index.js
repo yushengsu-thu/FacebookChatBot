@@ -83,7 +83,7 @@ function checkStocklist(sender, text){
     var fs = require('fs');
     var brands_and_photos = JSON.parse(fs.readFileSync('brands_and_photos.json', 'utf8'));
      
-    //var data=[]; 
+    var data=[]; 
     //for(var key in brands_and_photos){
     //    console.log()
         /*data.push({
