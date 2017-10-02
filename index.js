@@ -102,12 +102,7 @@ function checkStocklist(sender, text){
             title:"3M",
             image_url:"https://stockfeel-1.azureedge.net/wp-content/themes/stockfeel_2016_theme/images/stock_company/usa/logo_stock-usa-3m.svg",
             payload:"3M"
-        },{
-            content_type:"text",
-            title:"A&F",
-            image_url:"https://stockfeel-1.azureedge.net/wp-content/themes/stockfeel_2016_theme/images/stock_company/usa/logo_stock-usa-3m.svg",
-            payload:"A&F"
-        }]*/,
+        }*/,
     }
 
     request({
@@ -151,14 +146,30 @@ function subscribeAirticle(sender, text){
         console.log(content)
         
         /*Check the user if exist in the list*/
-       /*====================================*/ 
+        /*====================================*/ 
         /*Write in*/
-        fs.writeFile("subscribeUser.json",content,'utf8', function (err){
-        if (err) {
-            return console.log(err);
-        }
-            console.log("The file was saved!");
-        });
+        //fs.writeFile("subscribeUser.json",content,'utf8', function (err){
+        //if (err) {
+        //    return console.log(err);
+        //}
+        //    console.log("The file was saved!");
+        //});
+        
+    request({
+		url: "http://192.168.1.131/api/v1/warehouse/data/c95e3700d2f2c592a008c39fa640afec42a8cb51462178700cdbe1cf95f6455a160b060b2e549db31e08ff01c061a75f20d4bce2734c824a3441040b514d2782",
+		method: "POST",
+		json: {
+			recipient: {id: sender},
+			message : content,
+		}
+	}, function(error, response, body) {
+		if (error) {
+			console.log("sending error")
+		} else if (response.body.error) {
+			console.log(response.body.error);
+		}
+	});
+    //// // 
     })
 }
 
