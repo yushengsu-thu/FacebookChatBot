@@ -82,28 +82,28 @@ app.post('/webhook/', function(req, res) {
 function checkStocklist(sender, text){
     var fs = require('fs');
     var brands_and_photos = JSON.parse(fs.readFileSync('brands_and_photos.json', 'utf8'));
-    
-    var data=[]; 
-    for(var i=0;i<brands_and_photos.length;i++){
-        console.log(brands_and_photos[i])
+     
+    //var data=[]; 
+    //for(var key in brands_and_photos){
+    //    console.log()
         /*data.push({
             comoany:,
             link:
         });*/
-    }
+    //}
     
-    for(var i=0;i<brands_and_photos.length;i++){
-        console.log(brands_and_photos[i].key)
-        console.log(brands_and_photos[i].value)
+    for(var key,value in brands_and_photos){
+        console.log(key)
+        console.log(value)
         data.push({ 
             content_type:"text",
-            title:brands_and_photos[i].key,
-            image_url:brands_and_photos[i].value,
+            title:key,
+            image_url:value,
             payload:"brands"
         })
     }
         
-    console.log(data)
+    //console.log(data)
 
     var messageData = {
         text: "我們列出部分美股如下，你也可以點選‘更多’來找尋你感興趣的公司",
