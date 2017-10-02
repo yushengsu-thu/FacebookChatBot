@@ -4,7 +4,7 @@
   "description": "A Facebook Messenger bot built to work with heroku",
   "main": "index.js",
   "scripts": {
-		"start": "node index.js",
+    "start": "node index.js",
     "test": "hahaha"
   },
   "repository": {
@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/brandonbrown/fb-bot-heroku#readme",
   "dependencies": {
+    "axios": "^0.16.2",
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "request": "^2.78.0"

@@ -155,24 +155,28 @@ function subscribeAirticle(sender, text){
         //    console.log("The file was saved!");
         //});
         
-    request({
-		url: "http://192.168.1.131/api/v1/warehouse/data/c95e3700d2f2c592a008c39fa640afec42a8cb51462178700cdbe1cf95f6455a160b060b2e549db31e08ff01c061a75f20d4bce2734c824a3441040b514d2782",
-		method: "POST",
-		json: {
-			recipient: {id: sender},
-			message : content,
-		}
-	}, function(error, response, body) {
-		if (error) {
-			console.log("sending error")
-		} else if (response.body.error) {
-			console.log(response.body.error);
-		}
-	});
-    //// // 
+        //
+        axios({
+            method: 'post',
+            url: 'http://192.168.1.131/api/v1/warehouse/data/',
+            data:content,
+            headers: {Pragma-T: "e8c62ed49e57dd734651fad21bfdaf40"},
+            responseType:"application/json"
+        }).then(function(response) {
+           console.log(response) 
+        };
+        //
     })
 }
-
+//////
+//axios({
+//    method: '',
+//    headers: {},
+//    data: {}
+//})).then(data => {
+//    data
+//}))
+//////
 
 function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     /*Read a Links.json*/
