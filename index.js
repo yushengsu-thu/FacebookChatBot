@@ -85,7 +85,7 @@ function checkStocklist(sender, text){
     
     var data=[];
     for(var i=0;i<brands_and_photos.length;i++){
-        dict.push({ 
+        data.push({ 
             content_type:"text",
             title:brands_and_photos[i].key,
             image_url:brands_and_photos[i].value,
