@@ -80,7 +80,7 @@ app.post('/webhook/', function(req, res) {
 ///////
 //////
 function checkStocklist(sender, text){
-    var brands_ans_photos = require('fs');
+    var fs = require('fs');
     var brands_ans_photos = JSON.parse(fs.readFileSync('brands_ans_photos.json', 'utf8'));
     console.log(brands_ans_photos)//
 
