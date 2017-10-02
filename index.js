@@ -101,7 +101,7 @@ function checkStocklist(sender, text){
         })
     }
         
-    //console.log(data)
+    console.log(data)
 
     var messageData = {
         text: "我們列出部分美股如下，你也可以點選‘更多’來找尋你感興趣的公司",
