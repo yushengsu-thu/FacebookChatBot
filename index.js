@@ -92,7 +92,7 @@ function checkStocklist(sender, text){
         });*/
     //}
     
-    for(var key,value in brands_and_photos){
+    for(var key,value in brands_and_photos.iteritems()){
         console.log(key)
         console.log(value)
         data.push({ 
