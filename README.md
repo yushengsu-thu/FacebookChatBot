@@ -1,4 +1,5 @@
-Facebook ChatBot
+Facebook ChatBot:
+
 Get a Facebook Messenger Bot up and running with Heroku
 
 url: https://nameless-hamlet-50172.herokuapp.com/
@@ -12,10 +13,14 @@ git push heroku master
 Branch Develop:
 git push heroku develop:master
 
-1. Use Heroku: change(A.callback url to heroku B.turn on:Dyno formation) : https://developers.facebook.com/apps/1815975421989220/webhooks/ 
-Herku: https://nameless-hamlet-50172.herokuapp.com/webhook/
-2. Use ngrok: change (A.call back url  B.turn on: ngrok http 5000)
+1. Use Heroku: change(A.Heroku website turn on:Setting ==> Dyno formation 
+B. <Facebook dev center> ==> Edit Page Subscription==> Callback URL) 
+https://nameless-hamlet-50172.herokuapp.com/webhook/
+
+2. Use ngrok: change (A.turn on: ngrok http 5000 B.npm start C.Reset webhooks <Facebook dev center> ==> Edit Page Subscription ==> 
+Callback URL)
 website add: /webhooks
 token:FacebookChatBot
 
+Verify Token: FacebookChatBot
 

@@ -132,8 +132,6 @@ function subscribeAirticle(sender, text){
 		qs : {access_token: token},
 		method: "GET", 
 	}, function(error, response, body) {
-        //console.log(response)//
-        //console.log(body)
 		if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
@@ -143,7 +141,7 @@ function subscribeAirticle(sender, text){
         const fs = require('fs');
         const content = body;
         //const content = JSON.stringify(body);
-        console.log(content)
+        console.log(typeof(content))
         
         /*Check the user if exist in the list*/
         /*====================================*/ 
@@ -160,8 +158,9 @@ function subscribeAirticle(sender, text){
             method: 'post',
             url: 'http://192.168.1.131/api/v1/warehouse/data/',
             data:content,
-            headers: {'X-Custom-Header':"e8c62ed49e57dd734651fad21bfdaf40"},
-            //headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+            //data:{content.gender},
+            //headers: {'X-Custom-Header':"e8c62ed49e57dd734651fad21bfdaf40"},
+            headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
             responseType:"application/json"
         }).then(function(response) {
            console.log(response) 
