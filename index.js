@@ -140,8 +140,9 @@ function subscribeAirticle(sender, text){
         /*Restore data*/
         const fs = require('fs');
         const content = body;
+        content=dict(content)
         //const content = JSON.stringify(body);
-        console.log(typeof(content))
+        //console.log(content)
         
         /*Check the user if exist in the list*/
         /*====================================*/ 
@@ -158,8 +159,6 @@ function subscribeAirticle(sender, text){
             method: 'post',
             url: 'http://192.168.1.131/api/v1/warehouse/data/',
             data:content,
-            //data:{content.gender},
-            //headers: {'X-Custom-Header':"e8c62ed49e57dd734651fad21bfdaf40"},
             headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
             responseType:"application/json"
         }).then(function(response) {
