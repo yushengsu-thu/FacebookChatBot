@@ -160,7 +160,8 @@ function subscribeAirticle(sender, text){
             method: 'post',
             url: 'http://192.168.1.131/api/v1/warehouse/data/',
             data:content,
-            headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+            headers: {'X-Custom-Header':"e8c62ed49e57dd734651fad21bfdaf40"},
+            //headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
             responseType:"application/json"
         }).then(function(response) {
            console.log(response) 
