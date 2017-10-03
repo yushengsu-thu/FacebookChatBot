@@ -1,5 +1,5 @@
 'use strict'
-
+const axios = require('axios')
 const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
@@ -162,9 +162,9 @@ function subscribeAirticle(sender, text){
             data:content,
             headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
             responseType:"application/json"
-        });/*.then(function(response) {
+        }).then(function(response) {
            console.log(response) 
-        });*/
+        });
        //////////
     })
 }
