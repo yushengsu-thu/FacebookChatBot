@@ -139,20 +139,26 @@ function subscribeAirticle(sender, text){
 		}
         /*Restore data*/
         const fs = require('fs');
-        const content = body;
-        content=dict(content)
+        //const content = body;
         //const content = JSON.stringify(body);
-        //console.log(content)
-        
+        const content = JSON.parse(body);
+        console.log(typeof body) 
+        console.log("==========================")
         /*Check the user if exist in the list*/
+        /*
+        axios({
+            method:'get',
+            url:'http://192.168.1.131/api/v1/warehouse/data/', //要加上key
+            //responseType:'application/json'
+            headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+        }).then(function(response) {
+            //console.log(response)
+        }).catch(error=>{
+            //console.log(response)
+        });
+        console.log("==========================")
+        */
         /*====================================*/ 
-        /*Write in*/
-        //fs.writeFile("subscribeUser.json",content,'utf8', function (err){
-        //if (err) {
-        //    return console.log(err);
-        //}
-        //    console.log("The file was saved!");
-        //});
         
         /////////
         axios({
@@ -163,19 +169,11 @@ function subscribeAirticle(sender, text){
             responseType:"application/json"
         }).then(function(response) {
            console.log(response) 
+           console.log("User data was saved!");
         });
        //////////
     })
 }
-//////
-//axios({
-//    method: '',
-//    headers: {},
-//    data: {}
-//})).then(data => {
-//    data
-//}))
-//////
 
 function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     /*Read a Links.json*/
@@ -306,7 +304,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
         /*Restore data*/
         const fs = require('fs');
         const content = body;
-        //const content = JSON.stringify(body);
+        //const content = JSON.parse(body);
         //console.log(content)
 
         fs.writeFile("userdata.json", content, 'utf8', function (err) {
