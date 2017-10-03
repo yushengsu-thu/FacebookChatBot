@@ -19,7 +19,7 @@ app.get('/', function(req, res) {
 	res.send("Hi I am a chatbot")
 })
 
-var token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYNfpdxHb3C7ZCD7ZCY2CGZBCApLChUalh4z6zifVcNjtn0kE9K1DQ9kABZBZAZCy1ZCu2sFHjixbehr4lrQ4l9se8FfPfBqkWRwNHZCt3jwHHnhwKZAcGWwZBffHwgIR"
+const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYNfpdxHb3C7ZCD7ZCY2CGZBCApLChUalh4z6zifVcNjtn0kE9K1DQ9kABZBZAZCy1ZCu2sFHjixbehr4lrQ4l9se8FfPfBqkWRwNHZCt3jwHHnhwKZAcGWwZBffHwgIR"
 
 // Facebook
 
@@ -47,8 +47,22 @@ app.post('/webhook/', function(req, res) {
 			var sender = event.sender.id;
 			// For messages
 			if (event.message && event.message.text) {
-				var text = event.message.text
-			    backHome(sender, "Text echo: 回首頁")
+				switch (event.message.text) {
+                    case "更多1":
+						checkStocklist(sender,"Text echo: 更多公司資訊",1)
+                        break;
+                    case "更多2":
+						checkStocklist(sender,"Text echo: 更多公司資訊",2)
+                        break;
+                    case "更多3":
+						checkStocklist(sender,"Text echo: 更多公司資訊",3)
+                        break;
+                    default:
+			            backHome(sender, "Text echo: 回首頁")
+                        break;
+                }
+				//var text = event.message.text
+			    //backHome(sender, "Text echo: 回首頁")
                 //mainMenue(sender,"Text echo: mainMenue")
                 //browseAirticle(sender, "Text echo: " + text.substring(0, 100))
 			}
@@ -65,7 +79,7 @@ app.post('/webhook/', function(req, res) {
 						backHome(sender, "Text echo: 回首頁")
 						break;
 					case "美股清單":
-						checkStocklist(sender, "Text echo: 美股清單")
+						checkStocklist(sender, "Text echo: 美股清單", 0)
 						break;
 					default:
 						break;
@@ -79,30 +93,36 @@ app.post('/webhook/', function(req, res) {
 
 ///////
 //////
-function checkStocklist(sender, text){
+function checkStocklist(sender, text, part){
     var fs = require('fs');
-    var brands_and_photos_test = JSON.parse(fs.readFileSync('brands_and_photos_test.json', 'utf8'));
+    var brands_and_photos = JSON.parse(fs.readFileSync(String('brands_and_photos_p'+part+'.json'), 'utf8'));
      
     var data=[]; 
-    for(var key in brands_and_photos_test){
+    for(var key in brands_and_photos){
         data.push({ 
             content_type:"text",
             title:key,
-            image_url:brands_and_photos_test[key],
+            image_url:brands_and_photos[key],
             payload:"brands"
         })
+    } 
+    //更多 選項
+    data.push({
+        content_type:"text",
+        title:String("更多"+parseInt(part+1)), //use payload to change page
+        payload:String(part)
+    })
+    //console.log(data)
+    var conversation;
+    if(part!=0){
+        conversation="更多公司資訊";    
     }
-        
-    console.log(data)
-
+    else{
+        conversation="我們列出部分美股如下，你也可以點選‘更多’來找尋你感興趣的公司" 
+    }
     var messageData = {
-        text: "我們列出部分美股如下，你也可以點選‘更多’來找尋你感興趣的公司",
-        quick_replies:data/*[{
-            content_type:"text",
-            title:"3M",
-            image_url:"https://stockfeel-1.azureedge.net/wp-content/themes/stockfeel_2016_theme/images/stock_company/usa/logo_stock-usa-3m.svg",
-            payload:"3M"
-        }*/,
+        text: conversation,
+        quick_replies:data
     }
 
     request({
@@ -117,11 +137,11 @@ function checkStocklist(sender, text){
 		if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
-			//console.log("\n\n\n\n=== response body error ===");
 			console.log(response.body.error);
 		}
 	})
 }
+//////
 
 //////
 //////
@@ -142,7 +162,7 @@ function subscribeAirticle(sender, text){
         //const content = body;
         //const content = JSON.stringify(body);
         const content = JSON.parse(body);
-        console.log(typeof body) 
+        //console.log(typeof body) 
         console.log("==========================")
         /*Check the user if exist in the list*/
         /*
