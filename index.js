@@ -162,9 +162,9 @@ function subscribeAirticle(sender, text){
             data:content,
             headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
             responseType:"application/json"
-        }).then(function(response) {
-           //console.log(response) 
-        });
+        });/*.then(function(response) {
+           console.log(response) 
+        });*/
        //////////
     })
 }
