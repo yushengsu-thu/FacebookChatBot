@@ -47,18 +47,25 @@ app.post('/webhook/', function(req, res) {
 			var sender = event.sender.id;
 			// For messages
 			if (event.message && event.message.text) {
+                //console.log(event.message.text)
 				switch (event.message.text) {
-                    case "更多1":
-						checkStocklist(sender,"Text echo: 更多公司資訊",1)
+                    case "更多":
+				        //console.log(event.message.quick_reply.payload) 
+				        switch (event.message.quick_reply.payload) {
+                            case '1':
+                                checkStocklist(sender,"Text echo: 更多公司資訊",1)
+                                break;
+                            case '2':
+                                checkStocklist(sender,"Text echo: 更多公司資訊",2)
+                                break;
+                            case '3':
+                                checkStocklist(sender,"Text echo: 更多公司資訊",3)
+                                break;
+                            default:
+                                break;
+                        }
                         break;
-                    case "更多2":
-						checkStocklist(sender,"Text echo: 更多公司資訊",2)
-                        break;
-                    case "更多3":
-						checkStocklist(sender,"Text echo: 更多公司資訊",3)
-                        break;
-                    default:
-			            backHome(sender, "Text echo: 回首頁")
+                    default:                                                                                        backHome(sender, "Text echo: 回首頁")
                         break;
                 }
 				//var text = event.message.text
@@ -109,8 +116,9 @@ function checkStocklist(sender, text, part){
     //更多 選項
     data.push({
         content_type:"text",
-        title:String("更多"+parseInt(part+1)), //use payload to change page
-        payload:String(part)
+        //title:String("更多"+parseInt(part+1)), //use payload to change page
+        title:"更多", //use payload to change page
+        payload:String(part+1)
     })
     //console.log(data)
     var conversation;
@@ -118,7 +126,7 @@ function checkStocklist(sender, text, part){
         conversation="更多公司資訊";    
     }
     else{
-        conversation="我們列出部分美股如下，你也可以點選‘更多’來找尋你感興趣的公司" 
+        conversation="我們列出部分美股如下，你也可以點選'更多'來找尋你感興趣的公司" 
     }
     var messageData = {
         text: conversation,
