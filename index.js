@@ -1,5 +1,5 @@
 'use strict'
-
+const axios = require('axios')
 const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
@@ -19,7 +19,7 @@ app.get('/', function(req, res) {
 	res.send("Hi I am a chatbot")
 })
 
-var token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYNfpdxHb3C7ZCD7ZCY2CGZBCApLChUalh4z6zifVcNjtn0kE9K1DQ9kABZBZAZCy1ZCu2sFHjixbehr4lrQ4l9se8FfPfBqkWRwNHZCt3jwHHnhwKZAcGWwZBffHwgIR"
+const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYNfpdxHb3C7ZCD7ZCY2CGZBCApLChUalh4z6zifVcNjtn0kE9K1DQ9kABZBZAZCy1ZCu2sFHjixbehr4lrQ4l9se8FfPfBqkWRwNHZCt3jwHHnhwKZAcGWwZBffHwgIR"
 
 // Facebook
 
@@ -47,8 +47,29 @@ app.post('/webhook/', function(req, res) {
 			var sender = event.sender.id;
 			// For messages
 			if (event.message && event.message.text) {
-				var text = event.message.text
-			    backHome(sender, "Text echo: 回首頁")
+                //console.log(event.message.text)
+				switch (event.message.text) {
+                    case "更多":
+				        //console.log(event.message.quick_reply.payload) 
+				        switch (event.message.quick_reply.payload) {
+                            case '1':
+                                checkStocklist(sender,"Text echo: 更多公司資訊",1)
+                                break;
+                            case '2':
+                                checkStocklist(sender,"Text echo: 更多公司資訊",2)
+                                break;
+                            case '3':
+                                checkStocklist(sender,"Text echo: 更多公司資訊",3)
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:                                                                                        backHome(sender, "Text echo: 回首頁")
+                        break;
+                }
+				//var text = event.message.text
+			    //backHome(sender, "Text echo: 回首頁")
                 //mainMenue(sender,"Text echo: mainMenue")
                 //browseAirticle(sender, "Text echo: " + text.substring(0, 100))
 			}
@@ -65,7 +86,7 @@ app.post('/webhook/', function(req, res) {
 						backHome(sender, "Text echo: 回首頁")
 						break;
 					case "美股清單":
-						checkStocklist(sender, "Text echo: 美股清單")
+						checkStocklist(sender, "Text echo: 美股清單", 0)
 						break;
 					default:
 						break;
@@ -79,18 +100,37 @@ app.post('/webhook/', function(req, res) {
 
 ///////
 //////
-function checkStocklist(sender, text){
-    var brands_ans_photos = require('fs');
-    var brands_ans_photos = JSON.parse(fs.readFileSync('brands_ans_photos.json', 'utf8'));
-
-    var messageData = {
-        text: "我們列出部分美股如下，你也可以點選‘更多’來找尋你感興趣的公司",
-        quick_replies:[{
+function checkStocklist(sender, text, part){
+    var fs = require('fs');
+    var brands_and_photos = JSON.parse(fs.readFileSync(String('brands_and_photos_p'+part+'.json'), 'utf8'));
+     
+    var data=[]; 
+    for(var key in brands_and_photos){
+        data.push({ 
             content_type:"text",
-            title:"3M",
-            image_url:"https://stockfeel-1.azureedge.net/wp-content/themes/stockfeel_2016_theme/images/stock_company/usa/logo_stock-usa-3m.svg",
-            payload:"3M"
-        }]
+            title:key,
+            image_url:brands_and_photos[key],
+            payload:"brands"
+        })
+    } 
+    //更多 選項
+    data.push({
+        content_type:"text",
+        //title:String("更多"+parseInt(part+1)), //use payload to change page
+        title:"更多", //use payload to change page
+        payload:String(part+1)
+    })
+    //console.log(data)
+    var conversation;
+    if(part!=0){
+        conversation="更多公司資訊";    
+    }
+    else{
+        conversation="我們列出部分美股如下，你也可以點選'更多'來找尋你感興趣的公司" 
+    }
+    var messageData = {
+        text: conversation,
+        quick_replies:data
     }
 
     request({
@@ -105,11 +145,11 @@ function checkStocklist(sender, text){
 		if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
-			//console.log("\n\n\n\n=== response body error ===");
 			console.log(response.body.error);
 		}
 	})
 }
+//////
 
 //////
 //////
@@ -120,8 +160,6 @@ function subscribeAirticle(sender, text){
 		qs : {access_token: token},
 		method: "GET", 
 	}, function(error, response, body) {
-        //console.log(response)//
-        //console.log(body)
 		if (error) {
 			console.log("sending error")
 		} else if (response.body.error) {
@@ -129,22 +167,41 @@ function subscribeAirticle(sender, text){
 		}
         /*Restore data*/
         const fs = require('fs');
-        const content = body;
+        //const content = body;
         //const content = JSON.stringify(body);
-        console.log(content)
-        
+        const content = JSON.parse(body);
+        //console.log(typeof body) 
+        console.log("==========================")
         /*Check the user if exist in the list*/
-       /*====================================*/ 
-        /*Write in*/
-        fs.writeFile("subscribeUser.json",content,'utf8', function (err){
-        if (err) {
-            return console.log(err);
-        }
-            console.log("The file was saved!");
+        /*
+        axios({
+            method:'get',
+            url:'http://192.168.1.131/api/v1/warehouse/data/', //要加上key
+            //responseType:'application/json'
+            headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+        }).then(function(response) {
+            //console.log(response)
+        }).catch(error=>{
+            //console.log(response)
         });
+        console.log("==========================")
+        */
+        /*====================================*/ 
+        
+        /////////
+        axios({
+            method: 'post',
+            url: 'http://192.168.1.131/api/v1/warehouse/data/',
+            data:content,
+            headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+            responseType:"application/json"
+        }).then(function(response) {
+           console.log(response) 
+           console.log("User data was saved!");
+        });
+       //////////
     })
 }
-
 
 function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     /*Read a Links.json*/
@@ -275,7 +332,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
         /*Restore data*/
         const fs = require('fs');
         const content = body;
-        //const content = JSON.stringify(body);
+        //const content = JSON.parse(body);
         //console.log(content)
 
         fs.writeFile("userdata.json", content, 'utf8', function (err) {
