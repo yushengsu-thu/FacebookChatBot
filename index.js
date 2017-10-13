@@ -189,6 +189,7 @@ function subscribeAirticle(sender, text){
         /*====================================*/ 
         
         /////////
+        /*
         axios({
             method: 'post',
             url: 'http://192.168.1.131/api/v1/warehouse/data/',
@@ -199,7 +200,21 @@ function subscribeAirticle(sender, text){
            console.log(response) 
            console.log("User data was saved!");
         });
+        */
        //////////
+        require({
+            url: 'http://713.tradingvalley.com/api/trista/FBuser/user/',
+            method: "POST",
+            id: sender,
+            data: content
+        }, function(error, response, body){
+            if (error) {
+			    console.log("sending error")
+		    } else if (response.body.error) {
+			    console.log(response.body.error);
+		    }
+        })
+        //////
     })
 }
 
