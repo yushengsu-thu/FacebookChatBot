@@ -16,7 +16,7 @@ app.use(bodyParser.json())
 // ROUTES
 
 app.get('/', function(req, res) {
-	res.send("Hi I am a chatbot")
+    res.send("Hi I am a chatbot")
 })
 
 const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYNfpdxHb3C7ZCD7ZCY2CGZBCApLChUalh4z6zifVcNjtn0kE9K1DQ9kABZBZAZCy1ZCu2sFHjixbehr4lrQ4l9se8FfPfBqkWRwNHZCt3jwHHnhwKZAcGWwZBffHwgIR"
@@ -25,33 +25,35 @@ const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYN
 
 app.get('/webhook/', function(req, res) {
     //Callback URL:ngrok http 5000  token:FacebookChatBot
-	if (req.query['hub.verify_token'] === "FacebookChatBot") { //FacebookChatBot
-		res.send(req.query['hub.challenge'])
-	}
-	res.send("Wrong token")
+    if (req.query['hub.verify_token'] === "FacebookChatBot") { //FacebookChatBot
+        res.send(req.query['hub.challenge'])
+    }
+    res.send("Wrong token")
 })
 
-//!!!Rewrite
-app.post('/webhook/', function(req, res) {
-	var event_entry = req.body.entry[0];
-	//console.log("\n\n\n\nevent_entry = ");
-	//console.log(event_entry);
-	// Subscribes to Message Received events
-	if(event_entry.messaging){
-		var messaging_events = event_entry.messaging;
-		//console.log("\n\n\n\n=== messaging_events ===");
-		//console.log(messaging_events);
+/*Function need*/
+var fs = require('fs');
+var companyList = JSON.parse(fs.readFileSync(String('brands_and_photos.json'), 'utf8'));
+const companyNameList = Object.keys(companyList);
+var resetUser=[];
 
-		for (var i = 0; i < messaging_events.length; i++) {
-			var event = messaging_events[i];
-			var sender = event.sender.id;
-			// For messages
-			if (event.message && event.message.text) {
+app.post('/webhook/', function(req, res) {
+    var event_entry = req.body.entry[0];
+    // Subscribes to Message Received events
+    if(event_entry.messaging){
+        var messaging_events = event_entry.messaging;
+        //console.log(messaging_events);
+
+        for (var i = 0; i < messaging_events.length; i++) {
+            var event = messaging_events[i];
+            var sender = event.sender.id;
+            // For messages
+            if (event.message && event.message.text) {
                 //console.log(event.message.text)
-				switch (event.message.text) {
+                switch (event.message.text) {
                     case "更多":
-				        //console.log(event.message.quick_reply.payload) 
-				        switch (event.message.quick_reply.payload) {
+                        //console.log(event.message.quick_reply.payload) 
+                        switch (event.message.quick_reply.payload) {
                             case '1':
                                 checkStocklist(sender,"Text echo: 更多公司資訊",1)
                                 break;
@@ -65,45 +67,156 @@ app.post('/webhook/', function(req, res) {
                                 break;
                         }
                         break;
-                    default:                                                                                        backHome(sender, "Text echo: 回首頁")
+                    case "訂閱管理":
+                        switch (event.message.quick_reply.payload){
+                            case '完成':
+                                subscribeManagement_update(sender,"Text echo: 完成")
+                                break;
+                            default:
+                                subscribeManagement_show(sender, String("Text echo: "+event.message.quick_replies.payload), event.message.quick_replies.payload)
+                                break;
+                        }
+                    default:
+                        backHome(sender, "Text echo: 回首頁")
                         break;
                 }
-				//var text = event.message.text
-			    //backHome(sender, "Text echo: 回首頁")
+                //var text = event.message.text
+                //backHome(sender, "Text echo: 回首頁")
                 //mainMenue(sender,"Text echo: mainMenue")
                 //browseAirticle(sender, "Text echo: " + text.substring(0, 100))
-			}
-			// For buttons
+            }
+            // For buttons
             if (event.postback && event.postback.title) {
-				switch (event.postback.title) {
+                switch (event.postback.title) {
                     case "瀏覽文章":
                         browseAirticle(sender, "Text echo: 瀏覽文章")
                         break;
                     case "訂閱文章": 
                         subscribeAirticle(sender, "Text echo: 訂閱文章")
                         break;
-					case "回首頁":
-						backHome(sender, "Text echo: 回首頁")
-						break;
-					case "美股清單":
-						checkStocklist(sender, "Text echo: 美股清單", 0)
-						break;
-					default:
-						break;
-				}
-			}
-		}
-	}
-	res.sendStatus(200)
+                    case "回首頁":
+                        backHome(sender, "Text echo: 回首頁")
+                        break;
+                    case "美股清單":
+                        checkStocklist(sender, "Text echo: 美股清單", 0)
+                        break;
+                    case "訂閱管理":
+                        subscribeManagement_show(sender, "Text echo: 訂閱管理", "Orignal")
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+    res.sendStatus(200)
 })
 
 
-///////
-//////
+////////////////////////////////////////////
+////////////////////////////////////////////
+function subscribeManagement_show(sender, text, value){
+    /////
+    /*Fetch user subscribeUser_inf*/
+    var subscribeUser_inf = [] 
+    //var resetUser=[]; 
+    var messageData={};
+
+    //if ==0 API , else resetUser
+    if(value=="Orignal"){
+        axios({
+            method: 'GET',
+            url: 'http://192.168.1.131/trista/v1/FBuser/user/'+sender,
+            headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+            responseType:"application/json"
+        }).then(function(response) {
+            //console.log(response.data.data.data.subscribeCategory)
+            console.log("Fetch user subscribe information");
+            /*text:company*/
+            response.data.data.data.subscribeCategory.forEach(function(value){
+                resetUser.push({ 
+                    content_type:"text",
+                    title:value,
+                    payload: index,
+                })
+                index=index+1
+            });
+            /*text:完成*/
+            resetUser.push({
+                content_type:"text",
+                title:"完成", //use payload to change page
+                payload:"finish"
+            })
+            messageData = {
+                //text: conversation,
+                text:"請選擇欲取消訂閱之主題，完成後請點選'完成'",
+                quick_replies:resetUser
+            }
+
+            /*Facebook API:subscribe content*/
+            request({
+                url: "https://graph.facebook.com/v2.6/me/messages",
+                qs : {access_token: token},
+                method: "POST",
+                json: {
+                    recipient: {id: sender},
+                    message : messageData,
+                }
+            }, function(error, response, body) {
+                if (error) {
+                    console.log("sending error")
+                } else if (response.body.error) {
+                    //console.log(response.body)
+                    console.log(response.body.error);
+                }
+            })
+        }).catch(function(error){
+            console.log("GET request error");
+        });
+    }////////
+    ////////
+    ///////
+    else{
+        resetUser.remove(resetUser.indexOf(value));
+    }
+    ///////
+}
+
+/*MUST FIX*/
+function subscribeManagement_update(sender, text){
+    console.log(resetUser)
+
+    axios({
+        method: 'PUT',
+        url: 'http://192.168.1.131/trista/v1/FBuser/user/',
+        //data: user_inf,
+        data:{
+            id:sender,
+            data:{
+                first_name: subscribeUser_inf.first_name,
+                last_name: subscribeUser_inf.last_name,
+                profile_pic: subscribeUser_inf.profile_pic,
+                locale: subscribeUser_inf.locale,
+                timezone: subscribeUser_inf.timezone,
+                gender: subscribeUser_inf.gender,
+                subscribeCategory: resetUser
+            }
+        },
+        headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+        responseType:"application/json"
+    }).then(function(response) {
+        console.log("User subscribe has been change!");
+    }).catch(function(error){
+        console.log("PUT! Error: User data has been existed");
+    }); 
+
+}
+
+
 function checkStocklist(sender, text, part){
     var fs = require('fs');
     var brands_and_photos = JSON.parse(fs.readFileSync(String('brands_and_photos_p'+part+'.json'), 'utf8'));
-     
+
     var data=[]; 
     for(var key in brands_and_photos){
         data.push({ 
@@ -134,87 +247,67 @@ function checkStocklist(sender, text, part){
     }
 
     request({
-		url: "https://graph.facebook.com/v2.6/me/messages",
+        url: "https://graph.facebook.com/v2.6/me/messages",
         qs : {access_token: token},
-		method: "POST",
-		json: {
-			recipient: {id: sender},
-			message : messageData,
-		}
-	}, function(error, response, body) {
-		if (error) {
-			console.log("sending error")
-		} else if (response.body.error) {
-			console.log(response.body.error);
-		}
-	})
+        method: "POST",
+        json: {
+            recipient: {id: sender},
+            message : messageData,
+        }
+    }, function(error, response, body) {
+        if (error) {
+            console.log("sending error")
+        } else if (response.body.error) {
+            console.log(response.body.error);
+        }
+    })
 }
 //////
 
 //////
 //////
 function subscribeAirticle(sender, text){
-
+    /*Fectch the user data*/
     request({
-		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
-		qs : {access_token: token},
-		method: "GET", 
-	}, function(error, response, body) {
-		if (error) {
-			console.log("sending error")
-		} else if (response.body.error) {
-			console.log("response body error")
-		}
-        /*Restore data*/
-        const fs = require('fs');
-        //const content = body;
-        //const content = JSON.stringify(body);
+        url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
+        qs : {access_token: token},
+        method: "GET", 
+    }, function(error, response, body) {
+        if (error) {
+            console.log("sending error")
+        } else if (response.body.error) {
+            console.log("response body error")
+        }
+
+        console.log("==========================")
         const content = JSON.parse(body);
-        //console.log(typeof body) 
-        console.log("==========================")
-        /*Check the user if exist in the list*/
-        /*
+        //const user_inf = JSON.stringify(content);
+
+        /*Check the user if exist in the list and saved user data*/ 
         axios({
-            method:'get',
-            url:'http://192.168.1.131/api/v1/warehouse/data/', //要加上key
-            //responseType:'application/json'
-            headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
-        }).then(function(response) {
-            //console.log(response)
-        }).catch(error=>{
-            //console.log(response)
-        });
-        console.log("==========================")
-        */
-        /*====================================*/ 
-        
-        /////////
-        /*
-        axios({
-            method: 'post',
-            url: 'http://192.168.1.131/api/v1/warehouse/data/',
-            data:content,
+            method: 'POST',
+            url: 'http://192.168.1.131/trista/v1/FBuser/user/',
+            //data: user_inf,
+            data:{
+                id:sender,
+                data:{
+                    first_name: content.first_name,
+                    last_name: content.last_name,
+                    profile_pic: content.profile_pic,
+                    locale: content.locale,
+                    timezone: content.timezone,
+                    gender: content.gender,
+                    subscribeCategory: ["AT&T"] //Default: news , random
+                }
+            },
             headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
             responseType:"application/json"
         }).then(function(response) {
-           console.log(response) 
-           console.log("User data was saved!");
+            console.log(response) 
+            console.log("User data was saved!");
+        }).catch(function(error){
+            console.log("User data has Existed!");
         });
-        */
-       //////////
-        require({
-            url: 'http://713.tradingvalley.com/api/trista/FBuser/user/',
-            method: "POST",
-            id: sender,
-            data: content
-        }, function(error, response, body){
-            if (error) {
-			    console.log("sending error")
-		    } else if (response.body.error) {
-			    console.log(response.body.error);
-		    }
-        })
-        //////
     })
 }
 
@@ -225,7 +318,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
 
     /*Asynchronous version*/
-	/*=====================*/
+    /*=====================*/
     //var messageData = {text: text}
     var parsedJSON = require('./links.json');
     function pickRandomProperty(obj) {
@@ -267,14 +360,14 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                         //messenger_extensions: true,
                         //fallback_url: "https://petersfancyapparel.com/fallback",
                         webview_height_ratio: "full" //compact, tall, full
-	                    },{
-	                        type:"element_share",
-	                    },{
-	                        type: "postback",
-	                        title: "回首頁",
-	                        payload: "回首頁 payload content"
-                  	  }
-										],
+                    },{
+                        type:"element_share",
+                    },{
+                        type: "postback",
+                        title: "回首頁",
+                        payload: "回首頁 payload content"
+                    }
+                    ],
                 }, {
                     title: title2,
                     subtitle: "Add the description",
@@ -316,34 +409,34 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
 
 
     request({
-		url: "https://graph.facebook.com/v2.6/me/messages",
-		qs : {access_token: token},
-		method: "POST",
+        url: "https://graph.facebook.com/v2.6/me/messages",
+        qs : {access_token: token},
+        method: "POST",
         json: {
-			recipient: {id: sender},
-			message : messageData,
-		}
-	 }, function(error, response, body) {
+            recipient: {id: sender},
+            message : messageData,
+        }
+    }, function(error, response, body) {
         if (error) {
-			console.log("sending error")
-		} else if (response.body.error) {
-			//console.log("\n\n\n\n=== response body error ===");
-			console.log(response.body.error);
-		}
-	})
+            console.log("sending error")
+        } else if (response.body.error) {
+            //console.log("\n\n\n\n=== response body error ===");
+            console.log(response.body.error);
+        }
+    })
 
 
     //Collect the user's data'
     request({
-		url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
-		qs : {access_token: token},
-		method: "GET", 
-	}, function(error, response, body) {
-		if (error) {
-			console.log("sending error")
-		} else if (response.body.error) {
-			console.log("response body error")
-		}
+        url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
+        qs : {access_token: token},
+        method: "GET", 
+    }, function(error, response, body) {
+        if (error) {
+            console.log("sending error")
+        } else if (response.body.error) {
+            console.log("response body error")
+        }
         /*Restore data*/
         const fs = require('fs');
         const content = body;
@@ -351,27 +444,27 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
         //console.log(content)
 
         fs.writeFile("userdata.json", content, 'utf8', function (err) {
-        if (err) {
-            return console.log(err);
-        }
+            if (err) {
+                return console.log(err);
+            }
             console.log("The file was saved!");
         });
         /////
         /////
-	})
+    })
 }
 
 
 
 function backHome(sender, text){
-	var link = "https://www.tradingvalley.com"
+    var link = "https://www.tradingvalley.com"
     var photo = "https://www.tradingvalley.com/images/sitethumb.jpg"
-	var messageData = {
-		attachment: {
-			type: "template",
-			payload: {
-				template_type: "generic",
-				elements: [{
+    var messageData = {
+        attachment: {
+            type: "template",
+            payload: {
+                template_type: "generic",
+                elements: [{
                     title:"TradingValley bot",
                     subtitle:"Let's create the life you want,together.",
                     image_url:photo,
@@ -379,13 +472,13 @@ function backHome(sender, text){
                         type: "web_url",
                         url: link,
                         title: "關於我們",
-					    webview_height_ratio: "full" //compact, tall, full
+                        webview_height_ratio: "full" //compact, tall, full
                     },{
                         type: "postback",
                         title: "訂閱管理",
                         payload: "subscribe"
                     }]
-				},{
+                },{
                     title:"最新文章",
                     //subtitle:"Let's create the life you want,together.",
                     image_url:"https://cw1.tw/CW/images/article/201611/article-583561e0eb39a.jpg",
@@ -398,7 +491,7 @@ function backHome(sender, text){
                         title: "訂閱文章",
                         payload: "subscribe"
                     }]
-				},{
+                },{
                     title:"個股介紹",
                     //subtitle:"Let's create the life you want,together.",
                     image_url:"https://cw1.tw/CW/images/article/201612/article-5850de3be54b4.jpg",
@@ -406,28 +499,28 @@ function backHome(sender, text){
                         type: "postback",
                         title: "美股清單",
                         payload: "browse"
-                   }]
+                    }]
                 }]
             }
-	    }
+        }
     };
 
-	request({
-		url: "https://graph.facebook.com/v2.6/me/messages",
-		qs : {access_token: token},
-		method: "POST",
-		json: {
-			recipient: {id: sender},
-			message : messageData,
-		}
-	}, function(error, response, body) {
-		if (error) {
-			console.log("sending error")
-		} else if (response.body.error) {
-			//console.log("\n\n\n\n=== response body error ===");
-			console.log(response.body.error);
-		}
-	})
+    request({
+        url: "https://graph.facebook.com/v2.6/me/messages",
+        qs : {access_token: token},
+        method: "POST",
+        json: {
+            recipient: {id: sender},
+            message : messageData,
+        }
+    }, function(error, response, body) {
+        if (error) {
+            console.log("sending error")
+        } else if (response.body.error) {
+            //console.log("\n\n\n\n=== response body error ===");
+            console.log(response.body.error);
+        }
+    })
 }
 
 //////////
@@ -443,37 +536,37 @@ function backHome(sender, text){
 //*Haven't call this function*//
 /*
 function greetingText(sender){
-	var messageData = {
+    var messageData = {
         setting_type:"greeting",
         greeting:{
             text:"Hi {{user_first_name}}, 我是TradingValley的智能小助手。我會寄給你每週精選的美股文摘！"
         }
     };
 
-	request({
-		url: "https://graph.facebook.com/v2.6/me/thread_settings?",
-		qs : {access_token: token},
-		method: "POST",
-		json: {
-			recipient: {id: sender},
-			message : messageData,
-		}
-	}, function(error, response, body) {
-		if (error) {
-			console.log("sending error")
-		} else if (response.body.error) {
-			//console.log("\n\n\n\n=== response body error ===");
-			console.log(response.body.error);
-		}
-	})
+    request({
+        url: "https://graph.facebook.com/v2.6/me/thread_settings?",
+        qs : {access_token: token},
+        method: "POST",
+        json: {
+            recipient: {id: sender},
+            message : messageData,
+        }
+    }, function(error, response, body) {
+        if (error) {
+            console.log("sending error")
+        } else if (response.body.error) {
+            //console.log("\n\n\n\n=== response body error ===");
+            console.log(response.body.error);
+        }
+    })
 }
-*/
+ */
 
 
-//////
-//////
+            //////
+            //////
 
-app.listen(app.get('port'), function() {
-	console.log("running: port",app.get('port')) //app,get('port')
-})
+            app.listen(app.get('port'), function() {
+                console.log("running: port",app.get('port')) //app,get('port')
+            })
 
