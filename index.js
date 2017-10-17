@@ -31,7 +31,7 @@ app.get('/webhook/', function(req, res) {
 	res.send("Wrong token")
 })
 
-//!!!Rewrite
+////!!!Rewrite
 app.post('/webhook/', function(req, res) {
 	var event_entry = req.body.entry[0];
 	//console.log("\n\n\n\nevent_entry = ");
