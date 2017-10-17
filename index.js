@@ -26,7 +26,7 @@ const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYN
 app.get('/webhook/', function(req, res) {
     //Callback URL:ngrok http 5000  token:FacebookChatBot
     if (req.query['hub.verify_token'] === "FacebookChatBot") { //FacebookChatBot
-        res.send(req.query['hub.challenge'])
+        return res.send(req.query['hub.challenge'])
     }
     res.send("Wrong token")
 })
@@ -537,47 +537,10 @@ function backHome(sender, text){
     })
 }
 
-//////////
-//////////
 
-//////////
-/////////
+
 ////////
 ////////
-///////
-
-
-//*Haven't call this function*//
-/*
-function greetingText(sender){
-    var messageData = {
-        setting_type:"greeting",
-        greeting:{
-            text:"Hi {{user_first_name}}, 我是TradingValley的智能小助手。我會寄給你每週精選的美股文摘！"
-        }
-    };
-
-    request({
-        url: "https://graph.facebook.com/v2.6/me/thread_settings?",
-        qs : {access_token: token},
-        method: "POST",
-        json: {
-            recipient: {id: sender},
-            message : messageData,
-        }
-    }, function(error, response, body) {
-        if (error) {
-            console.log("sending error")
-        } else if (response.body.error) {
-            //console.log("\n\n\n\n=== response body error ===");
-            console.log(response.body.error);
-        }
-    })
-}
- */
-
-//////            
-//////
 app.listen(app.get('port'), function() {
     console.log("running: port",app.get('port')) //app,get('port')
 })
