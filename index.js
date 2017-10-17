@@ -49,12 +49,7 @@ app.post('/webhook/', function(req, res) {
             var event = messaging_events[i];
             var sender = event.sender.id;
             // For messages
-            console.log(event.message)
-            console.log(event.message.text)
-            console.log(event.message.is_echo)
-            console.log("=======")
             if (event.message && event.message.text && !event.message.is_echo) {
-                console.log(event.message.text)
                 switch (event.message.text) {
                     case "更多":
                         //console.log(event.message.quick_reply.payload) 
@@ -72,7 +67,6 @@ app.post('/webhook/', function(req, res) {
                                 break;
                         }
                         break; 
-                    /*
                     case "訂閱管理":
                         switch (event.message.quick_reply.payload){
                             case 'finish':
@@ -84,7 +78,6 @@ app.post('/webhook/', function(req, res) {
                                 subscribeManagement_show(sender, String("Text echo: "+event.message.quick_replies.payload), event.message.quick_replies.payload)
                                 break;
                         } 
-                    */
                     default:
                         backHome(sender, "Text echo: 回首頁")
                         break;
@@ -108,12 +101,10 @@ app.post('/webhook/', function(req, res) {
                         break;
                     case "美股清單":
                         checkStocklist(sender, "Text echo: 美股清單", 0)
-                        break;
-                    /*    
+                        break;    
                     case "訂閱管理":
                         subscribeManagement_show(sender, "Text echo: 訂閱管理", "subscribeList")
                         break;
-                    */
                     default:
                         break;
                 }
