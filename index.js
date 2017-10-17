@@ -26,7 +26,7 @@ const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYN
 app.get('/webhook/', function(req, res) {
     //Callback URL:ngrok http 5000  token:FacebookChatBot
 	if (req.query['hub.verify_token'] === "FacebookChatBot") { //FacebookChatBot
-		res.send(req.query['hub.challenge'])
+		return res.send(req.query['hub.challenge'])
 	}
 	res.send("Wrong token")
 })
@@ -40,12 +40,12 @@ app.post('/webhook/', function(req, res) {
 	if(event_entry.messaging){
 		var messaging_events = event_entry.messaging;
 		//console.log("\n\n\n\n=== messaging_events ===");
-		//console.log(messaging_events);
-
+		//console.log(messaging_events);)
 		for (var i = 0; i < messaging_events.length; i++) {
 			var event = messaging_events[i];
 			var sender = event.sender.id;
 			// For messages
+            console.log(event)
 			if (event.message && event.message.text) {
                 //console.log(event.message.text)
 				switch (event.message.text) {
