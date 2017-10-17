@@ -71,7 +71,8 @@ app.post('/webhook/', function(req, res) {
                             default:
                                 break;
                         }
-                        break;                    
+                        break; 
+                    /*
                     case "訂閱管理":
                         switch (event.message.quick_reply.payload){
                             case 'finish':
@@ -82,7 +83,8 @@ app.post('/webhook/', function(req, res) {
                                 //console.log(event.message.quick_replies.payload)
                                 subscribeManagement_show(sender, String("Text echo: "+event.message.quick_replies.payload), event.message.quick_replies.payload)
                                 break;
-                        }                    
+                        } 
+                    */
                     default:
                         backHome(sender, "Text echo: 回首頁")
                         break;
@@ -107,9 +109,11 @@ app.post('/webhook/', function(req, res) {
                     case "美股清單":
                         checkStocklist(sender, "Text echo: 美股清單", 0)
                         break;
+                    /*    
                     case "訂閱管理":
                         subscribeManagement_show(sender, "Text echo: 訂閱管理", "subscribeList")
                         break;
+                    */
                     default:
                         break;
                 }
