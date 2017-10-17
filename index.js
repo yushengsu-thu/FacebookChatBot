@@ -39,6 +39,7 @@ var resetUser=[];
 
 app.post('/webhook/', function(req, res) {
     var event_entry = req.body.entry[0];
+    console.log(req.body.entry)
     // Subscribes to Message Received events
     if(event_entry.messaging){
         var messaging_events = event_entry.messaging;
@@ -48,8 +49,12 @@ app.post('/webhook/', function(req, res) {
             var event = messaging_events[i];
             var sender = event.sender.id;
             // For messages
-            if (event.message && event.message.text) {
-                //console.log(event.message.text)
+            console.log(event.message)
+            console.log(event.message.text)
+            console.log(event.message.is_echo)
+            console.log("=======")
+            if (event.message && event.message.text && !event.message.is_echo) {
+                console.log(event.message.text)
                 switch (event.message.text) {
                     case "更多":
                         //console.log(event.message.quick_reply.payload) 
@@ -66,16 +71,18 @@ app.post('/webhook/', function(req, res) {
                             default:
                                 break;
                         }
-                        break;
+                        break;                    
                     case "訂閱管理":
                         switch (event.message.quick_reply.payload){
-                            case '完成':
+                            case 'finish':
+                                console.log(event.message.quick_replies.payload)
                                 subscribeManagement_update(sender,"Text echo: 完成")
                                 break;
                             default:
+                                //console.log(event.message.quick_replies.payload)
                                 subscribeManagement_show(sender, String("Text echo: "+event.message.quick_replies.payload), event.message.quick_replies.payload)
                                 break;
-                        }
+                        }                    
                     default:
                         backHome(sender, "Text echo: 回首頁")
                         break;
@@ -101,7 +108,7 @@ app.post('/webhook/', function(req, res) {
                         checkStocklist(sender, "Text echo: 美股清單", 0)
                         break;
                     case "訂閱管理":
-                        subscribeManagement_show(sender, "Text echo: 訂閱管理", "Orignal")
+                        subscribeManagement_show(sender, "Text echo: 訂閱管理", "subscribeList")
                         break;
                     default:
                         break;
@@ -115,7 +122,7 @@ app.post('/webhook/', function(req, res) {
 
 ////////////////////////////////////////////
 ////////////////////////////////////////////
-function subscribeManagement_show(sender, text, value){
+function subscribeManagement_show(sender, text, subscribeCompany){
     /////
     /*Fetch user subscribeUser_inf*/
     var subscribeUser_inf = [] 
@@ -123,23 +130,24 @@ function subscribeManagement_show(sender, text, value){
     var messageData={};
 
     //if ==0 API , else resetUser
-    if(value=="Orignal"){
+    if(subscribeCompany=="subscribeList"){
         axios({
             method: 'GET',
             url: 'http://192.168.1.131/trista/v1/FBuser/user/'+sender,
             headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
             responseType:"application/json"
         }).then(function(response) {
-            //console.log(response.data.data.data.subscribeCategory)
+            var subscribeCategory =  response.data.data.data.subscribeCategory
             console.log("Fetch user subscribe information");
             /*text:company*/
-            response.data.data.data.subscribeCategory.forEach(function(value){
+            var index = 0
+            subscribeCategory.forEach(function(value){
                 resetUser.push({ 
                     content_type:"text",
                     title:value,
-                    payload: index,
+                    payload:index,
                 })
-                index=index+1
+                index=index+1 //start from 1
             });
             /*text:完成*/
             resetUser.push({
@@ -152,7 +160,7 @@ function subscribeManagement_show(sender, text, value){
                 text:"請選擇欲取消訂閱之主題，完成後請點選'完成'",
                 quick_replies:resetUser
             }
-
+            
             /*Facebook API:subscribe content*/
             request({
                 url: "https://graph.facebook.com/v2.6/me/messages",
@@ -173,7 +181,8 @@ function subscribeManagement_show(sender, text, value){
         }).catch(function(error){
             console.log("GET request error");
         });
-    }////////
+    }
+    ////////
     ////////
     ///////
     else{
@@ -297,7 +306,8 @@ function subscribeAirticle(sender, text){
                     locale: content.locale,
                     timezone: content.timezone,
                     gender: content.gender,
-                    subscribeCategory: ["AT&T"] //Default: news , random
+                    subscribeCategory: [] //Default: news , random
+                    //subscribeCategory: ["AT&T","3M","Facebook"] //Default: news , random
                 }
             },
             headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
@@ -365,7 +375,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                     },{
                         type: "postback",
                         title: "回首頁",
-                        payload: "回首頁 payload content"
+                        payload: "content"
                     }
                     ],
                 }, {
@@ -383,7 +393,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                     },{
                         type: "postback",
                         title: "回首頁",
-                        payload: "回首頁 payload content",
+                        payload: "content",
                     }]
                 },{
                     title: title3,
@@ -400,7 +410,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                     },{
                         type: "postback",
                         title: "回首頁",
-                        payload: "回首頁 payload content",
+                        payload: "content",
                     }]
                 }]
             }
@@ -476,7 +486,7 @@ function backHome(sender, text){
                     },{
                         type: "postback",
                         title: "訂閱管理",
-                        payload: "subscribe"
+                        payload: "manage"
                     }]
                 },{
                     title:"最新文章",
@@ -562,11 +572,9 @@ function greetingText(sender){
 }
  */
 
-
-            //////
-            //////
-
-            app.listen(app.get('port'), function() {
-                console.log("running: port",app.get('port')) //app,get('port')
-            })
+//////            
+//////
+app.listen(app.get('port'), function() {
+    console.log("running: port",app.get('port')) //app,get('port')
+})
 
