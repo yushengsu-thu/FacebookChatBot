@@ -1,3 +1,7 @@
+//Fix bug:
+//1.沒有公司資料時，不用再“更多”
+//Once tyoe subscribe will be see as subscribe
+//subscribeAirticle modify default: ['Facebook',,,,,] to []]
 'use strict'
 const axios = require('axios')
 const express = require('express')
@@ -35,60 +39,39 @@ app.get('/webhook/', function(req, res) {
 var fs = require('fs');
 var companyList = JSON.parse(fs.readFileSync(String('brands_and_photos.json'), 'utf8'));
 const companyNameList = Object.keys(companyList);
+/*Gobal variable*/
+/*Fetch user subscribeUser_inf*/
+var subscribeUser_inf = {} 
 var resetUser=[];
 
 app.post('/webhook/', function(req, res) {
     var event_entry = req.body.entry[0];
-    console.log(req.body.entry)
-    // Subscribes to Message Received events
+    //console.log(req.body.entry)
+    //Received events
+    //process.exit(1);
+    console.log(event_entry)
+    console.log("====================")
+    //console.log(event_entry.messaging)
+    console.log("====================")
     if(event_entry.messaging){
+        //console.log("inininin")
         var messaging_events = event_entry.messaging;
+        //console.log("-")
+        //console.log("out")
         //console.log(messaging_events);
-
+        //console.log("-")
         for (var i = 0; i < messaging_events.length; i++) {
             var event = messaging_events[i];
             var sender = event.sender.id;
-            // For messages
-            if (event.message && event.message.text && !event.message.is_echo) {
-                switch (event.message.text) {
-                    case "更多":
-                        //console.log(event.message.quick_reply.payload) 
-                        switch (event.message.quick_reply.payload) {
-                            case '1':
-                                checkStocklist(sender,"Text echo: 更多公司資訊",1)
-                                break;
-                            case '2':
-                                checkStocklist(sender,"Text echo: 更多公司資訊",2)
-                                break;
-                            case '3':
-                                checkStocklist(sender,"Text echo: 更多公司資訊",3)
-                                break;
-                            default:
-                                break;
-                        }
-                        break; 
-                    case "訂閱管理":
-                        switch (event.message.quick_reply.payload){
-                            case 'finish':
-                                console.log(event.message.quick_replies.payload)
-                                subscribeManagement_update(sender,"Text echo: 完成")
-                                break;
-                            default:
-                                //console.log(event.message.quick_replies.payload)
-                                subscribeManagement_show(sender, String("Text echo: "+event.message.quick_replies.payload), event.message.quick_replies.payload)
-                                break;
-                        } 
-                    default:
-                        backHome(sender, "Text echo: 回首頁")
-                        break;
-                }
-                //var text = event.message.text
-                //backHome(sender, "Text echo: 回首頁")
-                //mainMenue(sender,"Text echo: mainMenue")
-                //browseAirticle(sender, "Text echo: " + text.substring(0, 100))
-            }
-            // For buttons
-            if (event.postback && event.postback.title) {
+
+            //    
+            //console.log("-")
+            //console.log("out")
+            //console.log(event);
+            //console.log("-")
+            //
+            /*button*/
+            if(event.postback){
                 switch (event.postback.title) {
                     case "瀏覽文章":
                         browseAirticle(sender, "Text echo: 瀏覽文章")
@@ -103,12 +86,61 @@ app.post('/webhook/', function(req, res) {
                         checkStocklist(sender, "Text echo: 美股清單", 0)
                         break;    
                     case "訂閱管理":
-                        subscribeManagement_show(sender, "Text echo: 訂閱管理", "subscribeList")
+                        subscribeManagement_show_and_modify(sender, "Text echo: 訂閱管理", "subscribeList")
                         break;
                     default:
                         break;
                 }
             }
+            /*
+            /*text button*/
+            else if(event.message.text && event.message.quick_reply){
+                switch(event.message.quick_reply.payload){
+                    case "checkStocklist":
+                        if(event.message.text == "更多:1"){
+                            checkStocklist(sender,"Text echo: 更多公司資訊",1)
+                        }
+                        if(event.message.text == "更多:2"){
+                            checkStocklist(sender,"Text echo: 更多公司資訊",2)
+                        }
+                        if(event.message.text == "更多:3"){
+                            checkStocklist(sender,"Text echo: 更多公司資訊",3)
+                        }
+                        else{
+                            //Open text link and subscribe function!!
+                        }
+                        break;
+                    case "subscribeManagement_show_and_modify":
+                        if(event.message.text == "完成"){
+                            subscribeManagement_update(sender, "Text echo: 完成訂閱修改")
+                        }
+                        else{
+                            subscribeManagement_show_and_modify(sender, String("Text echo: "+event.message.text), event.message.text)
+                        }
+                        break;
+                        //case "":
+                        //    break;
+                    default:
+                        break;
+                }
+            }
+            /*nlp text*/
+            else if(event.message.text){
+                //console.log("-")
+                //console.log("nlp")
+                //console.log("-")
+                backHome(sender, "Text echo: 回首頁")
+            }
+            /*Noisy*/
+            else{
+                //console.log("==++==")
+                //console.log("nosiy")
+                //console.log(event)
+                //console.log(event.messages)
+                //console.log("==++==")
+            }
+
+            //process.exit(1);
         }
     }
     res.sendStatus(200)
@@ -117,45 +149,50 @@ app.post('/webhook/', function(req, res) {
 
 ////////////////////////////////////////////
 ////////////////////////////////////////////
-function subscribeManagement_show(sender, text, subscribeCompany){
+function subscribeManagement_show_and_modify(sender, text, subscribeCompany){
     /////
+    /*Gobal variable*/
     /*Fetch user subscribeUser_inf*/
-    var subscribeUser_inf = [] 
-    //var resetUser=[]; 
+    //var subscribeUser_inf = {} 
+    var subscribeCompany_list=[]; 
     var messageData={};
 
-    //if ==0 API , else resetUser
-    if(subscribeCompany=="subscribeList"){
+    //if ==0 API , else subscribeCompany_list
+    if(subscribeCompany==="subscribeList"){
         axios({
             method: 'GET',
             url: 'http://192.168.1.131/trista/v1/FBuser/user/'+sender,
             headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
             responseType:"application/json"
         }).then(function(response) {
-            var subscribeCategory =  response.data.data.data.subscribeCategory
+            /*Fetch user subscribeUser_inf*/
+            subscribeUser_inf = response.data.data.data
+            var subscribeCategory =  subscribeUser_inf.subscribeCategory
+
             console.log("Fetch user subscribe information");
             /*text:company*/
-            var index = 0
+            //var index = 0
             subscribeCategory.forEach(function(value){
-                resetUser.push({ 
+                subscribeCompany_list.push({ 
                     content_type:"text",
                     title:value,
-                    payload:index,
+                    //payload:index,
+                    payload:"subscribeManagement_show_and_modify",
                 })
-                index=index+1 //start from 1
+                //index=index+1 //start from 1
             });
             /*text:完成*/
-            resetUser.push({
+            subscribeCompany_list.push({
                 content_type:"text",
                 title:"完成", //use payload to change page
-                payload:"finish"
+                payload:"subscribeManagement_show_and_modify",
             })
             messageData = {
                 //text: conversation,
                 text:"請選擇欲取消訂閱之主題，完成後請點選'完成'",
-                quick_replies:resetUser
+                quick_replies:subscribeCompany_list
             }
-            
+
             /*Facebook API:subscribe content*/
             request({
                 url: "https://graph.facebook.com/v2.6/me/messages",
@@ -177,11 +214,12 @@ function subscribeManagement_show(sender, text, subscribeCompany){
             console.log("GET request error");
         });
     }
-    ////////
-    ////////
-    ///////
     else{
-        resetUser.remove(resetUser.indexOf(value));
+        //console.log(subscribeCompany)
+        subscribeCompany_list.forEach(function(value){
+            resetUser.push(value)
+        });
+        resetUser.remove(resetUser.indexOf(subscribeCompany));
     }
     ///////
 }
@@ -227,17 +265,20 @@ function checkStocklist(sender, text, part){
             content_type:"text",
             title:key,
             image_url:brands_and_photos[key],
-            payload:"brands"
+            payload:"checkStocklist"
         })
     } 
     //更多 選項
-    data.push({
-        content_type:"text",
-        //title:String("更多"+parseInt(part+1)), //use payload to change page
-        title:"更多", //use payload to change page
-        payload:String(part+1)
-    })
-    //console.log(data)
+    part = part+1
+    if(part < 4){
+        data.push({
+            content_type:"text",
+            //title:String("更多"+parseInt(part+1)), //use payload to change page
+            title:String("更多:"+part), //use payload to change page
+            payload:"checkStocklist"
+        })
+    }
+
     var conversation;
     if(part!=0){
         conversation="更多公司資訊";    
@@ -301,14 +342,14 @@ function subscribeAirticle(sender, text){
                     locale: content.locale,
                     timezone: content.timezone,
                     gender: content.gender,
-                    subscribeCategory: [] //Default: news , random
-                    //subscribeCategory: ["AT&T","3M","Facebook"] //Default: news , random
+                    //subscribeCategory: [] //Default: news , random
+                    subscribeCategory: ["AT&T","3M","Facebook"] //Default: news , random
                 }
             },
             headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
             responseType:"application/json"
         }).then(function(response) {
-            console.log(response) 
+            //console.log(response) 
             console.log("User data was saved!");
         }).catch(function(error){
             console.log("User data has Existed!");
@@ -370,7 +411,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                     },{
                         type: "postback",
                         title: "回首頁",
-                        payload: "content"
+                        payload: "browseAirticle"
                     }
                     ],
                 }, {
@@ -388,7 +429,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                     },{
                         type: "postback",
                         title: "回首頁",
-                        payload: "content",
+                        payload: "browseAirticle",
                     }]
                 },{
                     title: title3,
@@ -405,7 +446,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                     },{
                         type: "postback",
                         title: "回首頁",
-                        payload: "content",
+                        payload: "browseAirticle",
                     }]
                 }]
             }
@@ -447,13 +488,14 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
         const content = body;
         //const content = JSON.parse(body);
         //console.log(content)
-
+        /*
         fs.writeFile("userdata.json", content, 'utf8', function (err) {
             if (err) {
                 return console.log(err);
             }
             console.log("The file was saved!");
         });
+         */
         /////
         /////
     })
@@ -481,7 +523,7 @@ function backHome(sender, text){
                     },{
                         type: "postback",
                         title: "訂閱管理",
-                        payload: "manage"
+                        payload: "backHome"
                     }]
                 },{
                     title:"最新文章",
@@ -490,11 +532,11 @@ function backHome(sender, text){
                     buttons:[{
                         type: "postback",
                         title: "瀏覽文章",
-                        payload: "browse"
+                        payload: "backHome"
                     },{
                         type: "postback",
                         title: "訂閱文章",
-                        payload: "subscribe"
+                        payload: "backHome"
                     }]
                 },{
                     title:"個股介紹",
@@ -503,7 +545,7 @@ function backHome(sender, text){
                     buttons:[{
                         type: "postback",
                         title: "美股清單",
-                        payload: "browse"
+                        payload: "backHome"
                     }]
                 }]
             }
@@ -522,7 +564,6 @@ function backHome(sender, text){
         if (error) {
             console.log("sending error")
         } else if (response.body.error) {
-            //console.log("\n\n\n\n=== response body error ===");
             console.log(response.body.error);
         }
     })
