@@ -148,6 +148,20 @@ function subscribe_and_readStocklist(sender, text, company){
                 template_type: "generic",
                 elements: [{
                     title: company,
+                    subtitle: String("點選訂閱把"+company+"加入訂閱清單"),
+                    item_url: "www.google.com",
+                    image_url: "www.google.com",
+                    buttons: [{
+                        type: "postback",
+                        title: "訂閱",
+                        payload: "subscribe_and_readStocklist"
+                    },{
+                        type: "postback",
+                        title: "回首頁",
+                        payload: "subscribe_and_readStocklist"
+                    }],
+                },{
+                    title: company,
                     subtitle: "Next-generation virtual reality",
                     item_url: "www.google.com",
                     image_url: "www.google.com",
@@ -164,19 +178,12 @@ function subscribe_and_readStocklist(sender, text, company){
                         type: "postback",
                         title: "更多相關文章",
                         payload: "subscribe_and_readStocklist"
-                    },{
-                        type: "postback",
-                        title: "訂閱",
-                        payload: "subscribe_and_readStocklist"
-                    },{
-                        type: "postback",
-                        title: "回首頁",
-                        payload: "subscribe_and_readStocklist"
                     }],
                 }],   
             }
         }
     }
+
 
     request({
         url: "https://graph.facebook.com/v2.6/me/messages",
