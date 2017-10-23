@@ -36,9 +36,9 @@ app.get('/webhook/', function(req, res) {
 })
 
 /*Function need*/
-var fs = require('fs');
-var companyList = JSON.parse(fs.readFileSync(String('brands_and_photos.json'), 'utf8'));
-const companyNameList = Object.keys(companyList);
+//var fs = require('fs');
+//var companyList = JSON.parse(fs.readFileSync(String('brands_and_photos.json'), 'utf8'));
+//const companyNameList = Object.keys(companyList);
 /*Gobal variable*/
 
 app.post('/webhook/', function(req, res) {
@@ -84,6 +84,15 @@ app.post('/webhook/', function(req, res) {
                     case "訂閱管理":
                         subscribeManagement_show_and_modify(sender, "Text echo: 訂閱管理", "subscribeList")
                         break;
+                    case "訂閱":
+                        subscribeList_addElement(sender,String("Text echo: "+event.postback.payload), event.postback.payload)
+                        break;
+                    case "更多相關文章":
+                        moreAboutairticles(sender, String("Text echo: 更多相關文章"))
+                        break;
+                    case "回上一頁":
+                        subscribeList_addElement(sender,String("Text echo: "+event.postback.payload), "回上一頁")
+                        break;
                     default:
                         break;
                 }
@@ -92,6 +101,7 @@ app.post('/webhook/', function(req, res) {
             /*text button*/
             else if(event.message.text && event.message.quick_reply){
                 switch(event.message.quick_reply.payload){
+
                     case "checkStocklist":
                         if(event.message.text == "更多:1"){
                             checkStocklist(sender,"Text echo: 更多公司資訊",1)
@@ -102,9 +112,10 @@ app.post('/webhook/', function(req, res) {
                         if(event.message.text == "更多:3"){
                             checkStocklist(sender,"Text echo: 更多公司資訊",3)
                         }
-                        else{
+                        else if(event.message.text !== "更多:1" && event.message.text !== "更多:2" && event.message.text !== "更多:3"){
                             subscribe_and_readStocklist(sender, String("Text echo: "+event.message.text), event.message.text)
                         }
+                        else{}
                         break;
                     case "subscribeManagement_show_and_modify":
                         subscribeManagement_show_and_modify(sender, String("Text echo: "+event.message.text), event.message.text)
@@ -138,36 +149,47 @@ app.post('/webhook/', function(req, res) {
 
 ////////////////////////////////////////////
 ////////////////////////////////////////////
-function subscribe_and_readStocklist(sender, text, company){
-    //,title,item_ , url,
-    console.log(company)
+function moreAboutairticles(sender, text){
+    /*Read a Links.json*/
+    /*Synchronous version*/
+    var fs = require('fs');
+    var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
+
+    /*Asynchronous version*/
+    /*=====================*/
+    //var messageData = {text: text}
+    var parsedJSON = require('./links.json');
+    function pickRandomProperty(obj) {
+        var result;
+        var count = 0;
+        for (var prop in obj)
+            if (Math.random() < 1/++count)
+                result = prop;
+        return result;
+    }
+    var title1 = pickRandomProperty(parsedJSON)
+    var link1 = parsedJSON[title1]
+    var airticle1 = link1[0]
+    var photo1 = link1[1]
+    var title2 = pickRandomProperty(parsedJSON)
+    var link2 = parsedJSON[title2]
+    var airticle2 = link2[0]
+    var photo2 = link2[1]
+
+
     var messageData = {
         attachment: {
             type: "template",
             payload: {
                 template_type: "generic",
                 elements: [{
-                    title: company,
-                    subtitle: String("點選訂閱把"+company+"加入訂閱清單"),
-                    item_url: "www.google.com",
-                    image_url: "www.google.com",
-                    buttons: [{
-                        type: "postback",
-                        title: "訂閱",
-                        payload: "subscribe_and_readStocklist"
-                    },{
-                        type: "postback",
-                        title: "回首頁",
-                        payload: "subscribe_and_readStocklist"
-                    }],
-                },{
-                    title: company,
+                    title: title1,
                     subtitle: "Next-generation virtual reality",
-                    item_url: "www.google.com",
-                    image_url: "www.google.com",
+                    item_url: airticle1,
+                    image_url: photo1,
                     buttons: [{
                         type: "web_url",
-                        url: "www.google.com",
+                        url: airticle1,
                         title: "閱讀此文章",
                         //messenger_extensions: true,
                         //fallback_url: "https://petersfancyapparel.com/fallback",
@@ -176,14 +198,31 @@ function subscribe_and_readStocklist(sender, text, company){
                         type:"element_share",
                     },{
                         type: "postback",
-                        title: "更多相關文章",
-                        payload: "subscribe_and_readStocklist"
-                    }],
-                }],   
+                        title: "回上一頁", //回上一頁
+                        payload: "moreAboutairticles"
+                    }
+                    ],
+                }, {
+                    title: title2,
+                    subtitle: "Add the description",
+                    item_url: airticle2,
+                    image_url: photo2,
+                    buttons: [{
+                        type: "web_url",
+                        url: airticle2,
+                        title: "閱讀此文章",
+                        webview_height_ratio: "full"
+                    },{
+                        type:"element_share"
+                    },{
+                        type: "postback",
+                        title: "回上一頁", //回上一頁
+                        payload: "moreAboutairticles",
+                    }]
+                }]
             }
         }
-    }
-
+    };
 
     request({
         url: "https://graph.facebook.com/v2.6/me/messages",
@@ -200,8 +239,129 @@ function subscribe_and_readStocklist(sender, text, company){
             console.log(response.body.error);
         }
     })
+}
 
 
+function subscribeList_addElement(sender, text, companyName){
+    var subscribeUser_inf={}
+    var resetUser=[]
+
+    axios({
+        method: 'GET',
+        url: 'http://192.168.1.131/trista/v1/FBuser/user/'+sender,
+        headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+        responseType:"application/json"
+    }).then(function(response) {
+        /*Fetch user subscribeUser_inf*/
+        subscribeUser_inf = response.data.data.data
+        var subscribeCategory =  subscribeUser_inf.subscribeCategory
+        console.log("Fetch user subscribe information");
+        /*text:company*/
+        subscribeCategory.forEach(function(value){
+            resetUser.push(value)
+        });
+        /*Add company*/
+        if(resetUser.indexOf(companyName)>=-1){
+            console.log("Has subscribed")
+        }
+        else if(resetUser.indexOf(companyName)==-1 && companyName!="回上一頁"){
+            resetUser.push(companyName)
+        }
+        //else if(companyName=="回上一頁"){}
+        else{}
+
+        /*PUT update subscribeList*/
+        axios({
+            method: 'PUT',
+            url: 'http://192.168.1.131/trista/v1/FBuser/user/',
+            //data: user_inf,
+            data:{
+                id:sender,
+                data:{
+                    first_name: subscribeUser_inf.first_name,
+                    last_name: subscribeUser_inf.last_name,
+                    profile_pic: subscribeUser_inf.profile_pic,
+                    locale: subscribeUser_inf.locale,
+                    timezone: subscribeUser_inf.timezone,
+                    gender: subscribeUser_inf.gender,
+                    subscribeCategory: resetUser
+                }
+            },
+            headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+            responseType:"application/json"
+        }).then(function(response) {
+            console.log("User subscribe has been change!");
+        }).catch(function(error){
+            console.log("PUT! Error: User data has been existed");
+        });
+        //
+    }).catch(function(error){
+        console.log("GET request error");
+    });
+}
+
+function subscribe_and_readStocklist(sender, text, companyName){
+    //Add: item_url, subtitle, url 
+    var fs = require('fs');
+    var brands_and_photos = JSON.parse(fs.readFileSync(String('brands_and_photos.json'), 'utf8'));
+    var companyPhotolink = brands_and_photos[companyName]
+
+    var messageData = {
+        attachment: {
+            type: "template",
+            payload: {
+                template_type: "generic",
+                elements: [{
+                    title: companyName,
+                    subtitle: String("點選訂閱把"+companyName+"加入訂閱清單"),
+                    item_url: "www.google.com",//
+                    image_url: companyPhotolink,
+                    buttons: [{
+                        type: "postback",
+                        title: "訂閱",
+                        payload: companyName  ///!!!!!!!!!!!!///
+                    },{
+                        type: "postback",
+                        title: "回首頁",
+                        payload: "subscribe_and_readStocklist"
+                    }],
+                },{
+                    title: companyName,
+                    subtitle: "paser airticel and brief here",//
+                    item_url: "www.google.com",//
+                    image_url: "www.google.com",//
+                    buttons: [{
+                        type: "web_url",
+                        url: "www.google.com",//
+                        title: "閱讀此文章",
+                        webview_height_ratio: "full" //compact, tall, full
+                    },{
+                        type:"element_share",
+                    },{
+                        type: "postback",
+                        title: "更多相關文章",//String("更多"+companyName+"相關文章"),
+                        payload: "subscribe_and_readStocklist"
+                    }],
+                }],   
+            }
+        }
+    }
+
+    request({
+        url: "https://graph.facebook.com/v2.6/me/messages",
+        qs : {access_token: token},
+        method: "POST",
+        json: {
+            recipient: {id: sender},
+            message : messageData,
+        }
+    }, function(error, response, body) {
+        if (error) {
+            console.log("sending error")
+        } else if (response.body.error) {
+            console.log(response.body.error);
+        }
+    })
 }
 
 function subscribeManagement_show_and_modify(sender, text, subscribeCompany){
@@ -390,10 +550,8 @@ function checkStocklist(sender, text, part){
         }
     })
 }
-//////
 
-//////
-//////
+
 function subscribeAirticle(sender, text){
     /*Fectch the user data*/
     request({
