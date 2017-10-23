@@ -40,13 +40,9 @@ var fs = require('fs');
 var companyList = JSON.parse(fs.readFileSync(String('brands_and_photos.json'), 'utf8'));
 const companyNameList = Object.keys(companyList);
 /*Gobal variable*/
-/*Fetch user subscribeUser_inf*/
-var subscribeUser_inf = {} 
-var resetUser=[];
 
 app.post('/webhook/', function(req, res) {
     var event_entry = req.body.entry[0];
-    //console.log(req.body.entry)
     //Received events
     //process.exit(1);
     console.log(event_entry)
@@ -111,12 +107,7 @@ app.post('/webhook/', function(req, res) {
                         }
                         break;
                     case "subscribeManagement_show_and_modify":
-                        if(event.message.text == "完成"){
-                            subscribeManagement_update(sender, "Text echo: 完成訂閱修改")
-                        }
-                        else{
-                            subscribeManagement_show_and_modify(sender, String("Text echo: "+event.message.text), event.message.text)
-                        }
+                        subscribeManagement_show_and_modify(sender, String("Text echo: "+event.message.text), event.message.text)
                         break;
                         //case "":
                         //    break;
@@ -150,49 +141,44 @@ app.post('/webhook/', function(req, res) {
 ////////////////////////////////////////////
 ////////////////////////////////////////////
 function subscribeManagement_show_and_modify(sender, text, subscribeCompany){
-    /////
-    /*Gobal variable*/
+    
     /*Fetch user subscribeUser_inf*/
-    //var subscribeUser_inf = {} 
     var subscribeCompany_list=[]; 
     var messageData={};
+    var subscribeUser_inf = {};// 
+    var resetUser=[];//
 
-    //if ==0 API , else subscribeCompany_list
-    if(subscribeCompany==="subscribeList"){
-        axios({
-            method: 'GET',
-            url: 'http://192.168.1.131/trista/v1/FBuser/user/'+sender,
-            headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
-            responseType:"application/json"
-        }).then(function(response) {
-            /*Fetch user subscribeUser_inf*/
-            subscribeUser_inf = response.data.data.data
-            var subscribeCategory =  subscribeUser_inf.subscribeCategory
+    axios({
+        method: 'GET',
+        url: 'http://192.168.1.131/trista/v1/FBuser/user/'+sender,
+        headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+        responseType:"application/json"
+    }).then(function(response) {
+        /*Fetch user subscribeUser_inf*/
+        subscribeUser_inf = response.data.data.data
+        var subscribeCategory =  subscribeUser_inf.subscribeCategory
 
-            console.log("Fetch user subscribe information");
-            /*text:company*/
-            //var index = 0
-            subscribeCategory.forEach(function(value){
-                subscribeCompany_list.push({ 
-                    content_type:"text",
-                    title:value,
-                    //payload:index,
-                    payload:"subscribeManagement_show_and_modify",
-                })
-                //index=index+1 //start from 1
-            });
-            /*text:完成*/
+        console.log("Fetch user subscribe information");
+        /*text:company*/
+        subscribeCategory.forEach(function(value){
+            subscribeCompany_list.push({ 
+                content_type:"text",
+                title:value,
+                payload:"subscribeManagement_show_and_modify",
+            })
+        });
+
+        /*subscribe list show and modify*/
+        if(subscribeCompany=="subscribeList"){
             subscribeCompany_list.push({
                 content_type:"text",
                 title:"完成", //use payload to change page
                 payload:"subscribeManagement_show_and_modify",
             })
             messageData = {
-                //text: conversation,
                 text:"請選擇欲取消訂閱之主題，完成後請點選'完成'",
                 quick_replies:subscribeCompany_list
             }
-
             /*Facebook API:subscribe content*/
             request({
                 url: "https://graph.facebook.com/v2.6/me/messages",
@@ -210,48 +196,82 @@ function subscribeManagement_show_and_modify(sender, text, subscribeCompany){
                     console.log(response.body.error);
                 }
             })
-        }).catch(function(error){
-            console.log("GET request error");
-        });
-    }
-    else{
-        //console.log(subscribeCompany)
-        subscribeCompany_list.forEach(function(value){
-            resetUser.push(value)
-        });
-        resetUser.remove(resetUser.indexOf(subscribeCompany));
-    }
-    ///////
-}
+        } 
+        else if(subscribeCompany=="完成"){
+            backHome(sender, "Text echo: 完成") //
+        }
+        /*subscribe list updates:text*/
+        else{
+            subscribeCompany_list.forEach(function(value){
+                resetUser.push(value.title)
+            });
+            var nth_element = resetUser.indexOf(subscribeCompany);
+            resetUser.splice(nth_element,1);
 
-/*MUST FIX*/
-function subscribeManagement_update(sender, text){
-    console.log(resetUser)
+            axios({
+                method: 'PUT',
+                url: 'http://192.168.1.131/trista/v1/FBuser/user/',
+                //data: user_inf,
+                data:{
+                    id:sender,
+                    data:{
+                        first_name: subscribeUser_inf.first_name,
+                        last_name: subscribeUser_inf.last_name,
+                        profile_pic: subscribeUser_inf.profile_pic,
+                        locale: subscribeUser_inf.locale,
+                        timezone: subscribeUser_inf.timezone,
+                        gender: subscribeUser_inf.gender,
+                        subscribeCategory: resetUser
+                    }
+                },
+                headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+                responseType:"application/json"
+            }).then(function(response) {
+                console.log("User subscribe has been change!");
+            }).catch(function(error){
+                console.log("PUT! Error: User data has been existed");
+            });
 
-    axios({
-        method: 'PUT',
-        url: 'http://192.168.1.131/trista/v1/FBuser/user/',
-        //data: user_inf,
-        data:{
-            id:sender,
-            data:{
-                first_name: subscribeUser_inf.first_name,
-                last_name: subscribeUser_inf.last_name,
-                profile_pic: subscribeUser_inf.profile_pic,
-                locale: subscribeUser_inf.locale,
-                timezone: subscribeUser_inf.timezone,
-                gender: subscribeUser_inf.gender,
-                subscribeCategory: resetUser
+            /*Update subscribeList*/
+            subscribeCompany_list = []
+            resetUser.forEach(function(value){
+                subscribeCompany_list.push({ 
+                    content_type:"text",
+                    title:value,
+                    payload:"subscribeManagement_show_and_modify",
+                })
+            });
+            /*modify the subscribe list*/ 
+            subscribeCompany_list.push({
+                content_type:"text",
+                title:"完成", //use payload to change page
+                payload:"subscribeManagement_show_and_modify",
+            })
+            messageData = {
+                text:"請選擇欲取消訂閱之主題，完成後請點選'完成'",
+                quick_replies:subscribeCompany_list
             }
-        },
-        headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
-        responseType:"application/json"
-    }).then(function(response) {
-        console.log("User subscribe has been change!");
+            /*Facebook API:subscribe content*/
+            request({
+                url: "https://graph.facebook.com/v2.6/me/messages",
+                qs : {access_token: token},
+                method: "POST",
+                json: {
+                    recipient: {id: sender},
+                    message : messageData,
+                }
+            }, function(error, response, body) {
+                if (error) {
+                    console.log("sending error")
+                } else if (response.body.error) {
+                    //console.log(response.body)
+                    console.log(response.body.error);
+                }
+            })
+        }
     }).catch(function(error){
-        console.log("PUT! Error: User data has been existed");
-    }); 
-
+        console.log("GET request error");
+    });
 }
 
 
