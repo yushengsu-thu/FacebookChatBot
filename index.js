@@ -103,14 +103,12 @@ app.post('/webhook/', function(req, res) {
                             checkStocklist(sender,"Text echo: 更多公司資訊",3)
                         }
                         else{
-                            //Open text link and subscribe function!!
+                            subscribe_and_readStocklist(sender, String("Text echo: "+event.message.text), event.message.text)
                         }
                         break;
                     case "subscribeManagement_show_and_modify":
                         subscribeManagement_show_and_modify(sender, String("Text echo: "+event.message.text), event.message.text)
                         break;
-                        //case "":
-                        //    break;
                     default:
                         break;
                 }
@@ -140,8 +138,67 @@ app.post('/webhook/', function(req, res) {
 
 ////////////////////////////////////////////
 ////////////////////////////////////////////
+function subscribe_and_readStocklist(sender, text, company){
+    //,title,item_ , url,
+    console.log(company)
+    var messageData = {
+        attachment: {
+            type: "template",
+            payload: {
+                template_type: "generic",
+                elements: [{
+                    title: company,
+                    subtitle: "Next-generation virtual reality",
+                    item_url: "www.google.com",
+                    image_url: "www.google.com",
+                    buttons: [{
+                        type: "web_url",
+                        url: "www.google.com",
+                        title: "閱讀此文章",
+                        //messenger_extensions: true,
+                        //fallback_url: "https://petersfancyapparel.com/fallback",
+                        webview_height_ratio: "full" //compact, tall, full
+                    },{
+                        type:"element_share",
+                    },{
+                        type: "postback",
+                        title: "更多相關文章",
+                        payload: "subscribe_and_readStocklist"
+                    },{
+                        type: "postback",
+                        title: "訂閱",
+                        payload: "subscribe_and_readStocklist"
+                    },{
+                        type: "postback",
+                        title: "回首頁",
+                        payload: "subscribe_and_readStocklist"
+                    }],
+                }],   
+            }
+        }
+    }
+
+    request({
+        url: "https://graph.facebook.com/v2.6/me/messages",
+        qs : {access_token: token},
+        method: "POST",
+        json: {
+            recipient: {id: sender},
+            message : messageData,
+        }
+    }, function(error, response, body) {
+        if (error) {
+            console.log("sending error")
+        } else if (response.body.error) {
+            console.log(response.body.error);
+        }
+    })
+
+
+}
+
 function subscribeManagement_show_and_modify(sender, text, subscribeCompany){
-    
+
     /*Fetch user subscribeUser_inf*/
     var subscribeCompany_list=[]; 
     var messageData={};
@@ -293,7 +350,6 @@ function checkStocklist(sender, text, part){
     if(part < 4){
         data.push({
             content_type:"text",
-            //
             title:String("更多:"+part), //use payload to change page
             payload:"checkStocklist"
         })
