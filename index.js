@@ -293,6 +293,7 @@ function checkStocklist(sender, text, part){
     if(part < 4){
         data.push({
             content_type:"text",
+            //
             title:String("更多:"+part), //use payload to change page
             payload:"checkStocklist"
         })
