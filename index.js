@@ -29,6 +29,7 @@ const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYN
 
 app.get('/webhook/', function(req, res) {
     //Callback URL:ngrok http 5000  token:FacebookChatBot
+<<<<<<< HEAD
     if (req.query['hub.verify_token'] === "FacebookChatBot") { //FacebookChatBot
         return res.send(req.query['hub.challenge'])
     }
@@ -69,6 +70,59 @@ app.post('/webhook/', function(req, res) {
             /*button*/
             if(event.postback){
                 switch (event.postback.title) {
+=======
+	if (req.query['hub.verify_token'] === "FacebookChatBot") { //FacebookChatBot
+		return res.send(req.query['hub.challenge'])
+	}
+	res.send("Wrong token")
+})
+
+////!!!Rewrite
+app.post('/webhook/', function(req, res) {
+	var event_entry = req.body.entry[0];
+	//console.log("\n\n\n\nevent_entry = ");
+	//console.log(event_entry);
+	// Subscribes to Message Received events
+	if(event_entry.messaging){
+		var messaging_events = event_entry.messaging;
+		//console.log("\n\n\n\n=== messaging_events ===");
+		//console.log(messaging_events);)
+		for (var i = 0; i < messaging_events.length; i++) {
+			var event = messaging_events[i];
+			var sender = event.sender.id;
+			// For messages
+            console.log(event)
+			if (event.message && event.message.text) {
+                //console.log(event.message.text)
+				switch (event.message.text) {
+                    case "更多":
+				        //console.log(event.message.quick_reply.payload) 
+				        switch (event.message.quick_reply.payload) {
+                            case '1':
+                                checkStocklist(sender,"Text echo: 更多公司資訊",1)
+                                break;
+                            case '2':
+                                checkStocklist(sender,"Text echo: 更多公司資訊",2)
+                                break;
+                            case '3':
+                                checkStocklist(sender,"Text echo: 更多公司資訊",3)
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:                                                                                        backHome(sender, "Text echo: 回首頁")
+                        break;
+                }
+				//var text = event.message.text
+			    //backHome(sender, "Text echo: 回首頁")
+                //mainMenue(sender,"Text echo: mainMenue")
+                //browseAirticle(sender, "Text echo: " + text.substring(0, 100))
+			}
+			// For buttons
+            if (event.postback && event.postback.title) {
+				switch (event.postback.title) {
+>>>>>>> develop
                     case "瀏覽文章":
                         browseAirticle(sender, "Text echo: 瀏覽文章")
                         break;
