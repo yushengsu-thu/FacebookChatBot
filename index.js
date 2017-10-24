@@ -2,6 +2,9 @@
 //1.沒有公司資料時，不用再“更多”
 //Once tyoe subscribe will be see as subscribe
 //subscribeAirticle modify default: ['Facebook',,,,,] to []]
+//function greeting() how to actived! ==>https://doofenshmirtzevilincorporated.blogspot.tw/2017/08/messenger-chatbot.html
+//title: companyName ==> company 改成 title name
+//url ==> bitton (triger)==>web_url
 'use strict'
 const axios = require('axios')
 const express = require('express')
@@ -23,6 +26,15 @@ app.get('/', function(req, res) {
     res.send("Hi I am a chatbot")
 })
 
+/*
+app.use('*', function(req,res,next){
+    console.log(req)
+    console.log(res)
+    next()
+    //console.log()
+})
+*/
+
 const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYNfpdxHb3C7ZCD7ZCY2CGZBCApLChUalh4z6zifVcNjtn0kE9K1DQ9kABZBZAZCy1ZCu2sFHjixbehr4lrQ4l9se8FfPfBqkWRwNHZCt3jwHHnhwKZAcGWwZBffHwgIR"
 
 // Facebook
@@ -35,22 +47,19 @@ app.get('/webhook/', function(req, res) {
     res.send("Wrong token")
 })
 
-/*Function need*/
-//var fs = require('fs');
-//var companyList = JSON.parse(fs.readFileSync(String('brands_and_photos.json'), 'utf8'));
-//const companyNameList = Object.keys(companyList);
-/*Gobal variable*/
 
 app.post('/webhook/', function(req, res) {
     var event_entry = req.body.entry[0];
     //Received events
+    //console.log(req)
+    //console.log("====")
+    //console.log(res)
     //process.exit(1);
-    console.log(event_entry)
-    console.log("====================")
+    //console.log(event_entry)
+    //console.log("====================")
     //console.log(event_entry.messaging)
-    console.log("====================")
+    //console.log("====================")
     if(event_entry.messaging){
-        //console.log("inininin")
         var messaging_events = event_entry.messaging;
         //console.log("-")
         //console.log("out")
@@ -67,6 +76,9 @@ app.post('/webhook/', function(req, res) {
             //console.log("-")
             //
             /*button*/
+            //console.log("-")//
+            //console.log(event.web_url)//
+            //console.log("-")//
             if(event.postback){
                 switch (event.postback.title) {
                     case "瀏覽文章":
@@ -93,6 +105,9 @@ app.post('/webhook/', function(req, res) {
                     case "回上一頁":
                         subscribeList_addElement(sender,"Text echo: 回上一頁", event.postback.payload)
                         break;
+                    //case "閱讀此文章":
+                        //updatereadHistory(sender,"Text echo: 閱讀此文章", )
+                        //break;
                     default:
                         break;
                 }
@@ -149,6 +164,91 @@ app.post('/webhook/', function(req, res) {
 
 ////////////////////////////////////////////
 ////////////////////////////////////////////
+
+//////////////??How to actived!
+function greeting(sender){
+    /*Fectch the user data*/
+    request({
+        url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
+        qs : {access_token: token},
+        method: "POST",
+    }, function(error, response, body){
+        if (error) {
+            console.log("sending error")
+        } else if (response.body.error){
+            console.log("response body error")
+        }
+        const content = JSON.parse(body);
+        
+        /*Gretting text: Weclome*/
+        axios({
+            url: String("https://graph.facebook.com/v2.6/me/thread_settings?access_token="+token),
+            method: "POST",
+            responseType:"application/json",
+            data:{
+                id:sender,
+                data:{
+                    setting_type:"greeting",
+                    greeting:{
+                        text: String("Hi "+content.first_name+", welcome to tradingValley bot.")
+                    }
+                }
+            }
+        }).then(function(response){
+            console.log("Get user data:greeting")
+        }).catch(function(error){
+            console.log("error:greeting")
+        })
+
+        /*Recorder user data*/
+        /*Check the user if exist in the list and saved user data*/
+        axios({
+            method: 'POST',
+            url: 'http://192.168.1.131/trista/v1/FBuser/user/',
+            //data: user_inf,
+            data:{
+                id:sender,
+                data:{
+                    first_name: content.first_name,
+                    last_name: content.last_name,
+                    profile_pic: content.profile_pic,
+                    locale: content.locale,
+                    timezone: content.timezone,
+                    gender: content.gender,
+                    readHistory: [], //
+                    //subscribeCategory: [] //Default: news , random
+                    subscribeCategory: [] //Default: news , random
+                }
+            },
+            headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+            responseType:"application/json"
+        }).then(function(response) {
+            //console.log(response)
+            console.log("User data was saved!");
+        }).catch(function(error){
+            console.log("User data has Existed!");
+        });
+    })
+}
+/////////////
+////////////
+
+function getDateTime(){
+    var date = new Date();
+    var hour = date.getHours();
+    hour = (hour < 10 ? "0" : "") + hour;
+    var min  = date.getMinutes();
+    min = (min < 10 ? "0" : "") + min;
+    var sec  = date.getSeconds();
+    sec = (sec < 10 ? "0" : "") + sec;
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    month = (month < 10 ? "0" : "") + month;
+    var day  = date.getDate();
+    day = (day < 10 ? "0" : "") + day;
+    return year + "-" + month + "-" + day + "-" + hour + "-" + min + "-" + sec;
+}
+
 function moreAboutairticles(sender, text, companyName){
     /*Read a Links.json*/
     /*Synchronous version*/
@@ -282,6 +382,7 @@ function subscribeList_addElement(sender, text, companyName){
                         locale: subscribeUser_inf.locale,
                         timezone: subscribeUser_inf.timezone,
                         gender: subscribeUser_inf.gender,
+                        readHistory: subscribeUser_inf.readHistory,
                         subscribeCategory: resetUser
                     }
                 },
@@ -448,6 +549,7 @@ function subscribeManagement_show_and_modify(sender, text, subscribeCompany){
                         locale: subscribeUser_inf.locale,
                         timezone: subscribeUser_inf.timezone,
                         gender: subscribeUser_inf.gender,
+                        readHistory:subscribeUser_inf.readHistory,
                         subscribeCategory: resetUser
                     }
                 },
@@ -586,6 +688,7 @@ function subscribeAirticle(sender, text){
                     locale: content.locale,
                     timezone: content.timezone,
                     gender: content.gender,
+                    readHistory: [], //
                     //subscribeCategory: [] //Default: news , random
                     subscribeCategory: ["AT&T","3M","Facebook"] //Default: news , random
                 }
@@ -710,7 +813,6 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
         if (error) {
             console.log("sending error")
         } else if (response.body.error) {
-            //console.log("\n\n\n\n=== response body error ===");
             console.log(response.body.error);
         }
     })
@@ -727,21 +829,9 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
         } else if (response.body.error) {
             console.log("response body error")
         }
-        /*Restore data*/
-        const fs = require('fs');
-        const content = body;
-        //const content = JSON.parse(body);
-        //console.log(content)
-        /*
-        fs.writeFile("userdata.json", content, 'utf8', function (err) {
-            if (err) {
-                return console.log(err);
-            }
-            console.log("The file was saved!");
-        });
-         */
-        /////
-        /////
+        else{
+            /*Restore data: write to database*/
+        }
     })
 }
 
