@@ -72,8 +72,8 @@ app.post('/webhook/', function(req, res) {
                     case "瀏覽文章":
                         browseAirticle(sender, "Text echo: 瀏覽文章")
                         break;
-                    case "訂閱文章": 
-                        subscribeAirticle(sender, "Text echo: 訂閱文章")
+                    case "訂閱最新文章": 
+                        subscribeAirticle(sender, "Text echo: 訂閱最新文章")
                         break;
                     case "回首頁":
                         backHome(sender, "Text echo: 回首頁")
@@ -88,10 +88,10 @@ app.post('/webhook/', function(req, res) {
                         subscribeList_addElement(sender,String("Text echo: "+event.postback.payload), event.postback.payload)
                         break;
                     case "更多相關文章":
-                        moreAboutairticles(sender, String("Text echo: 更多相關文章"))
+                        moreAboutairticles(sender, String("Text echo: 更多相關文章"), event.postback.payload)
                         break;
                     case "回上一頁":
-                        subscribeList_addElement(sender,String("Text echo: "+event.postback.payload), "回上一頁")
+                        subscribeList_addElement(sender,"Text echo: 回上一頁", event.postback.payload)
                         break;
                     default:
                         break;
@@ -149,7 +149,7 @@ app.post('/webhook/', function(req, res) {
 
 ////////////////////////////////////////////
 ////////////////////////////////////////////
-function moreAboutairticles(sender, text){
+function moreAboutairticles(sender, text, companyName){
     /*Read a Links.json*/
     /*Synchronous version*/
     var fs = require('fs');
@@ -199,7 +199,7 @@ function moreAboutairticles(sender, text){
                     },{
                         type: "postback",
                         title: "回上一頁", //回上一頁
-                        payload: "moreAboutairticles"
+                        payload: companyName //!!!!!+===////
                     }
                     ],
                 }, {
@@ -217,7 +217,7 @@ function moreAboutairticles(sender, text){
                     },{
                         type: "postback",
                         title: "回上一頁", //回上一頁
-                        payload: "moreAboutairticles",
+                        payload: companyName //!!!-----///
                     }]
                 }]
             }
@@ -260,41 +260,44 @@ function subscribeList_addElement(sender, text, companyName){
         subscribeCategory.forEach(function(value){
             resetUser.push(value)
         });
-        /*Add company*/
-        if(resetUser.indexOf(companyName)>=-1){
+        /*Add company to the list*/
+        if(resetUser.indexOf(companyName)>-1 && text!= "Text echo: 回上一頁"){
+            console.log(resetUser.indexOf(companyName))//
+            console.log(text)
             console.log("Has subscribed")
         }
         else if(resetUser.indexOf(companyName)==-1 && companyName!="回上一頁"){
             resetUser.push(companyName)
-        }
-        //else if(companyName=="回上一頁"){}
-        else{}
-
-        /*PUT update subscribeList*/
-        axios({
-            method: 'PUT',
-            url: 'http://192.168.1.131/trista/v1/FBuser/user/',
-            //data: user_inf,
-            data:{
-                id:sender,
+            /*PUT update subscribeList*/
+            axios({
+                method: 'PUT',
+                url: 'http://192.168.1.131/trista/v1/FBuser/user/',
+                //data: user_inf,
                 data:{
-                    first_name: subscribeUser_inf.first_name,
-                    last_name: subscribeUser_inf.last_name,
-                    profile_pic: subscribeUser_inf.profile_pic,
-                    locale: subscribeUser_inf.locale,
-                    timezone: subscribeUser_inf.timezone,
-                    gender: subscribeUser_inf.gender,
-                    subscribeCategory: resetUser
-                }
-            },
-            headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
-            responseType:"application/json"
-        }).then(function(response) {
-            console.log("User subscribe has been change!");
-        }).catch(function(error){
-            console.log("PUT! Error: User data has been existed");
-        });
-        //
+                    id:sender,
+                    data:{
+                        first_name: subscribeUser_inf.first_name,
+                        last_name: subscribeUser_inf.last_name,
+                        profile_pic: subscribeUser_inf.profile_pic,
+                        locale: subscribeUser_inf.locale,
+                        timezone: subscribeUser_inf.timezone,
+                        gender: subscribeUser_inf.gender,
+                        subscribeCategory: resetUser
+                    }
+                },
+                headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+                responseType:"application/json"
+            }).then(function(response) {
+                console.log("User subscribe has been change!");
+            }).catch(function(error){
+                console.log("PUT! Error: User data has been existed");
+            });
+        }
+        //"回上一頁"
+        else{
+            subscribe_and_readStocklist(sender, text, companyName)
+        }
+
     }).catch(function(error){
         console.log("GET request error");
     });
@@ -340,7 +343,7 @@ function subscribe_and_readStocklist(sender, text, companyName){
                     },{
                         type: "postback",
                         title: "更多相關文章",//String("更多"+companyName+"相關文章"),
-                        payload: "subscribe_and_readStocklist"
+                        payload: companyName /////!!!!!!!!/////
                     }],
                 }],   
             }
@@ -776,7 +779,7 @@ function backHome(sender, text){
                         payload: "backHome"
                     },{
                         type: "postback",
-                        title: "訂閱文章",
+                        title: "訂閱最新文章",
                         payload: "backHome"
                     }]
                 },{
