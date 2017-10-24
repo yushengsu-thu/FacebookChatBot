@@ -28,8 +28,8 @@
   "homepage": "https://github.com/brandonbrown/fb-bot-heroku#readme",
   "dependencies": {
     "axios": "^0.16.2",
-    "body-parser": "^1.15.2",
-    "express": "^4.14.0",
-    "request": "^2.78.0"
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "request": "^2.83.0"
   }
 }
