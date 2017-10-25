@@ -41,7 +41,6 @@ const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYN
 
 app.get('/webhook/', function(req, res) {
     //Callback URL:ngrok http 5000  token:FacebookChatBot
-<<<<<<< HEAD
     if (req.query['hub.verify_token'] === "FacebookChatBot") { //FacebookChatBot
         return res.send(req.query['hub.challenge'])
     }
@@ -70,7 +69,7 @@ app.post('/webhook/', function(req, res) {
             var event = messaging_events[i];
             var sender = event.sender.id;
 
-            //    
+            //
             //console.log("-")
             //console.log("out")
             //console.log(event);
@@ -82,63 +81,10 @@ app.post('/webhook/', function(req, res) {
             //console.log("-")//
             if(event.postback){
                 switch (event.postback.title) {
-=======
-	if (req.query['hub.verify_token'] === "FacebookChatBot") { //FacebookChatBot
-		return res.send(req.query['hub.challenge'])
-	}
-	res.send("Wrong token")
-})
-
-////!!!Rewrite
-app.post('/webhook/', function(req, res) {
-	var event_entry = req.body.entry[0];
-	//console.log("\n\n\n\nevent_entry = ");
-	//console.log(event_entry);
-	// Subscribes to Message Received events
-	if(event_entry.messaging){
-		var messaging_events = event_entry.messaging;
-		//console.log("\n\n\n\n=== messaging_events ===");
-		//console.log(messaging_events);)
-		for (var i = 0; i < messaging_events.length; i++) {
-			var event = messaging_events[i];
-			var sender = event.sender.id;
-			// For messages
-            console.log(event)
-			if (event.message && event.message.text) {
-                //console.log(event.message.text)
-				switch (event.message.text) {
-                    case "更多":
-				        //console.log(event.message.quick_reply.payload) 
-				        switch (event.message.quick_reply.payload) {
-                            case '1':
-                                checkStocklist(sender,"Text echo: 更多公司資訊",1)
-                                break;
-                            case '2':
-                                checkStocklist(sender,"Text echo: 更多公司資訊",2)
-                                break;
-                            case '3':
-                                checkStocklist(sender,"Text echo: 更多公司資訊",3)
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-                    default:                                                                                        backHome(sender, "Text echo: 回首頁")
-                        break;
-                }
-				//var text = event.message.text
-			    //backHome(sender, "Text echo: 回首頁")
-                //mainMenue(sender,"Text echo: mainMenue")
-                //browseAirticle(sender, "Text echo: " + text.substring(0, 100))
-			}
-			// For buttons
-            if (event.postback && event.postback.title) {
-				switch (event.postback.title) {
->>>>>>> develop
                     case "瀏覽文章":
                         browseAirticle(sender, "Text echo: 瀏覽文章")
                         break;
-                    case "訂閱最新文章": 
+                    case "訂閱最新文章":
                         subscribeAirticle(sender, "Text echo: 訂閱最新文章")
                         break;
                     case "回首頁":
@@ -146,7 +92,7 @@ app.post('/webhook/', function(req, res) {
                         break;
                     case "美股清單":
                         checkStocklist(sender, "Text echo: 美股清單", 0)
-                        break;    
+                        break;
                     case "訂閱管理":
                         subscribeManagement_show_and_modify(sender, "Text echo: 訂閱管理", "subscribeList")
                         break;
@@ -159,7 +105,7 @@ app.post('/webhook/', function(req, res) {
                     case "回上一頁":
                         subscribeList_addElement(sender,"Text echo: 回上一頁", event.postback.payload)
                         break;
-                    //case "閱讀此文章":
+                        //case "閱讀此文章":
                         //updatereadHistory(sender,"Text echo: 閱讀此文章", )
                         //break;
                     default:
@@ -233,7 +179,7 @@ function greeting(sender){
             console.log("response body error")
         }
         const content = JSON.parse(body);
-        
+
         /*Gretting text: Weclome*/
         axios({
             url: String("https://graph.facebook.com/v2.6/me/thread_settings?access_token="+token),
@@ -459,7 +405,7 @@ function subscribeList_addElement(sender, text, companyName){
 }
 
 function subscribe_and_readStocklist(sender, text, companyName){
-    //Add: item_url, subtitle, url 
+    //Add: item_url, subtitle, url
     var fs = require('fs');
     var brands_and_photos = JSON.parse(fs.readFileSync(String('brands_and_photos.json'), 'utf8'));
     var companyPhotolink = brands_and_photos[companyName]
@@ -500,7 +446,7 @@ function subscribe_and_readStocklist(sender, text, companyName){
                         title: "更多相關文章",//String("更多"+companyName+"相關文章"),
                         payload: companyName /////!!!!!!!!/////
                     }],
-                }],   
+                }],
             }
         }
     }
@@ -525,9 +471,9 @@ function subscribe_and_readStocklist(sender, text, companyName){
 function subscribeManagement_show_and_modify(sender, text, subscribeCompany){
 
     /*Fetch user subscribeUser_inf*/
-    var subscribeCompany_list=[]; 
+    var subscribeCompany_list=[];
     var messageData={};
-    var subscribeUser_inf = {};// 
+    var subscribeUser_inf = {};//
     var resetUser=[];//
 
     axios({
@@ -543,7 +489,7 @@ function subscribeManagement_show_and_modify(sender, text, subscribeCompany){
         console.log("Fetch user subscribe information");
         /*text:company*/
         subscribeCategory.forEach(function(value){
-            subscribeCompany_list.push({ 
+            subscribeCompany_list.push({
                 content_type:"text",
                 title:value,
                 payload:"subscribeManagement_show_and_modify",
@@ -578,7 +524,7 @@ function subscribeManagement_show_and_modify(sender, text, subscribeCompany){
                     console.log(response.body.error);
                 }
             })
-        } 
+        }
         else if(subscribeCompany=="完成"){
             backHome(sender, "Text echo: 完成") //
         }
@@ -618,13 +564,13 @@ function subscribeManagement_show_and_modify(sender, text, subscribeCompany){
             /*Update subscribeList*/
             subscribeCompany_list = []
             resetUser.forEach(function(value){
-                subscribeCompany_list.push({ 
+                subscribeCompany_list.push({
                     content_type:"text",
                     title:value,
                     payload:"subscribeManagement_show_and_modify",
                 })
             });
-            /*modify the subscribe list*/ 
+            /*modify the subscribe list*/
             subscribeCompany_list.push({
                 content_type:"text",
                 title:"完成", //use payload to change page
@@ -662,15 +608,15 @@ function checkStocklist(sender, text, part){
     var fs = require('fs');
     var brands_and_photos = JSON.parse(fs.readFileSync(String('brands_and_photos_p'+part+'.json'), 'utf8'));
 
-    var data=[]; 
+    var data=[];
     for(var key in brands_and_photos){
-        data.push({ 
+        data.push({
             content_type:"text",
             title:key,
             image_url:brands_and_photos[key],
             payload:"checkStocklist"
         })
-    } 
+    }
     //更多 選項
     part = part+1
     if(part < 4){
@@ -683,10 +629,10 @@ function checkStocklist(sender, text, part){
 
     var conversation;
     if(part!=0){
-        conversation="更多公司資訊";    
+        conversation="更多公司資訊";
     }
     else{
-        conversation="我們列出部分美股如下，你也可以點選'更多'來找尋你感興趣的公司" 
+        conversation="我們列出部分美股如下，你也可以點選'更多'來找尋你感興趣的公司"
     }
     var messageData = {
         text: conversation,
@@ -716,7 +662,7 @@ function subscribeAirticle(sender, text){
     request({
         url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
         qs : {access_token: token},
-        method: "GET", 
+        method: "GET",
     }, function(error, response, body) {
         if (error) {
             console.log("sending error")
@@ -728,7 +674,7 @@ function subscribeAirticle(sender, text){
         const content = JSON.parse(body);
         //const user_inf = JSON.stringify(content);
 
-        /*Check the user if exist in the list and saved user data*/ 
+        /*Check the user if exist in the list and saved user data*/
         axios({
             method: 'POST',
             url: 'http://192.168.1.131/trista/v1/FBuser/user/',
@@ -750,7 +696,7 @@ function subscribeAirticle(sender, text){
             headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
             responseType:"application/json"
         }).then(function(response) {
-            //console.log(response) 
+            //console.log(response)
             console.log("User data was saved!");
         }).catch(function(error){
             console.log("User data has Existed!");
@@ -876,7 +822,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     request({
         url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
         qs : {access_token: token},
-        method: "GET", 
+        method: "GET",
     }, function(error, response, body) {
         if (error) {
             console.log("sending error")
@@ -964,4 +910,3 @@ function backHome(sender, text){
 app.listen(app.get('port'), function() {
     console.log("running: port",app.get('port')) //app,get('port')
 })
-
