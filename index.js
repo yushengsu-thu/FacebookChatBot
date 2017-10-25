@@ -5,6 +5,7 @@
 //function greeting() how to actived! ==>https://doofenshmirtzevilincorporated.blogspot.tw/2017/08/messenger-chatbot.html
 //title: companyName ==> company 改成 title name
 //url ==> bitton (triger)==>web_url
+//solution: https://github.com/howdyai/botkit/issues/652
 'use strict'
 const axios = require('axios')
 const express = require('express')

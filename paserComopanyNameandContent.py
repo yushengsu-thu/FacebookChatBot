@@ -46,6 +46,8 @@ class Pares:
        return(companyNews)
     
     def parsecompanyNews(self,url):
+        
+
        res = requests.get(url)
        soup = BeautifulSoup(res.text,"html5lib")
        soup = soup.find_all('div', {'class': 'post-info'})
