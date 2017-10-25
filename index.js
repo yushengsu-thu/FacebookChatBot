@@ -26,14 +26,14 @@ app.get('/', function(req, res) {
     res.send("Hi I am a chatbot")
 })
 
-/*
+
 app.use('*', function(req,res,next){
     console.log(req)
     console.log(res)
     next()
     //console.log()
 })
-*/
+
 
 const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYNfpdxHb3C7ZCD7ZCY2CGZBCApLChUalh4z6zifVcNjtn0kE9K1DQ9kABZBZAZCy1ZCu2sFHjixbehr4lrQ4l9se8FfPfBqkWRwNHZCt3jwHHnhwKZAcGWwZBffHwgIR"
 
