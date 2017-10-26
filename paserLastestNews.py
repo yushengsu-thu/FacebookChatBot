@@ -42,11 +42,28 @@ class Pares:
         titles = BeautifulSoup(str(titles),"html5lib")
         titles = soup.find_all('div', {'class': 'post-title'})
         titles = [title.text for title in titles]
-        print(titles)
+        #print(titles)
+
+        dates = soup.find_all('div', {'class': 'post-date'}) 
+        dates = [date.text.replace("\xa0","") for date in dates]
+        #print(dates)
+        
+        lastestNews=list()
+        for i in range(len(titles)):
+            lastestNews.append({
+                "title":titles[i],
+                "newsLink":newsLinks[i],
+                "airticlePhoto":airticlePhotos[i],
+                "brief":"相關報導",
+                "date":dates[i]
+            })
+
+        #print(lastestNews)
+        return lastestNews
 
 if __name__ == '__main__':
     mainPage = "https://www.stockfeel.com.tw/category/stock-usa/"
     parser1=Pares()
     lastestNews = parser1.parselastestNews(mainPage)
     with open('lastestNews.json', 'w') as f:
-        json.dump(lastestNews,f)
+        json.dump(lastestNews,f,ensure_ascii=False)

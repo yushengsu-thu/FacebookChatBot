@@ -38,7 +38,9 @@ app.use('*', function(req,res,next){
 
 const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYNfpdxHb3C7ZCD7ZCY2CGZBCApLChUalh4z6zifVcNjtn0kE9K1DQ9kABZBZAZCy1ZCu2sFHjixbehr4lrQ4l9se8FfPfBqkWRwNHZCt3jwHHnhwKZAcGWwZBffHwgIR"
 /*company and airticle content*/
-const parsedJSON = require('./brandandcCompanyNews.json.json');
+const allCompanyInf = require('./brandandcCompanyNews.json');
+/*Lastest news*/
+const lastestNews =
 
 //Facebook
 app.get('/webhook/', function(req, res) {
