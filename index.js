@@ -475,7 +475,8 @@ function subscribe_and_readStocklist(sender, text, companyName){
     //console.log(photo1)
     //process.exit()
 
-    //console.log(companyName)
+    
+    console.log(companyName)
     //console.log(airticel1)
     //console.log(companyinformation.photoLink)
     //console.log(brief1)
