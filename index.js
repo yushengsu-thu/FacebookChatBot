@@ -37,9 +37,10 @@ app.use('*', function(req,res,next){
 
 
 const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYNfpdxHb3C7ZCD7ZCY2CGZBCApLChUalh4z6zifVcNjtn0kE9K1DQ9kABZBZAZCy1ZCu2sFHjixbehr4lrQ4l9se8FfPfBqkWRwNHZCt3jwHHnhwKZAcGWwZBffHwgIR"
+/*company and airticle content*/
+const parsedJSON = require('./brandandcCompanyNews.json.json');
 
-// Facebook
-
+//Facebook
 app.get('/webhook/', function(req, res) {
     //Callback URL:ngrok http 5000  token:FacebookChatBot
     if (req.query['hub.verify_token'] === "FacebookChatBot") { //FacebookChatBot
@@ -253,8 +254,8 @@ function getDateTime(){
 function moreAboutairticles(sender, text, companyName){
     /*Read a Links.json*/
     /*Synchronous version*/
-    var fs = require('fs');
-    var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
+    //var fs = require('fs');
+    //var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
 
     /*Asynchronous version*/
     /*=====================*/
@@ -407,8 +408,9 @@ function subscribeList_addElement(sender, text, companyName){
 
 function subscribe_and_readStocklist(sender, text, companyName){
     //Add: item_url, subtitle, url
-    var fs = require('fs');
-    var brands_and_photos = JSON.parse(fs.readFileSync(String('brands_and_photos.json'), 'utf8'));
+    //var fs = require('fs');
+    //var brands_and_photos = JSON.parse(fs.readFileSync(String('brands_and_photos.json'), 'utf8'));
+    var brands_and_photos = require('./links.json');
     var companyPhotolink = brands_and_photos[companyName]
 
     var messageData = {
@@ -708,13 +710,13 @@ function subscribeAirticle(sender, text){
 function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     /*Read a Links.json*/
     /*Synchronous version*/
-    var fs = require('fs');
-    var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
+    //var fs = require('fs');
+    //var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
 
     /*Asynchronous version*/
     /*=====================*/
     //var messageData = {text: text}
-    var parsedJSON = require('./links.json');
+    //var parsedJSON = require('./links.json');
     function pickRandomProperty(obj) {
         var result;
         var count = 0;
