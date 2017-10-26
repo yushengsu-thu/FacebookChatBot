@@ -40,7 +40,7 @@ const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYN
 /*company and airticle content*/
 const allCompanyInf = require('./brandandcCompanyNews.json');
 /*Lastest news*/
-const lastestNews =
+const lastestNews = require('./lastestNews.json')
 
 //Facebook
 app.get('/webhook/', function(req, res) {
@@ -262,7 +262,14 @@ function moreAboutairticles(sender, text, companyName){
     /*Asynchronous version*/
     /*=====================*/
     //var messageData = {text: text}
-    var parsedJSON = require('./links.json');
+    //var parsedJSON = require('./links.json');
+    
+    var parsedJSON = allCompanyInf.filter(function(value){ return value.name == companyName;})
+    parsedJSON = parsedJSON[0].companyNews
+    
+
+    /*Random*/
+    console.log(parsedJSON.length)
     function pickRandomProperty(obj) {
         var result;
         var count = 0;
@@ -271,16 +278,43 @@ function moreAboutairticles(sender, text, companyName){
                 result = prop;
         return result;
     }
-    var title1 = pickRandomProperty(parsedJSON)
-    var link1 = parsedJSON[title1]
-    var airticle1 = link1[0]
-    var photo1 = link1[1]
-    var title2 = pickRandomProperty(parsedJSON)
-    var link2 = parsedJSON[title2]
-    var airticle2 = link2[0]
-    var photo2 = link2[1]
+    
+    var parse1 = parsedJSON[pickRandomProperty(parsedJSON)] 
+    var title1 = parse1.title
+    var link1 = parse1.newsLink
+    var airticle1 = parse1.newsLink
+    var date1 =  parse1.date
+    var brief1 = parse1.brief
+    var photo1 = parse1.airticlePhoto
 
+    var parse2 = parsedJSON[pickRandomProperty(parsedJSON)]
+    while(parse2.title == parse1.title && parsedJSON.length>=2)
+    {
+        parse2 = parsedJSON[pickRandomProperty(parsedJSON)]
+    }
+    var title2 = parse2.title
+    var link2 = parse2.newsLink
+    var airticle2 = parse2.newsLink
+    var photo2 = parse2.airticlePhoto
+    var date2 = parse2.date
+    var brief2 = parse2.brief
+    
+    /*
+    parse3 = parsedJSON[pickRandomProperty(parsedJSON)]
+    while(((parse3.title == parse1.title) || (parse3.title == parse2.title)) && parsedJSON.length>=3)
+    {
+        parse3 = parsedJSON[pickRandomProperty(parsedJSON)]
+    }
 
+    var title3 = paser3.title
+    var link3 = paser3.newslink
+    var airticle3 = paser3.newslink
+    var photo3 = paser3.airticlePhoto
+    var date3 = paser3.date
+    var brief3 = paser3.brief
+    */
+
+    /*control maxiuam 3 airticle*/ //==>if okay push!!
     var messageData = {
         attachment: {
             type: "template",
@@ -288,7 +322,7 @@ function moreAboutairticles(sender, text, companyName){
                 template_type: "generic",
                 elements: [{
                     title: title1,
-                    subtitle: "Next-generation virtual reality",
+                    subtitle: String(brief1+": "+date1),
                     item_url: airticle1,
                     image_url: photo1,
                     buttons: [{
@@ -308,7 +342,7 @@ function moreAboutairticles(sender, text, companyName){
                     ],
                 }, {
                     title: title2,
-                    subtitle: "Add the description",
+                    subtitle: String(brief2+": "+date2),
                     item_url: airticle2,
                     image_url: photo2,
                     buttons: [{
@@ -411,10 +445,46 @@ function subscribeList_addElement(sender, text, companyName){
 function subscribe_and_readStocklist(sender, text, companyName){
     //Add: item_url, subtitle, url
     //var fs = require('fs');
-    //var brands_and_photos = JSON.parse(fs.readFileSync(String('brands_and_photos.json'), 'utf8'));
-    var brands_and_photos = require('./links.json');
-    var companyPhotolink = brands_and_photos[companyName]
+    //var allCompanyInf = JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
+    //var brands_and_photos = require('./links.json');
+    //var companyPhotolink = brands_and_photos[companyName]
+    var allCompanyInf = require('./brandandcCompanyNews1.json');
+    var parsedJSON = allCompanyInf.filter(function(value){ return value.name == companyName;})
+    var companyinformation = parsedJSON[0]
+    parsedJSON = companyinformation.companyNews
+   
+    
+    /*Random*/
+    //console.log(parsedJSON.length)
+    function pickRandomProperty(obj) {
+        var result;
+        var count = 0;
+        for (var prop in obj)
+            if (Math.random() < 1/++count)
+                result = prop;
+        return result;
+    }
 
+    var parse1 = parsedJSON[pickRandomProperty(parsedJSON)]
+    var title1 = parse1.title
+    var link1 = parse1.newsLink
+    var airticle1 = parse1.newsLink
+    var date1 =  parse1.date
+    var brief1 = parse1.brief
+    var photo1 = parse1.airticlePhoto
+    //console.log(photo1)
+    //process.exit()
+
+    //console.log(companyName)
+    //console.log(airticel1)
+    //console.log(companyinformation.photoLink)
+    //console.log(brief1)
+    //console.log(date1)
+    //console.log(photo1)
+    //console.log(title1)
+    //console.log(parse1)
+    //process.exit()
+    
     var messageData = {
         attachment: {
             type: "template",
@@ -423,8 +493,8 @@ function subscribe_and_readStocklist(sender, text, companyName){
                 elements: [{
                     title: companyName,
                     subtitle: String("點選訂閱把"+companyName+"加入訂閱清單"),
-                    item_url: "www.google.com",//
-                    image_url: companyPhotolink,
+                    item_url: airticel1,///////
+                    image_url: companyinformation.photoLink,
                     buttons: [{
                         type: "postback",
                         title: "訂閱",
@@ -435,13 +505,13 @@ function subscribe_and_readStocklist(sender, text, companyName){
                         payload: "subscribe_and_readStocklist"
                     }],
                 },{
-                    title: companyName,
-                    subtitle: "paser airticel and brief here",//
-                    item_url: "www.google.com",//
-                    image_url: "www.google.com",//
+                    title: title1,
+                    subtitle: String(brief1+": "+date1),
+                    item_url: airticle1,//
+                    image_url: photo1,
                     buttons: [{
                         type: "web_url",
-                        url: "www.google.com",//
+                        url: airticle1,
                         title: "閱讀此文章",
                         webview_height_ratio: "full" //compact, tall, full
                     },{
@@ -455,6 +525,10 @@ function subscribe_and_readStocklist(sender, text, companyName){
             }
         }
     }
+
+
+    console.log(messageData)
+    process.exit()
 
     request({
         url: "https://graph.facebook.com/v2.6/me/messages",
@@ -718,7 +792,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     /*Asynchronous version*/
     /*=====================*/
     //var messageData = {text: text}
-    //var parsedJSON = require('./links.json');
+    var parsedJSON = require('./links.json');
     function pickRandomProperty(obj) {
         var result;
         var count = 0;
