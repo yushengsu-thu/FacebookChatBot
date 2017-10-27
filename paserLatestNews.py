@@ -65,5 +65,5 @@ if __name__ == '__main__':
     mainPage = "https://www.stockfeel.com.tw/category/stock-usa/"
     parser1=Pares()
     lastestNews = parser1.parselastestNews(mainPage)
-    with open('lastestNews.json', 'w') as f:
+    with open('latestNews.json', 'w') as f:
         json.dump(lastestNews,f,ensure_ascii=False)

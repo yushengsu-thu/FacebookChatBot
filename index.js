@@ -40,7 +40,7 @@ const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYN
 /*company and airticle content*/
 //const allCompanyInf = require('./brandandcCompanyNews.json');
 /*Lastest news*/
-//const lastestNews = require('./lastestNews.json')
+//const latestNews = require('./latestNews.json')
 
 //Facebook
 app.get('/webhook/', function(req, res) {
@@ -176,6 +176,83 @@ app.post('/webhook/', function(req, res) {
 ////////////////////////////////////////////
 ////////////////////////////////////////////
 
+//function pushNotification(){
+//} 
+
+function notification(){
+
+    /*Random*/
+    console.log(parsedJSON.length)
+    function pickRandomProperty(obj) {
+        var result;
+        var count = 0;
+        for (var prop in obj)
+            if (Math.random() < 1/++count)
+                result = prop;
+        return result;
+    }
+    /////
+    var messageData = {
+        attachment: {
+            type: "template",
+            payload: {
+                template_type: "generic",
+                elements: []
+            }
+        }
+    }
+    //////
+    var latestNews = require('./latestNews.json');
+    var fs = require('fs');
+    var allCompanyInf = JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
+
+    var subscribeUser_inf=[]
+    var airticle1={}
+    var airticle2={}
+    var airticle3={}
+
+    axios({
+        method: 'GET',
+        url: 'http://192.168.1.131/trista/v1/FBuser/user/'+sender,
+        headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+        responseType:"application/json"
+    }).then(function(response) {
+        /*Fetch user subscribeUser_inf*/
+        subscribeUser_inf = response.data.data.data
+        var subscribeCategory =  subscribeUser_inf.subscribeCategory
+        console.log("Fetch user subscribe information");
+        
+        /*Push Notification*/
+        //push 1 latestNews
+        //unscribe latestNews
+        if(subscribeCategory.indexOf("latestNews") == -1){
+            //empty
+            if(subscribeCategory.length == 0){
+            //push nothong
+            }
+            //not empty ==>Condition still need to fix
+            else{
+                
+            }
+        }
+        //subscribe lastestNews (Default)
+        else{
+            //subscribe latest and others
+            if(subscribeCategory.length>1){
+            //2 latestNews
+            //1 random from array
+            }
+            //only subscribe latestNews
+            else{
+                //3 latestNews
+                browseAirticle(sender, "本週最新文章")
+            }
+        }
+        
+    });
+}
+
+///////////////////////////////
 //////////////??How to actived!
 function greeting(sender){
     /*Fectch the user data*/
@@ -243,7 +320,6 @@ function greeting(sender){
 }
 /////////////
 ////////////
-
 function getDateTime(){
     var date = new Date();
     var hour = date.getHours();
@@ -259,6 +335,8 @@ function getDateTime(){
     day = (day < 10 ? "0" : "") + day;
     return year + "-" + month + "-" + day + "-" + hour + "-" + min + "-" + sec;
 }
+////
+////
 
 function moreAboutairticles(sender, text, companyName){
     /*Read a Links.json*/
@@ -272,10 +350,10 @@ function moreAboutairticles(sender, text, companyName){
     /*=====================*/
     //var messageData = {text: text}
     //var parsedJSON = require('./links.json');
-    
+
     var parsedJSON = allCompanyInf.filter(function(value){ return value.name == companyName;})
     parsedJSON = parsedJSON[0].companyNews
-    
+
 
     /*Random*/
     console.log(parsedJSON.length)
@@ -287,7 +365,7 @@ function moreAboutairticles(sender, text, companyName){
                 result = prop;
         return result;
     }
-    
+
     var parse1 = parsedJSON[pickRandomProperty(parsedJSON)] 
     var title1 = parse1.title
     var link1 = parse1.newsLink
@@ -307,7 +385,7 @@ function moreAboutairticles(sender, text, companyName){
     var photo2 = parse2.airticlePhoto
     var date2 = parse2.date
     var brief2 = parse2.brief
-    
+
     /*
     parse3 = parsedJSON[pickRandomProperty(parsedJSON)]
     while(((parse3.title == parse1.title) || (parse3.title == parse2.title)) && parsedJSON.length>=3)
@@ -321,7 +399,7 @@ function moreAboutairticles(sender, text, companyName){
     var photo3 = paser3.airticlePhoto
     var date3 = paser3.date
     var brief3 = paser3.brief
-    */
+     */
 
     /*control maxiuam 3 airticle*/ //==>if okay push!!
     var messageData = {
@@ -462,8 +540,8 @@ function subscribe_and_readStocklist(sender, text, companyName){
     var parsedJSON = allCompanyInf.filter(function(value){ return value.name == companyName;})
     var companyinformation = parsedJSON[0]
     parsedJSON = companyinformation.companyNews
-   
-    
+
+
     /*Random*/
     //console.log(parsedJSON.length)
     function pickRandomProperty(obj) {
@@ -475,7 +553,7 @@ function subscribe_and_readStocklist(sender, text, companyName){
         return result;
     }
 
-    
+
     var parse1 = parsedJSON[pickRandomProperty(parsedJSON)]
     var title1 = parse1.title
     var link1 = parse1.newsLink
@@ -483,7 +561,7 @@ function subscribe_and_readStocklist(sender, text, companyName){
     var date1 =  parse1.date
     var brief1 = parse1.brief
     var photo1 = parse1.airticlePhoto
-    
+
     //console.log(companyName)
     //process.exit()
     //console.log(airticle1)//wrong
@@ -495,7 +573,7 @@ function subscribe_and_readStocklist(sender, text, companyName){
     //console.log(title1)
     //console.log(parse1)
     //process.exit(1)
-    
+
     var messageData = {
         attachment: {
             type: "template",
@@ -780,7 +858,8 @@ function subscribeAirticle(sender, text){
                     gender: content.gender,
                     readHistory: [], //
                     //subscribeCategory: [] //Default: news , random
-                    subscribeCategory: ["AT&T","3M","Facebook"] //Default: news , random
+                    //subscribeCategory: ["AT&T","3M","Facebook"] //Default: news , random
+                    subscribeCategory: ["latestNews"] //Default: news , random
                 }
             },
             headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
@@ -803,7 +882,9 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     /*Asynchronous version*/
     /*=====================*/
     //var messageData = {text: text}
-    var parsedJSON = require('./links.json');
+    var parsedJSON = require('./latestNews.json');
+    /*Random*/
+    /*
     function pickRandomProperty(obj) {
         var result;
         var count = 0;
@@ -824,6 +905,27 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     var link3 = parsedJSON[title3]
     var airticle3 = link3[0]
     var photo3 = link3[1]
+     */
+    var title1 = parsedJSON[1].title 
+    var link1 = parsedJSON[1].newsLink
+    var airticle1 = parsedJSON[1].newsLink
+    var photo1 = parsedJSON[1].airticlePhoto
+    var brief1 = parsedJSON[1].brief
+    var date1= parsedJSON[1].date
+
+    var title2 = parsedJSON[2].title
+    var link2 = parsedJSON[2].newsLink
+    var airticle2 = parsedJSON[2].newsLink
+    var photo2 = parsedJSON[2].airticlePhoto
+    var brief2 = parsedJSON[2].brief
+    var date2= parsedJSON[2].date
+
+    var title3 = parsedJSON[3].title
+    var link3 = parsedJSON[3].newsLink
+    var airticle3 = parsedJSON[3].newsLink
+    var photo3 = parsedJSON[3].airticlePhoto
+    var brief3 = parsedJSON[3].brief
+    var date3 = parsedJSON[3].date
     /////
     ////
     var messageData = {
@@ -833,7 +935,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                 template_type: "generic",
                 elements: [{
                     title: title1,
-                    subtitle: "Next-generation virtual reality",
+                    subtitle: String(brief1+": "+date1),
                     item_url: airticle1,
                     image_url: photo1,
                     buttons: [{
@@ -853,7 +955,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                     ],
                 }, {
                     title: title2,
-                    subtitle: "Add the description",
+                    subtitle: String(brief1+": "+date1),
                     item_url: airticle2,
                     image_url: photo2,
                     buttons: [{
@@ -870,7 +972,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                     }]
                 },{
                     title: title3,
-                    subtitle: "Add the description",
+                    subtitle: String(brief1+": "+date1),
                     item_url: airticle3,
                     image_url: photo3,
                     buttons: [{
