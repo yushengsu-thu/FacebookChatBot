@@ -155,7 +155,11 @@ app.post('/webhook/', function(req, res) {
                 //console.log("-")
                 //console.log("nlp")
                 //console.log("-")
-                backHome(sender, "Text echo: 回首頁")
+                ///
+                //console.log(event.messages.text)
+                //process.exit()
+                notification(sender, "Text echo: test")
+                //backHome(sender, "Text echo: 回首頁")
             }
             /*Noisy*/
             else{
@@ -176,13 +180,27 @@ app.post('/webhook/', function(req, res) {
 ////////////////////////////////////////////
 ////////////////////////////////////////////
 
-//function pushNotification(){
-//} 
+function pushNotification(sender,messageData){
+    request({
+        url: "https://graph.facebook.com/v2.6/me/messages",
+        qs : {access_token: token},
+        method: "POST",
+        json: {
+            recipient: {id: sender},
+            message : messageData,
+        }
+    }, function(error, response, body) {
+        if (error) {
+            console.log("sending error")
+        } else if (response.body.error) {
+            console.log(response.body.error);
+        }
+    })
+} 
 
-function notification(){
+function notification(sender, text){
 
     /*Random*/
-    console.log(parsedJSON.length)
     function pickRandomProperty(obj) {
         var result;
         var count = 0;
@@ -201,7 +219,7 @@ function notification(){
             }
         }
     }
-    //////
+
     var latestNews = require('./latestNews.json');
     var fs = require('fs');
     var allCompanyInf = JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
@@ -210,6 +228,10 @@ function notification(){
     //var airticle1={}
     //var airticle2={}
     //var airticle3={}
+    
+    //////
+    //console.log("++==++")
+    //process.exit()
 
     axios({
         method: 'GET',
@@ -221,14 +243,14 @@ function notification(){
         subscribeUser_inf = response.data.data.data
         var subscribeCategory =  subscribeUser_inf.subscribeCategory
         console.log("Fetch user subscribe information");
-        
+
         /*Push Notification*/
         //push 1 latestNews
         //unscribe latestNews
         if(subscribeCategory.indexOf("latestNews") == -1){
             //empty
             if(subscribeCategory.length == 0){
-            //push nothong
+                //push nothong
             }
             //not empty ==>Condition still need to fix
             else{
@@ -246,24 +268,25 @@ function notification(){
                     var photo1 = parse1.airticlePhoto
                     ////
                     messageData.attachment.payload.elements.push({
-                            title: title1,
-                            subtitle: String(brief1+": "+date1),
-                            item_url: airticle1,
-                            image_url: photo1,
-                            buttons: [{
-                                type: "web_url",
-                                url: airticle1,
-                                title: "閱讀此文章",
-                                webview_height_ratio: "full"
-                            },{
-                                type:"element_share"
-                            },{
-                                type: "postback",
-                                title: "回首頁",
-                                payload: "browseAirticle",
-                            }]
+                        title: title1,
+                        subtitle: String(brief1+": "+date1),
+                        item_url: airticle1,
+                        image_url: photo1,
+                        buttons: [{
+                            type: "web_url",
+                            url: airticle1,
+                            title: "閱讀此文章",
+                            webview_height_ratio: "full"
+                        },{
+                            type:"element_share"
+                        },{
+                            type: "postback",
+                            title: "回首頁",
+                            payload: "browseAirticle",
+                        }]
                     })
                     //pushN
+                    pushNotification(sender,messageData)
                 }
                 //subscribe 2 comapny
                 else if(subscribeCategory.length == 2){
@@ -301,6 +324,7 @@ function notification(){
                         ///
                     }
                     //pushN
+                    pushNotification(sender,messageData)
                 }
                 //subscribe more than 3 comapny 
                 else{
@@ -349,7 +373,8 @@ function notification(){
                             }]
                         })
                     }
-                   /////push
+                    /////push
+                    pushNotification(sender,messageData)
                 }
 
             }
@@ -386,7 +411,6 @@ function notification(){
                             payload: "browseAirticle",
                         }]
                     })
-                    //push
                 }
 
                 //1 random from array
@@ -421,8 +445,9 @@ function notification(){
                     }]
                 })
                 //push
+                pushNotification(sender,messageData)
             }
-            
+
             //only subscribe latestNews
             else{
                 //3 latestNews
