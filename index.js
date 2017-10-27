@@ -27,20 +27,20 @@ app.get('/', function(req, res) {
     res.send("Hi I am a chatbot")
 })
 
-
+/*
 app.use('*', function(req,res,next){
     console.log(req)
     console.log(res)
     next()
     //console.log()
 })
-
+*/
 
 const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYNfpdxHb3C7ZCD7ZCY2CGZBCApLChUalh4z6zifVcNjtn0kE9K1DQ9kABZBZAZCy1ZCu2sFHjixbehr4lrQ4l9se8FfPfBqkWRwNHZCt3jwHHnhwKZAcGWwZBffHwgIR"
 /*company and airticle content*/
-const allCompanyInf = require('./brandandcCompanyNews.json');
+//const allCompanyInf = require('./brandandcCompanyNews.json');
 /*Lastest news*/
-const lastestNews = require('./lastestNews.json')
+//const lastestNews = require('./lastestNews.json')
 
 //Facebook
 app.get('/webhook/', function(req, res) {
@@ -63,12 +63,14 @@ app.post('/webhook/', function(req, res) {
     //console.log("====================")
     //console.log(event_entry.messaging)
     //console.log("====================")
+    //&& !event.message.is_echo
     if(event_entry.messaging){
         var messaging_events = event_entry.messaging;
         //console.log("-")
         //console.log("out")
         //console.log(messaging_events);
         //console.log("-")
+        //process.exit()
         for (var i = 0; i < messaging_events.length; i++) {
             var event = messaging_events[i];
             var sender = event.sender.id;
@@ -84,39 +86,44 @@ app.post('/webhook/', function(req, res) {
             //console.log(event.web_url)//
             //console.log("-")//
             if(event.postback){
-                switch (event.postback.title) {
-                    case "瀏覽文章":
-                        browseAirticle(sender, "Text echo: 瀏覽文章")
-                        break;
-                    case "訂閱最新文章":
-                        subscribeAirticle(sender, "Text echo: 訂閱最新文章")
-                        break;
-                    case "回首頁":
-                        backHome(sender, "Text echo: 回首頁")
-                        break;
-                    case "美股清單":
-                        checkStocklist(sender, "Text echo: 美股清單", 0)
-                        break;
-                    case "訂閱管理":
-                        subscribeManagement_show_and_modify(sender, "Text echo: 訂閱管理", "subscribeList")
-                        break;
-                    case "訂閱":
-                        subscribeList_addElement(sender,String("Text echo: "+event.postback.payload), event.postback.payload)
-                        break;
-                    case "更多相關文章":
-                        moreAboutairticles(sender, String("Text echo: 更多相關文章"), event.postback.payload)
-                        break;
-                    case "回上一頁":
-                        subscribeList_addElement(sender,"Text echo: 回上一頁", event.postback.payload)
-                        break;
-                        //case "閱讀此文章":
-                        //updatereadHistory(sender,"Text echo: 閱讀此文章", )
-                        //break;
-                    default:
-                        break;
+                if(event.postback.title != undefined){
+                    switch (event.postback.title) {
+                        case "瀏覽文章":
+                            browseAirticle(sender, "Text echo: 瀏覽文章")
+                            break;
+                        case "訂閱最新文章":
+                            subscribeAirticle(sender, "Text echo: 訂閱最新文章")
+                            break;
+                        case "回首頁":
+                            backHome(sender, "Text echo: 回首頁")
+                            break;
+                        case "美股清單":
+                            checkStocklist(sender, "Text echo: 美股清單", 0)
+                            break;
+                        case "訂閱管理":
+                            subscribeManagement_show_and_modify(sender, "Text echo: 訂閱管理", "subscribeList")
+                            break;
+                        case "訂閱":
+                            subscribeList_addElement(sender,String("Text echo: "+event.postback.payload), event.postback.payload)
+                            break;
+                        case "更多相關文章":
+                            moreAboutairticles(sender, String("Text echo: 更多相關文章"), event.postback.payload)
+                            break;
+                        case "回上一頁":
+                            subscribeList_addElement(sender,"Text echo: 回上一頁", event.postback.payload)
+                            break;
+                            //case "閱讀此文章":
+                            //updatereadHistory(sender,"Text echo: 閱讀此文章", )
+                            //break;
+                        default:
+                            break;
+                    }
+                }
+                else{
+                    console.log("event.postback.title == undefined") 
                 }
             }
-            /*
+             
             /*text button*/
             else if(event.message.text && event.message.quick_reply){
                 switch(event.message.quick_reply.payload){
@@ -125,10 +132,10 @@ app.post('/webhook/', function(req, res) {
                         if(event.message.text == "更多:1"){
                             checkStocklist(sender,"Text echo: 更多公司資訊",1)
                         }
-                        if(event.message.text == "更多:2"){
+                        else if(event.message.text == "更多:2"){
                             checkStocklist(sender,"Text echo: 更多公司資訊",2)
                         }
-                        if(event.message.text == "更多:3"){
+                        else if(event.message.text == "更多:3"){
                             checkStocklist(sender,"Text echo: 更多公司資訊",3)
                         }
                         else if(event.message.text !== "更多:1" && event.message.text !== "更多:2" && event.message.text !== "更多:3"){
@@ -258,6 +265,8 @@ function moreAboutairticles(sender, text, companyName){
     /*Synchronous version*/
     //var fs = require('fs');
     //var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
+    var fs = require('fs');
+    var allCompanyInf = JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
 
     /*Asynchronous version*/
     /*=====================*/
@@ -444,11 +453,12 @@ function subscribeList_addElement(sender, text, companyName){
 
 function subscribe_and_readStocklist(sender, text, companyName){
     //Add: item_url, subtitle, url
-    //var fs = require('fs');
-    //var allCompanyInf = JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
+    //
+    var fs = require('fs');
+    var allCompanyInf = JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
     //var brands_and_photos = require('./links.json');
     //var companyPhotolink = brands_and_photos[companyName]
-    var allCompanyInf = require('./brandandcCompanyNews1.json');
+    //var allCompanyInf = require('./brandandcCompanyNews1.json');
     var parsedJSON = allCompanyInf.filter(function(value){ return value.name == companyName;})
     var companyinformation = parsedJSON[0]
     parsedJSON = companyinformation.companyNews
@@ -465,6 +475,7 @@ function subscribe_and_readStocklist(sender, text, companyName){
         return result;
     }
 
+    
     var parse1 = parsedJSON[pickRandomProperty(parsedJSON)]
     var title1 = parse1.title
     var link1 = parse1.newsLink
@@ -472,19 +483,18 @@ function subscribe_and_readStocklist(sender, text, companyName){
     var date1 =  parse1.date
     var brief1 = parse1.brief
     var photo1 = parse1.airticlePhoto
-    //console.log(photo1)
-    //process.exit()
-
     
-    console.log(companyName)
-    //console.log(airticel1)
+    //console.log(companyName)
+    //process.exit()
+    //console.log(airticle1)//wrong
+    //process.exit()
     //console.log(companyinformation.photoLink)
     //console.log(brief1)
     //console.log(date1)
     //console.log(photo1)
     //console.log(title1)
     //console.log(parse1)
-    //process.exit()
+    //process.exit(1)
     
     var messageData = {
         attachment: {
@@ -494,7 +504,7 @@ function subscribe_and_readStocklist(sender, text, companyName){
                 elements: [{
                     title: companyName,
                     subtitle: String("點選訂閱把"+companyName+"加入訂閱清單"),
-                    item_url: airticel1,///////
+                    item_url: companyinformation.photoLink,
                     image_url: companyinformation.photoLink,
                     buttons: [{
                         type: "postback",
@@ -528,8 +538,8 @@ function subscribe_and_readStocklist(sender, text, companyName){
     }
 
 
-    console.log(messageData)
-    process.exit()
+    //console.log(messageData)
+    //process.exit()
 
     request({
         url: "https://graph.facebook.com/v2.6/me/messages",
