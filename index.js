@@ -207,9 +207,9 @@ function notification(){
     var allCompanyInf = JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
 
     var subscribeUser_inf=[]
-    var airticle1={}
-    var airticle2={}
-    var airticle3={}
+    //var airticle1={}
+    //var airticle2={}
+    //var airticle3={}
 
     axios({
         method: 'GET',
@@ -232,23 +232,204 @@ function notification(){
             }
             //not empty ==>Condition still need to fix
             else{
-                
+                if(subscribeCategory.length == 1){
+                    var companyName = subscribeCategory[0]
+                    var parsedJSON = allCompanyInf.filter(function(value){return value.name == subscribeCategory[0];})
+                    var companyinformation = parsedJSON[0]
+                    parsedJSON = companyinformation.companyNews
+                    var parse1 = parsedJSON[pickRandomProperty(parsedJSON)]
+                    var title1 = parse1.title
+                    var link1 = parse1.newsLink
+                    var airticle1 = parse1.newsLink
+                    var date1 =  parse1.date
+                    var brief1 = parse1.brief
+                    var photo1 = parse1.airticlePhoto
+                    ////
+                    messageData.attachment.payload.elements.push({
+                            title: title1,
+                            subtitle: String(brief1+": "+date1),
+                            item_url: airticle1,
+                            image_url: photo1,
+                            buttons: [{
+                                type: "web_url",
+                                url: airticle1,
+                                title: "閱讀此文章",
+                                webview_height_ratio: "full"
+                            },{
+                                type:"element_share"
+                            },{
+                                type: "postback",
+                                title: "回首頁",
+                                payload: "browseAirticle",
+                            }]
+                    })
+                    //pushN
+                }
+                //subscribe 2 comapny
+                else if(subscribeCategory.length == 2){
+                    for(i=0;i<=1;i++){
+                        var companyName = subscribeCategory[i]
+                        var parsedJSON = allCompanyInf.filter(function(value){return value.name == companyName;})
+                        var companyinformation = parsedJSON[0]
+                        parsedJSON = companyinformation.companyNews
+                        var parse1 = parsedJSON[pickRandomProperty(parsedJSON)]
+                        var title1 = parse1.title
+                        var link1 = parse1.newsLink
+                        var airticle1 = parse1.newsLink
+                        var date1 =  parse1.date
+                        var brief1 = parse1.brief
+                        var photo1 = parse1.airticlePhoto
+                        ////
+                        messageData.attachment.payload.elements.push({
+                            title: title1,
+                            subtitle: String(brief1+": "+date1),
+                            item_url: airticle1,
+                            image_url: photo1,
+                            buttons: [{
+                                type: "web_url",
+                                url: airticle1,
+                                title: "閱讀此文章",
+                                webview_height_ratio: "full"
+                            },{
+                                type:"element_share"
+                            },{
+                                type: "postback",
+                                title: "回首頁",
+                                payload: "browseAirticle",
+                            }]
+                        })
+                        ///
+                    }
+                    //pushN
+                }
+                //subscribe more than 3 comapny 
+                else{
+                    var list=[]
+                    var company1 = subscribeCategory[pickRandomProperty(subscribeCategory)]
+                    list.push(company1)
+                    var company2 = subscribeCategory[pickRandomProperty(subscribeCategory)]
+                    while(company1 == company2){
+                        var company2 = subscribeCategory[pickRandomProperty(subscribeCategory)]
+                    }
+                    list.push(company2)
+                    var company3 = subscribeCategory[pickRandomProperty(subscribeCategory)]
+                    while((company1 == company3) || (company2 == company3) ){
+                        var company3 = subscribeCategory[pickRandomProperty(subscribeCategory)]
+                    }
+                    list.push(company3)
+
+                    for(i=0;i<=2;i++){
+                        var companyName = list[i]
+                        var parsedJSON = allCompanyInf.filter(function(value){return value.name == companyName;})
+                        var companyinformation = parsedJSON[0]
+                        parsedJSON = companyinformation.companyNews
+                        var parse1 = parsedJSON[pickRandomProperty(parsedJSON)]
+                        var title1 = parse1.title
+                        var link1 = parse1.newsLink
+                        var airticle1 = parse1.newsLink
+                        var date1 =  parse1.date
+                        var brief1 = parse1.brief
+                        var photo1 = parse1.airticlePhoto
+                        messageData.attachment.payload.elements.push({
+                            title: title1,
+                            subtitle: String(brief1+": "+date1),
+                            item_url: airticle1,
+                            image_url: photo1,
+                            buttons: [{
+                                type: "web_url",
+                                url: airticle1,
+                                title: "閱讀此文章",
+                                webview_height_ratio: "full"
+                            },{
+                                type:"element_share"
+                            },{
+                                type: "postback",
+                                title: "回首頁",
+                                payload: "browseAirticle",
+                            }]
+                        })
+                    }
+                   /////push
+                }
+
             }
         }
         //subscribe lastestNews (Default)
         else{
             //subscribe latest and others
             if(subscribeCategory.length>1){
-            //2 latestNews
-            //1 random from array
+                //2 latestNews
+                for(i=0;i<=1;i++){
+                    var parsedJSON = require('./latestNews.json');
+                    var title1 = parsedJSON[i].title
+                    var link1 = parsedJSON[i].newsLink
+                    var airticle1 = parsedJSON[i].newsLink
+                    var photo1 = parsedJSON[i].airticlePhoto
+                    var brief1 = parsedJSON[i].brief
+                    var date1= parsedJSON[i].date
+                    ///
+                    messageData.attachment.payload.elements.push({
+                        title: title1,
+                        subtitle: String(brief1+": "+date1),
+                        item_url: airticle1,
+                        image_url: photo1,
+                        buttons: [{
+                            type: "web_url",
+                            url: airticle1,
+                            title: "閱讀此文章",
+                            webview_height_ratio: "full"
+                        },{
+                            type:"element_share"
+                        },{
+                            type: "postback",
+                            title: "回首頁",
+                            payload: "browseAirticle",
+                        }]
+                    })
+                    //push
+                }
+
+                //1 random from array
+                var companyName = subscribeCategory[pickRandomProperty(subscribeCategory)]
+                var parsedJSON = allCompanyInf.filter(function(value){return value.name == companyName;})
+                var companyinformation = parsedJSON[0]
+                parsedJSON = companyinformation.companyNews
+                var parse1 = parsedJSON[pickRandomProperty(parsedJSON)]
+                var title1 = parse1.title
+                var link1 = parse1.newsLink
+                var airticle1 = parse1.newsLink
+                var date1 =  parse1.date
+                var brief1 = parse1.brief
+                var photo1 = parse1.airticlePhoto
+                ////
+                messageData.attachment.payload.elements.push({
+                    title: title1,
+                    subtitle: String(brief1+": "+date1),
+                    item_url: airticle1,
+                    image_url: photo1,
+                    buttons: [{
+                        type: "web_url",
+                        url: airticle1,
+                        title: "閱讀此文章",
+                        webview_height_ratio: "full"
+                    },{
+                        type:"element_share"
+                    },{
+                        type: "postback",
+                        title: "回首頁",
+                        payload: "browseAirticle",
+                    }]
+                })
+                //push
             }
+            
             //only subscribe latestNews
             else{
                 //3 latestNews
                 browseAirticle(sender, "本週最新文章")
             }
         }
-        
+
     });
 }
 
@@ -955,7 +1136,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                     ],
                 }, {
                     title: title2,
-                    subtitle: String(brief1+": "+date1),
+                    subtitle: String(brief2+": "+date2),
                     item_url: airticle2,
                     image_url: photo2,
                     buttons: [{
@@ -972,7 +1153,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                     }]
                 },{
                     title: title3,
-                    subtitle: String(brief1+": "+date1),
+                    subtitle: String(brief3+": "+date3),
                     item_url: airticle3,
                     image_url: photo3,
                     buttons: [{

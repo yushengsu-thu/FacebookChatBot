@@ -6,7 +6,8 @@ var parsedJSON = allCompanyInf.filter(function(value){ return value.name == comp
     var companyinformation = parsedJSON[0]
     parsedJSON = companyinformation.companyNews
 
-
+    var parse1 = []
+    console.log(parse1)
     /*Random*/
     //console.log(parsedJSON.length)
     function pickRandomProperty(obj) {
@@ -20,6 +21,7 @@ var parsedJSON = allCompanyInf.filter(function(value){ return value.name == comp
 
 
     var parse1 = parsedJSON[pickRandomProperty(parsedJSON)]
+    console.log(parse1)
     var title1 = parse1.title
     var link1 = parse1.newsLink
     var airticle1 = parse1.newsLink
@@ -29,12 +31,12 @@ var parsedJSON = allCompanyInf.filter(function(value){ return value.name == comp
 
     //console.log(companyName)
     //process.exit()
-    console.log(airticle1)//wrong
+    //console.log(airticle1)//wrong
     //process.exit()
-    console.log(companyinformation.photoLink)
-    console.log(brief1)
-    console.log(date1)
-    console.log(photo1)
-    console.log(title1)
+    //console.log(companyinformation.photoLink)
+    //console.log(brief1)
+    //console.log(date1)
+    //console.log(photo1)
+    //console.log(title1)
     //console.log(parse1)
     //process.exit(1)
