@@ -1,3 +1,4 @@
+/*
 var fs = require('fs');
 var companyName = "3M"
 var allCompanyInf = JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
@@ -8,7 +9,7 @@ var parsedJSON = allCompanyInf.filter(function(value){ return value.name == comp
 
     var parse1 = []
     console.log(parse1)
-    /*Random*/
+    
     //console.log(parsedJSON.length)
     function pickRandomProperty(obj) {
         var result;
@@ -28,7 +29,7 @@ var parsedJSON = allCompanyInf.filter(function(value){ return value.name == comp
     var date1 =  parse1.date
     var brief1 = parse1.brief
     var photo1 = parse1.airticlePhoto
-
+*/
     //console.log(companyName)
     //process.exit()
     //console.log(airticle1)//wrong
@@ -40,3 +41,26 @@ var parsedJSON = allCompanyInf.filter(function(value){ return value.name == comp
     //console.log(title1)
     //console.log(parse1)
     //process.exit(1)
+
+/*excute fun*/
+//var date = new Date.getTime()
+function  myfunc(){
+    console.log("myfunc  "+"when");
+}
+/*interval time*/
+setInterval(myfunc,1000);
+/*trigger*/
+/*
+function active(){
+    console.log(myInterval);
+}
+*/
+
+/*
+function  stop(){
+    clearTimeout(myInterval);
+ //myInterval.unref();
+}
+*/
+/*stop activing after 5s*/
+//setTimeout(active,5000);

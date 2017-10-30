@@ -157,9 +157,9 @@ app.post('/webhook/', function(req, res) {
                 //console.log("-")
                 ///
                 //console.log(event.messages.text)
-                //process.exit()
-                notification(sender, "Text echo: test")
-                //backHome(sender, "Text echo: 回首頁")
+                //notification(sender, "Text echo: test")
+                //fetchUsersubscribe("test")
+                backHome(sender, "Text echo: 回首頁")
             }
             /*Noisy*/
             else{
@@ -180,6 +180,39 @@ app.post('/webhook/', function(req, res) {
 ////////////////////////////////////////////
 ////////////////////////////////////////////
 
+/*excute function*/ //fetch all user data from database []
+//backHome(sender, "Text echo: 回首頁")
+/*interval time:1s and trigger*/
+//setInterval(fetchUsersubscribe,1000,"Text echo: 本週訂閱");
+setInterval(fetchUsersubscribe,10000,"Text echo: 本週訂閱"); //10s
+
+///////////////////////////////////////////
+////////////////////////////////////////////
+function fetchUsersubscribe(text){ ///!!!!!! change!!
+    // just fetch user id!!!!!! 
+    axios({
+        method: 'GET',
+        url: 'http://192.168.1.131/trista/v1/FBuser/user_list',
+        headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+        responseType:"application/json"
+    }).then(function(response) {
+        /*Fetch user subscribeUser_inf*/ 
+        //var subscribeUser_inf = {};
+        //subscribeUser_inf = response.data.data.data 
+        var alluserData = response.data.data //a array
+        //var subscribeCategory =  subscribeUser_inf.subscribeCategory
+        console.log("fetchUsersubscribe");
+        /*text:company*/
+        var userIdlist = []
+        alluserData.forEach(function(user){
+            userIdlist.push(user.id)
+        });
+        notification(userIdlist, text)
+    })
+}
+
+///////////////////////////////////////////
+////////////////////////////////////////////
 function pushNotification(sender,messageData){
     request({
         url: "https://graph.facebook.com/v2.6/me/messages",
@@ -198,9 +231,20 @@ function pushNotification(sender,messageData){
     })
 } 
 
-function notification(sender, text){
+function notification(userIdlist, text){
+    var latestNews = require('./latestNews.json');
+    var fs = require('fs');
+    var allCompanyInf = JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
+    for(var i=0; i<userIdlist.length; i++){
+        //console.log(userIdlist[i])
+        notificationContent(userIdlist[i], allCompanyInf, latestNews); 
+    }
+}
 
-    /*Random*/
+function notificationContent(sender, allCompanyInf, latestNews){
+     /*Random*/
+    //console.log(allCompanyInf)
+    //console.log(latestNews)
     function pickRandomProperty(obj) {
         var result;
         var count = 0;
@@ -209,8 +253,8 @@ function notification(sender, text){
                 result = prop;
         return result;
     }
-    /////
-    var messageData = {
+
+     var messageData = {
         attachment: {
             type: "template",
             payload: {
@@ -220,19 +264,7 @@ function notification(sender, text){
         }
     }
 
-    var latestNews = require('./latestNews.json');
-    var fs = require('fs');
-    var allCompanyInf = JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
-
     var subscribeUser_inf=[]
-    //var airticle1={}
-    //var airticle2={}
-    //var airticle3={}
-    
-    //////
-    //console.log("++==++")
-    //process.exit()
-
     axios({
         method: 'GET',
         url: 'http://192.168.1.131/trista/v1/FBuser/user/'+sender,
@@ -242,18 +274,20 @@ function notification(sender, text){
         /*Fetch user subscribeUser_inf*/
         subscribeUser_inf = response.data.data.data
         var subscribeCategory =  subscribeUser_inf.subscribeCategory
-        console.log("Fetch user subscribe information");
-
+        //console.log("Fetch user subscribe information");
+        
         /*Push Notification*/
         //push 1 latestNews
         //unscribe latestNews
         if(subscribeCategory.indexOf("latestNews") == -1){
             //empty
             if(subscribeCategory.length == 0){
+                console.log("Nothing in the list")
                 //push nothong
             }
             //not empty ==>Condition still need to fix
             else{
+                //subscribe 1 comapny
                 if(subscribeCategory.length == 1){
                     var companyName = subscribeCategory[0]
                     var parsedJSON = allCompanyInf.filter(function(value){return value.name == subscribeCategory[0];})
@@ -286,11 +320,12 @@ function notification(sender, text){
                         }]
                     })
                     //pushN
+                    //console.log(messageData.attachment.payload.elements)
                     pushNotification(sender,messageData)
                 }
                 //subscribe 2 comapny
                 else if(subscribeCategory.length == 2){
-                    for(i=0;i<=1;i++){
+                    for(var i=0;i<=1;i++){
                         var companyName = subscribeCategory[i]
                         var parsedJSON = allCompanyInf.filter(function(value){return value.name == companyName;})
                         var companyinformation = parsedJSON[0]
@@ -342,7 +377,7 @@ function notification(sender, text){
                     }
                     list.push(company3)
 
-                    for(i=0;i<=2;i++){
+                    for(var i=0;i<=2;i++){
                         var companyName = list[i]
                         var parsedJSON = allCompanyInf.filter(function(value){return value.name == companyName;})
                         var companyinformation = parsedJSON[0]
@@ -374,6 +409,7 @@ function notification(sender, text){
                         })
                     }
                     /////push
+                    //console.log(messageData)
                     pushNotification(sender,messageData)
                 }
 
@@ -384,7 +420,7 @@ function notification(sender, text){
             //subscribe latest and others
             if(subscribeCategory.length>1){
                 //2 latestNews
-                for(i=0;i<=1;i++){
+                for(var i=0;i<=1;i++){
                     var parsedJSON = require('./latestNews.json');
                     var title1 = parsedJSON[i].title
                     var link1 = parsedJSON[i].newsLink
@@ -412,7 +448,6 @@ function notification(sender, text){
                         }]
                     })
                 }
-
                 //1 random from array
                 var companyName = subscribeCategory[pickRandomProperty(subscribeCategory)]
                 var parsedJSON = allCompanyInf.filter(function(value){return value.name == companyName;})
@@ -444,6 +479,7 @@ function notification(sender, text){
                         payload: "browseAirticle",
                     }]
                 })
+                //console.log(messageData.attachment.payload.elements)
                 //push
                 pushNotification(sender,messageData)
             }
@@ -456,6 +492,7 @@ function notification(sender, text){
         }
 
     });
+    console.log("send subscribe weekly")
 }
 
 ///////////////////////////////
@@ -1215,7 +1252,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
         }
     })
 
-
+    /*
     //Collect the user's data'
     request({
         url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
@@ -1228,9 +1265,10 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
             console.log("response body error")
         }
         else{
-            /*Restore data: write to database*/
+            //Restore data: write to database
         }
     })
+    */
 }
 
 
