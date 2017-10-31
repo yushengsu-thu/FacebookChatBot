@@ -11,6 +11,7 @@ const axios = require('axios')
 const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
+const moment = require('moment')
 
 const app = express()
 
@@ -88,10 +89,11 @@ app.post('/webhook/', function(req, res) {
             if(event.postback){
                 if(event.postback.title != undefined){
                     switch (event.postback.title) {
-                        case "瀏覽文章":
-                            browseAirticle(sender, "Text echo: 瀏覽文章")
+                        case "瀏覽最新文章":
+                            browseAirticle(sender, "Text echo: 瀏覽最新文章")
                             break;
                         case "訂閱最新文章":
+                            //subscribeActive(sender, "Text echo: 訂閱最新文章")
                             subscribeAirticle(sender, "Text echo: 訂閱最新文章")
                             break;
                         case "回首頁":
@@ -138,7 +140,19 @@ app.post('/webhook/', function(req, res) {
                         else if(event.message.text == "更多:3"){
                             checkStocklist(sender,"Text echo: 更多公司資訊",3)
                         }
-                        else if(event.message.text !== "更多:1" && event.message.text !== "更多:2" && event.message.text !== "更多:3"){
+                        else if(event.message.text == "更多:4"){
+                            checkStocklist(sender,"Text echo: 更多公司資訊",4)
+                        }
+                        else if(event.message.text == "更多:5"){
+                            checkStocklist(sender,"Text echo: 更多公司資訊",5)
+                        }
+                        else if(event.message.text == "更多:6"){
+                            checkStocklist(sender,"Text echo: 更多公司資訊",6)
+                        }
+                        else if(event.message.text == "更多:7"){
+                            checkStocklist(sender,"Text echo: 更多公司資訊",7)
+                        }
+                        else if(event.message.text !== "更多:1" && event.message.text !== "更多:2" && event.message.text !== "更多:3" && event.message.text !== "更多:4" && event.message.text !== "更多:5" && event.message.text !== "更多:6" && event.message.text !== "更多:7"){
                             subscribe_and_readStocklist(sender, String("Text echo: "+event.message.text), event.message.text)
                         }
                         else{}
@@ -157,7 +171,7 @@ app.post('/webhook/', function(req, res) {
                 //console.log("-")
                 ///
                 //console.log(event.messages.text)
-                //notification(sender, "Text echo: test")
+                //sub_and_latestnotification(sender, "Text echo: test")
                 //fetchUsersubscribe("test")
                 backHome(sender, "Text echo: 回首頁")
             }
@@ -184,7 +198,8 @@ app.post('/webhook/', function(req, res) {
 //backHome(sender, "Text echo: 回首頁")
 /*interval time:1s and trigger*/
 //setInterval(fetchUsersubscribe,1000,"Text echo: 本週訂閱");
-setInterval(fetchUsersubscribe,10000,"Text echo: 本週訂閱"); //10s
+//setInterval(fetchUsersubscribe,10000,"最新資訊"); //10s send different value
+setInterval(fetchUsersubscribe,10000,"訂閱資訊"); //10s send different value
 
 ///////////////////////////////////////////
 ////////////////////////////////////////////
@@ -207,12 +222,26 @@ function fetchUsersubscribe(text){ ///!!!!!! change!!
         alluserData.forEach(function(user){
             userIdlist.push(user.id)
         });
-        notification(userIdlist, text)
+        //sub_and_latestnotification(userIdlist, text)
+        //push latestNews
+        if(text == "最新資訊"){
+            //var latestNews = require('./latestNews.json');
+            for(var i=0; i<userIdlist.length; i++){
+                notifyLatestNews(userIdlist[i]); 
+            }
+        }
+        //push subscription
+        else if(text == "訂閱資訊"){
+            var fs = require('fs');
+            var allCompanyInf=JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
+            for(var i=0; i<userIdlist.length; i++){
+                notifySubscription(userIdlist[i], allCompanyInf); 
+            }
+        }
+        else{}
     })
 }
 
-///////////////////////////////////////////
-////////////////////////////////////////////
 function pushNotification(sender,messageData){
     request({
         url: "https://graph.facebook.com/v2.6/me/messages",
@@ -231,17 +260,169 @@ function pushNotification(sender,messageData){
     })
 } 
 
-function notification(userIdlist, text){
+//////////////////////////////////////////
+/////////////////////////////////////////
+/*check dates*/
+function dayDiff(airticleDate){
+    //console.log(airticleDate)
+    var moment = require('moment');
+    var nowEnd = moment();
+    var nowStart = moment();
+    var endDate = nowEnd.add(1,'days')
+    var startDate = nowStart.subtract(7,'days')
+    //var endDate = moment.add(1,'days')
+    //var startDate = moment.subtract(7,'days')
+    //console.log(airticleDate,endDate)
+    //console.log(airticleDate.isBefore(endDate))
+    //console.log(airticleDate,startDate)
+    //console.log(airticleDate.isAfter(startDate))
+    //console.log(airticleDate.isBefore(endDate) && airticleDate.isAfter(startDate))
+    //process.exit()
+    return (airticleDate.isBefore(endDate) && airticleDate.isAfter(startDate))
+}
+
+/*subscribe*/
+function notifySubscription(sender, allCompanyInf){
+    
+    function pickRandomProperty(obj) {
+        var result;
+        var count = 0;
+        for (var prop in obj)
+            if (Math.random() < 1/++count)
+                result = prop;
+        return result;
+    }
+   
+    var messageData = {
+        attachment: {
+            type: "template",
+            payload: {
+                template_type: "generic",
+                elements: []
+            }
+        }
+    }
+
+    var subscribeUser_inf=[]
+    axios({
+        method: 'GET',
+        url: 'http://192.168.1.131/trista/v1/FBuser/user/'+sender,
+        headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+        responseType:"application/json"
+    }).then(function(response) {
+        /*Fetch user subscribeUser_inf*/
+        subscribeUser_inf = response.data.data.data
+        var subscribeCategory =  subscribeUser_inf.subscribeCategory
+        //have latestNews
+        if(subscribeCategory.indexOf("latestNews") != -1){
+            subscribeCategory.splice(subscribeCategory.indexOf("latestNews"),1)
+        }
+        //No latestNews
+        else{}
+
+        //subscribeCategory list,length 
+        var airticlecontentlistLength=0
+        var searchedCompany=[]
+        while(airticlecontentlistLength < 2){
+            //choose comapny this week news
+            var companyName = subscribeCategory[pickRandomProperty(subscribeCategory)]
+            var userData = allCompanyInf.filter(function(value){return value.name == companyName;})
+            var airticle_inf = userData[0].companyNews
+            for(var j=0; j<airticle_inf.length; j++){
+                //console.log(airticle_inf[j])
+                //process.exit()
+                var date = airticle_inf[j].date
+                if(dayDiff(moment(date,"YYYY-MM-DD"))){
+                    messageData.attachment.payload.elements.push({
+                        title: airticle_inf[j].title,
+                        subtitle:  String(airticle_inf[j].brief+": "+date),
+                        item_url: airticle_inf[j].newsLink,
+                        image_url: airticle_inf[j].airticlePhoto,
+                        buttons: [{
+                            type: "web_url",
+                            url: airticle_inf[j].newsLink,
+                            title: "閱讀此文章",
+                            webview_height_ratio: "full"
+                        },{
+                            type:"element_share"
+                        },{
+                            type: "postback",
+                            title: "回首頁",
+                            payload: "weekly",
+                        }]
+                    })
+                    airticlecontentlistLength = airticlecontentlistLength + 1
+                    if(airticlecontentlistLength >= 3){
+                        break;
+                    }
+                }
+                else{}
+            }
+            if(searchedCompany.indexOf(companyName) == -1){
+                searchedCompany.push(companyName)
+            }
+            else{
+                if(searchedCompany.length >= subscribeCategory.length){
+                    break;
+                }
+                else{
+                    continue;
+                }
+            }
+        }
+
+        
+        ///
+        //////
+        //console.log(messageData)
+        //process.exit()
+        if(messageData.attachment.payload.elements.length != 0){
+            pushNotification(sender,messageData)
+        }
+        else{}
+        /////
+    }).catch(function(error){
+        console.log(error)
+    });
+   
+}
+
+
+/*latestNews*/
+function notifyLatestNews(sender){
+    axios({
+        method: 'GET',
+        url: 'http://192.168.1.131/trista/v1/FBuser/user/'+sender,
+        headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+        responseType:"application/json"
+    }).then(function(response) {
+        /*Fetch user subscribeUser_inf*/
+        subscribeUser_inf = response.data.data.data
+        var subscribeCategory =  subscribeUser_inf.subscribeCategory
+        if(subscribeCategory.indexOf("latestNews")!= -1){
+            backHome(sender,"Text echo: weekly news")
+        }
+        else{}
+    })
+
+}
+
+
+///////////////////////////////////////////
+///////////Don't need to use below////////
+/*Subscribe and latestNews*/
+function sub_and_latestnotification(userIdlist, text){
     var latestNews = require('./latestNews.json');
     var fs = require('fs');
     var allCompanyInf = JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
     for(var i=0; i<userIdlist.length; i++){
         //console.log(userIdlist[i])
-        notificationContent(userIdlist[i], allCompanyInf, latestNews); 
+        sub_and_latestContent(userIdlist[i], allCompanyInf, latestNews); 
     }
 }
 
-function notificationContent(sender, allCompanyInf, latestNews){
+/*Subscribe and latestNews*/
+function sub_and_latestContent(sender, allCompanyInf, latestNews){
      /*Random*/
     //console.log(allCompanyInf)
     //console.log(latestNews)
@@ -415,7 +596,7 @@ function notificationContent(sender, allCompanyInf, latestNews){
 
             }
         }
-        //subscribe lastestNews (Default)
+        //subscribe latestNews (Default)
         else{
             //subscribe latest and others
             if(subscribeCategory.length>1){
@@ -495,8 +676,11 @@ function notificationContent(sender, allCompanyInf, latestNews){
     console.log("send subscribe weekly")
 }
 
+///////////Don't need to use above////////
+///////////////////////////////////////////
+
 ///////////////////////////////
-//////////////??How to actived!
+//////////////How to actived!
 function greeting(sender){
     /*Fectch the user data*/
     request({
@@ -1018,19 +1202,18 @@ function subscribeManagement_show_and_modify(sender, text, subscribeCompany){
 function checkStocklist(sender, text, part){
     var fs = require('fs');
     var brands_and_photos = JSON.parse(fs.readFileSync(String('brands_and_photos_p'+part+'.json'), 'utf8'));
-
     var data=[];
     for(var key in brands_and_photos){
         data.push({
             content_type:"text",
             title:key,
-            image_url:brands_and_photos[key],
+            //image_url:brands_and_photos[key],
             payload:"checkStocklist"
         })
     }
     //更多 選項
     part = part+1
-    if(part < 4){
+    if(part < 7){
         data.push({
             content_type:"text",
             title:String("更多:"+part), //use payload to change page
@@ -1070,6 +1253,55 @@ function checkStocklist(sender, text, part){
 
 function subscribeAirticle(sender, text){
     /*Fectch the user data*/
+    axios({
+        method: 'GET',
+        url: 'http://192.168.1.131/trista/v1/FBuser/user/'+sender,
+        headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+        responseType:"application/json"
+    }).then(function(response) {
+        /*Fetch user subscribeUser_inf*/
+        var subscribeUser_inf = response.data.data.data
+        var subscribeCategory =  subscribeUser_inf.subscribeCategory
+        if(subscribeCategory.indexOf("latestNews") == -1){
+
+        axios({
+            //method: 'POST',
+            method: 'PUT',
+            url: 'http://192.168.1.131/trista/v1/FBuser/user/',
+            //data: user_inf,
+            data:{
+                id:sender,
+                data:{
+                    first_name: subscribeUser_inf.first_name,
+                    last_name: subscribeUser_inf.last_name,
+                    profile_pic: subscribeUser_inf.profile_pic,
+                    locale: subscribeUser_inf.locale,
+                    timezone: subscribeUser_inf.timezone,
+                    gender: subscribeUser_inf.gender,
+                    readHistory: [], //
+                    //subscribeCategory: [] //Default: news , random
+                    subscribeCategory: subscribeCategory.push("latestNews") //Default: news , random
+                }
+            },
+            headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+            responseType:"application/json"
+        }).then(function(response) {
+            //console.log(response)
+            console.log("User latestNews subscribe!");
+        }).catch(function(error){
+            console.log("User latestNews subscribe error!");
+        });
+        }
+        ///
+        else{}
+    })
+}
+
+
+
+
+function subscribeActive(sender, text){
+    /*Fectch the user data*/
     request({
         url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
         qs : {access_token: token},
@@ -1101,8 +1333,7 @@ function subscribeAirticle(sender, text){
                     gender: content.gender,
                     readHistory: [], //
                     //subscribeCategory: [] //Default: news , random
-                    //subscribeCategory: ["AT&T","3M","Facebook"] //Default: news , random
-                    subscribeCategory: ["latestNews"] //Default: news , random
+                    subscribeCategory: ["latestNews","Google","Netflix","Facebook"] //Default: news , random
                 }
             },
             headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
@@ -1115,6 +1346,8 @@ function subscribeAirticle(sender, text){
         });
     })
 }
+
+
 
 function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     /*Read a Links.json*/
@@ -1301,7 +1534,7 @@ function backHome(sender, text){
                     image_url:"https://cw1.tw/CW/images/article/201611/article-583561e0eb39a.jpg",
                     buttons:[{
                         type: "postback",
-                        title: "瀏覽文章",
+                        title: "瀏覽最新文章",
                         payload: "backHome"
                     },{
                         type: "postback",

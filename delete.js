@@ -44,11 +44,15 @@ var parsedJSON = allCompanyInf.filter(function(value){ return value.name == comp
 
 /*excute fun*/
 //var date = new Date.getTime()
+/*
 function  myfunc(){
     console.log("myfunc  "+"when");
 }
+*/
 /*interval time*/
+/*
 setInterval(myfunc,1000);
+*/
 /*trigger*/
 /*
 function active(){
@@ -64,3 +68,25 @@ function  stop(){
 */
 /*stop activing after 5s*/
 //setTimeout(active,5000);
+var moment = require('moment');
+var date = "2017-10-26"
+//var airticleDate = moment(date, "YYYY-MM-DD")
+//console.log(airticleDate)
+if(dayDiff(moment(date,"YYYY-MM-DD")))
+
+function dayDiff(airticleDate){
+    var nowEnd = moment();
+    var nowStart = moment();
+    var endDate = nowEnd.add(1,'days')
+    var startDate = nowStart.subtract(7,'days')
+    //var endDate = moment.add(1,'days')
+    //var startDate = moment.subtract(7,'days')
+    console.log(airticleDate,endDate)
+    console.log(airticleDate.isBefore(endDate))
+    console.log(airticleDate,startDate)
+    console.log(airticleDate.isAfter(startDate))
+    return airticleDate.isBefore(endDate) && airticleDate.isAfter(startDate)
+}
+//var dayDiff = now.diff(startDate, 'DD')
+//console.log(dayDiff)
+
