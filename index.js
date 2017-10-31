@@ -333,29 +333,33 @@ function notifySubscription(sender, allCompanyInf){
                 //process.exit()
                 var date = airticle_inf[j].date
                 if(dayDiff(moment(date,"YYYY-MM-DD"))){
-                    messageData.attachment.payload.elements.push({
-                        title: airticle_inf[j].title,
-                        subtitle:  String(airticle_inf[j].brief+": "+date),
-                        item_url: airticle_inf[j].newsLink,
-                        image_url: airticle_inf[j].airticlePhoto,
-                        buttons: [{
-                            type: "web_url",
-                            url: airticle_inf[j].newsLink,
-                            title: "閱讀此文章",
-                            webview_height_ratio: "full"
-                        },{
-                            type:"element_share"
-                        },{
-                            type: "postback",
-                            title: "回首頁",
-                            payload: "weekly",
-                        }]
-                    })
+                    //var arry = messageData.attachment.payload.elements
+                    //no repeat airticle ==> 用法對嗎？
+                    if(messageData.attachment.payload.elements.indexOf(airticle_inf[j].title)==-1){
+                        messageData.attachment.payload.elements.push({
+                            title: airticle_inf[j].title,
+                            subtitle:  String(airticle_inf[j].brief+": "+date),
+                            item_url: airticle_inf[j].newsLink,
+                            image_url: airticle_inf[j].airticlePhoto,
+                            buttons: [{
+                                type: "web_url",
+                                url: airticle_inf[j].newsLink,
+                                title: "閱讀此文章",
+                                webview_height_ratio: "full"
+                            },{
+                                type:"element_share"
+                            },{
+                                type: "postback",
+                                title: "回首頁",
+                                payload: "weekly",
+                            }]
+                        })
+                    }//////
                     airticlecontentlistLength = airticlecontentlistLength + 1
                     if(airticlecontentlistLength >= 3){
                         break;
                     }
-                }
+                }    
                 else{}
             }
             if(searchedCompany.indexOf(companyName) == -1){
