@@ -1,6 +1,6 @@
 {
-  "name": "fb-bot-heroku",
-  "version": "0.5.0",
+  "name": "tradingvalley-chatbot",
+  "version": "1.0.0",
   "description": "A Facebook Messenger bot built to work with heroku",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "node",
     "javascript"
   ],
-  "author": "Brandon Brown",
+  "author": "sheng Eason",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/brandonbrown/fb-bot-heroku/issues"
@@ -32,5 +32,6 @@
     "express": "^4.16.2",
     "moment": "^2.19.1",
     "request": "^2.83.0"
-  }
+  },
+  "devDependencies": {}
 }

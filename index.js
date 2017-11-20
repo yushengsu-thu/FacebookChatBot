@@ -12,6 +12,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const request = require('request')
 const moment = require('moment')
+const path = require('path');
 
 const app = express()
 
@@ -21,7 +22,7 @@ app.set('port', (process.env.PORT || 5000))
 // Allows us to process the data
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
-
+app.use(express.static(path.join(__dirname,'public')));
 // ROUTES
 
 app.get('/', function(req, res) {
@@ -198,8 +199,9 @@ app.post('/webhook/', function(req, res) {
 //backHome(sender, "Text echo: 回首頁")
 /*interval time:1s and trigger*/
 //setInterval(fetchUsersubscribe,1000,"Text echo: 本週訂閱");
+
 //setInterval(fetchUsersubscribe,10000,"最新資訊"); //10s send different value
-setInterval(fetchUsersubscribe,10000,"訂閱資訊"); //10s send different value
+//setInterval(fetchUsersubscribe,10000,"訂閱資訊"); //10s send different value
 
 ///////////////////////////////////////////
 ////////////////////////////////////////////
@@ -1013,8 +1015,10 @@ function subscribe_and_readStocklist(sender, text, companyName){
                 elements: [{
                     title: companyName,
                     subtitle: String("點選訂閱把"+companyName+"加入訂閱清單"),
-                    item_url: companyinformation.photoLink,
-                    image_url: companyinformation.photoLink,
+                    //item_url: companyinformation.photoLink,
+                    //image_url: companyinformation.photoLink,
+                    item_url:String("https://c8a9d666.ngrok.io/companyPhoto/"+companyName+".png"),
+                    image_url:String("https://c8a9d666.ngrok.io/companyPhoto/"+companyName+".png"),
                     buttons: [{
                         type: "postback",
                         title: "訂閱",
