@@ -7,7 +7,7 @@ var jsonfile = require('jsonfile')
 var array=[]
 var async = require("async");
 
-var allCompanyNews=JSON.parse(fs.readFileSync("latestNews_1.json"), 'utf8');
+var allCompanyNews=JSON.parse(fs.readFileSync("latestNews.json"), 'utf8');
 
 doRedirect()
 

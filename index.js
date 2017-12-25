@@ -38,16 +38,16 @@ app.use('*', function(req,res,next){
 })
  */
 
-    const token = "EAAHvSChIjDUBAKZBp3kyUZBZCB5Akq3yBsvMm15Sys6XuZAhUuJatPdkA1YTej9rCNUkROXOwF7tOGKWveVeQ9qgatYYPIS2K0ZBWJEHSzlZBRxP3OPWTGUTPN4wzo8CWqEviU5rqWZBvk8w6BZC0hOWvEstZAoWbxVOBLJxMNq9G0Vu9vHHw7uT3"    
+    const token =  "EAAZAznrny0WQBAISlpuVzE4dgF6KOqIzVgnwbhAZCDGssVExYCDc0h4cKPGUAo4Fo9n8yyXUWFfXxLGzyJRtpaAlZBtUAGheIQewZBce7nPaigItyeY89ZANVMs0PsjuXsR7BC9DVScGr2W6ZBzfhlZCBgSP9O6OQzC01qqfMgknzEH6GZBD2lhR"
     /*company and airticle content*/
-    //const allCompanyInf = require('./brandandcCompanyNews.json');
+    //const allCompanyInf = require('./brandandCompanyNews.json');
     /*Lastest news*/
     //const latestNews = require('./latestNews.json')
 
     //Facebook
     app.get('/webhook/', function(req, res) {
         //Callback URL:ngrok http 5000  token:FacebookChatBot
-        if (req.query['hub.verify_token'] === "nccucs_fintech_rentinghouse") { //FacebookChatBot
+        if (req.query['hub.verify_token'] === "FacebookChatBot") { //FacebookChatBot
             return res.send(req.query['hub.challenge'])
         }
         res.send("Wrong token")
@@ -201,7 +201,7 @@ app.post('/webhook/', function(req, res) {
 //setInterval(fetchUsersubscribe,1000,"Text echo: 本週訂閱");
 
 //setInterval(fetchUsersubscribe,10000,"最新資訊"); //10s send different value
-//setInterval(fetchUsersubscribe,10000,"訂閱資訊"); //10s send different value
+setInterval(fetchUsersubscribe,604800000,"訂閱資訊"); //10s send different value:10000
 
 ///////////////////////////////////////////
 ////////////////////////////////////////////
@@ -235,7 +235,7 @@ function fetchUsersubscribe(text){ ///!!!!!! change!!
         //push subscription
         else if(text == "訂閱資訊"){
             var fs = require('fs');
-            var allCompanyInf=JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
+            var allCompanyInf=JSON.parse(fs.readFileSync('brandandCompanyNews.json'), 'utf8');
             for(var i=0; i<userIdlist.length; i++){
                 notifySubscription(userIdlist[i], allCompanyInf); 
             }
@@ -272,14 +272,7 @@ function dayDiff(airticleDate){
     var nowStart = moment();
     var endDate = nowEnd.add(1,'days')
     var startDate = nowStart.subtract(7,'days')
-    //var endDate = moment.add(1,'days')
-    //var startDate = moment.subtract(7,'days')
-    //console.log(airticleDate,endDate)
-    //console.log(airticleDate.isBefore(endDate))
-    //console.log(airticleDate,startDate)
-    //console.log(airticleDate.isAfter(startDate))
-    //console.log(airticleDate.isBefore(endDate) && airticleDate.isAfter(startDate))
-    //process.exit()
+
     return (airticleDate.isBefore(endDate) && airticleDate.isAfter(startDate))
 }
 
@@ -415,7 +408,7 @@ function notifyLatestNews(sender){
 function sub_and_latestnotification(userIdlist, text){
     var latestNews = require('./latestNews.json');
     var fs = require('fs');
-    var allCompanyInf = JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
+    var allCompanyInf = JSON.parse(fs.readFileSync('brandandCompanyNews.json'), 'utf8');
     for(var i=0; i<userIdlist.length; i++){
         //console.log(userIdlist[i])
         sub_and_latestContent(userIdlist[i], allCompanyInf, latestNews); 
@@ -774,7 +767,7 @@ function moreAboutairticles(sender, text, companyName){
     //var fs = require('fs');
     //var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
     var fs = require('fs');
-    var allCompanyInf = JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
+    var allCompanyInf = JSON.parse(fs.readFileSync('brandandCompanyNews.json'), 'utf8');
 
     /*Asynchronous version*/
     /*=====================*/
@@ -963,7 +956,7 @@ function subscribe_and_readStocklist(sender, text, companyName){
     //Add: item_url, subtitle, url
     //
     var fs = require('fs');
-    var allCompanyInf = JSON.parse(fs.readFileSync('brandandcCompanyNews.json'), 'utf8');
+    var allCompanyInf = JSON.parse(fs.readFileSync('brandandCompanyNews.json'), 'utf8');
     //var brands_and_photos = require('./links.json');
     //var companyPhotolink = brands_and_photos[companyName]
     //var allCompanyInf = require('./brandandcCompanyNews1.json');
