@@ -36,22 +36,22 @@ app.use('*', function(req,res,next){
     next()
     //console.log()
 })
-*/
+ */
 
-const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYNfpdxHb3C7ZCD7ZCY2CGZBCApLChUalh4z6zifVcNjtn0kE9K1DQ9kABZBZAZCy1ZCu2sFHjixbehr4lrQ4l9se8FfPfBqkWRwNHZCt3jwHHnhwKZAcGWwZBffHwgIR"
-/*company and airticle content*/
-//const allCompanyInf = require('./brandandcCompanyNews.json');
-/*Lastest news*/
-//const latestNews = require('./latestNews.json')
+    const token = "EAAHvSChIjDUBAKZBp3kyUZBZCB5Akq3yBsvMm15Sys6XuZAhUuJatPdkA1YTej9rCNUkROXOwF7tOGKWveVeQ9qgatYYPIS2K0ZBWJEHSzlZBRxP3OPWTGUTPN4wzo8CWqEviU5rqWZBvk8w6BZC0hOWvEstZAoWbxVOBLJxMNq9G0Vu9vHHw7uT3"    
+    /*company and airticle content*/
+    //const allCompanyInf = require('./brandandcCompanyNews.json');
+    /*Lastest news*/
+    //const latestNews = require('./latestNews.json')
 
-//Facebook
-app.get('/webhook/', function(req, res) {
-    //Callback URL:ngrok http 5000  token:FacebookChatBot
-    if (req.query['hub.verify_token'] === "FacebookChatBot") { //FacebookChatBot
-        return res.send(req.query['hub.challenge'])
-    }
-    res.send("Wrong token")
-})
+    //Facebook
+    app.get('/webhook/', function(req, res) {
+        //Callback URL:ngrok http 5000  token:FacebookChatBot
+        if (req.query['hub.verify_token'] === "nccucs_fintech_rentinghouse") { //FacebookChatBot
+            return res.send(req.query['hub.challenge'])
+        }
+        res.send("Wrong token")
+    })
 
 
 app.post('/webhook/', function(req, res) {
@@ -126,7 +126,7 @@ app.post('/webhook/', function(req, res) {
                     console.log("event.postback.title == undefined") 
                 }
             }
-             
+
             /*text button*/
             else if(event.message.text && event.message.quick_reply){
                 switch(event.message.quick_reply.payload){
@@ -285,7 +285,7 @@ function dayDiff(airticleDate){
 
 /*subscribe*/
 function notifySubscription(sender, allCompanyInf){
-    
+
     function pickRandomProperty(obj) {
         var result;
         var count = 0;
@@ -294,7 +294,7 @@ function notifySubscription(sender, allCompanyInf){
                 result = prop;
         return result;
     }
-   
+
     var messageData = {
         attachment: {
             type: "template",
@@ -331,13 +331,8 @@ function notifySubscription(sender, allCompanyInf){
             var userData = allCompanyInf.filter(function(value){return value.name == companyName;})
             var airticle_inf = userData[0].companyNews
             for(var j=0; j<airticle_inf.length; j++){
-                //console.log(airticle_inf[j])
-                //process.exit()
                 var date = airticle_inf[j].date
                 if(dayDiff(moment(date,"YYYY-MM-DD"))){
-                    //var arry = messageData.attachment.payload.elements
-                    //no repeat airticle ==> 用法對嗎？
-                    //if(messageData.attachment.payload.elements.indexOf(airticle_inf[j].title)==-1){
                     messageData.attachment.payload.elements.push({
                         title: airticle_inf[j].title,
                         subtitle:  String(airticle_inf[j].brief+": "+date),
@@ -356,7 +351,7 @@ function notifySubscription(sender, allCompanyInf){
                             payload: "weekly",
                         }]
                     })
-                    //}//////
+
                     airticlecontentlistLength = airticlecontentlistLength + 1
                     if(airticlecontentlistLength >= 3){
                         break;
@@ -377,7 +372,7 @@ function notifySubscription(sender, allCompanyInf){
             }
         }
 
-        
+
         ///
         //////
         //console.log(messageData)
@@ -390,7 +385,7 @@ function notifySubscription(sender, allCompanyInf){
     }).catch(function(error){
         console.log(error)
     });
-   
+
 }
 
 
@@ -429,7 +424,7 @@ function sub_and_latestnotification(userIdlist, text){
 
 /*Subscribe and latestNews*/
 function sub_and_latestContent(sender, allCompanyInf, latestNews){
-     /*Random*/
+    /*Random*/
     //console.log(allCompanyInf)
     //console.log(latestNews)
     function pickRandomProperty(obj) {
@@ -441,7 +436,7 @@ function sub_and_latestContent(sender, allCompanyInf, latestNews){
         return result;
     }
 
-     var messageData = {
+    var messageData = {
         attachment: {
             type: "template",
             payload: {
@@ -462,7 +457,7 @@ function sub_and_latestContent(sender, allCompanyInf, latestNews){
         subscribeUser_inf = response.data.data.data
         var subscribeCategory =  subscribeUser_inf.subscribeCategory
         //console.log("Fetch user subscribe information");
-        
+
         /*Push Notification*/
         //push 1 latestNews
         //unscribe latestNews
@@ -487,7 +482,9 @@ function sub_and_latestContent(sender, allCompanyInf, latestNews){
                     var date1 =  parse1.date
                     var brief1 = parse1.brief
                     var photo1 = parse1.airticlePhoto
-                    ////
+                    ////////////////////
+                    ///////////////////
+
                     messageData.attachment.payload.elements.push({
                         title: title1,
                         subtitle: String(brief1+": "+date1),
@@ -1272,33 +1269,33 @@ function subscribeAirticle(sender, text){
         var subscribeCategory =  subscribeUser_inf.subscribeCategory
         if(subscribeCategory.indexOf("latestNews") == -1){
 
-        axios({
-            //method: 'POST',
-            method: 'PUT',
-            url: 'http://192.168.1.131/trista/v1/FBuser/user/',
-            //data: user_inf,
-            data:{
-                id:sender,
+            axios({
+                //method: 'POST',
+                method: 'PUT',
+                url: 'http://192.168.1.131/trista/v1/FBuser/user/',
+                //data: user_inf,
                 data:{
-                    first_name: subscribeUser_inf.first_name,
-                    last_name: subscribeUser_inf.last_name,
-                    profile_pic: subscribeUser_inf.profile_pic,
-                    locale: subscribeUser_inf.locale,
-                    timezone: subscribeUser_inf.timezone,
-                    gender: subscribeUser_inf.gender,
-                    readHistory: [], //
-                    //subscribeCategory: [] //Default: news , random
-                    subscribeCategory: subscribeCategory.push("latestNews") //Default: news , random
-                }
-            },
-            headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
-            responseType:"application/json"
-        }).then(function(response) {
-            //console.log(response)
-            console.log("User latestNews subscribe!");
-        }).catch(function(error){
-            console.log("User latestNews subscribe error!");
-        });
+                    id:sender,
+                    data:{
+                        first_name: subscribeUser_inf.first_name,
+                        last_name: subscribeUser_inf.last_name,
+                        profile_pic: subscribeUser_inf.profile_pic,
+                        locale: subscribeUser_inf.locale,
+                        timezone: subscribeUser_inf.timezone,
+                        gender: subscribeUser_inf.gender,
+                        readHistory: [], //
+                        //subscribeCategory: [] //Default: news , random
+                        subscribeCategory: subscribeCategory.push("latestNews") //Default: news , random
+                    }
+                },
+                headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+                responseType:"application/json"
+            }).then(function(response) {
+                //console.log(response)
+                console.log("User latestNews subscribe!");
+            }).catch(function(error){
+                console.log("User latestNews subscribe error!");
+            });
         }
         ///
         else{}
@@ -1355,9 +1352,28 @@ function subscribeActive(sender, text){
     })
 }
 
-
+/*
+function redirect_API(airticle){
+    axios({ 
+        method: "POST",
+        url: "http://192.168.1.131/api/v1/Redirector/short_code/",
+        data: {url:airticle},
+        headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+        responseType:"application/json"
+    }).then(function(response){
+        console.log(response.data.shorten_url)
+        return response.data.shorten_url
+    })
+}
+*/
 
 function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
+
+
+    //////////////////////
+    //////////////////////
+    //////////////////////
+    /////////////////////
     /*Read a Links.json*/
     /*Synchronous version*/
     //var fs = require('fs');
@@ -1390,28 +1406,61 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     var airticle3 = link3[0]
     var photo3 = link3[1]
      */
-    var title1 = parsedJSON[1].title 
-    var link1 = parsedJSON[1].newsLink
-    var airticle1 = parsedJSON[1].newsLink
-    var photo1 = parsedJSON[1].airticlePhoto
-    var brief1 = parsedJSON[1].brief
-    var date1= parsedJSON[1].date
+    /*top 3 latest news*/
+    var title1 = parsedJSON[0].title 
+    var link1 = parsedJSON[0].newsLink
+    var airticle1 = parsedJSON[0].newsLink
+    var photo1 = parsedJSON[0].airticlePhoto
+    var brief1 = parsedJSON[0].brief
+    var date1= parsedJSON[0].date
 
-    var title2 = parsedJSON[2].title
-    var link2 = parsedJSON[2].newsLink
-    var airticle2 = parsedJSON[2].newsLink
-    var photo2 = parsedJSON[2].airticlePhoto
-    var brief2 = parsedJSON[2].brief
-    var date2= parsedJSON[2].date
+    var title2 = parsedJSON[1].title
+    var link2 = parsedJSON[1].newsLink
+    var airticle2 = parsedJSON[1].newsLink
+    var photo2 = parsedJSON[1].airticlePhoto
+    var brief2 = parsedJSON[1].brief
+    var date2= parsedJSON[1].date
 
-    var title3 = parsedJSON[3].title
-    var link3 = parsedJSON[3].newsLink
-    var airticle3 = parsedJSON[3].newsLink
-    var photo3 = parsedJSON[3].airticlePhoto
-    var brief3 = parsedJSON[3].brief
-    var date3 = parsedJSON[3].date
+    var title3 = parsedJSON[2].title
+    var link3 = parsedJSON[2].newsLink
+    var airticle3 = parsedJSON[2].newsLink
+    var photo3 = parsedJSON[2].airticlePhoto
+    var brief3 = parsedJSON[2].brief
+    var date3 = parsedJSON[2].date
+    
     /////
     ////
+    /*
+    var call_API = (async function(){
+        var airticle = await axios({ 
+            method: "POST",
+            url: "http://192.168.1.131/api/v1/Redirector/short_code/",
+            data: {url:airticle1},
+            headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
+            responseType:"application/json"
+        })
+        console.log(airticle.data.shorten_url)
+        return airticle.data.shorten_url
+    })
+     */
+    
+    //console.log(await call_API())
+    //airticle1=redirect_API(airticle1)
+    //console.log(airticle1)
+    //process.exit()
+   
+    /*
+    (async function(){
+        airticle1 = await redirect_API(airticle1) 
+        airticle2 = await redirect_API(airticle2)
+        airticle3 = await redirect_API(airticle3)
+        console.log(airticle1)
+        console.log(airticle2)
+        console.log(airticle3)
+        process.exist()
+    })()
+    */
+
     var messageData = {
         attachment: {
             type: "template",
@@ -1424,7 +1473,7 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
                     image_url: photo1,
                     buttons: [{
                         type: "web_url",
-                        url: airticle1,
+                        url: airticle1, //////////!!!!!!
                         title: "閱讀此文章",
                         //messenger_extensions: true,
                         //fallback_url: "https://petersfancyapparel.com/fallback",
@@ -1475,8 +1524,8 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
             }
         }
     };
-
-
+    
+    
     request({
         url: "https://graph.facebook.com/v2.6/me/messages",
         qs : {access_token: token},
@@ -1486,6 +1535,10 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
             message : messageData,
         }
     }, function(error, response, body) {
+        /*Judge if read: GET: redirect 3url*/
+        //API
+        //if(Result){//write into database}
+
         if (error) {
             console.log("sending error")
         } else if (response.body.error) {
@@ -1509,8 +1562,8 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
             //Restore data: write to database
         }
     })
-    */
-}
+     */
+        }
 
 
 
