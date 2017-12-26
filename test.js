@@ -1,6 +1,6 @@
 'use strict'
 
-const token = "EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYNfpdxHb3C7ZCD7ZCY2CGZBCApLChUalh4z6zifVcNjtn0kE9K1DQ9kABZBZAZCy1ZCu2sFHjixbehr4lrQ4l9se8FfPfBqkWRwNHZCt3jwHHnhwKZAcGWwZBffHwgIR"
+const token = "EAAZAznrny0WQBAISlpuVzE4dgF6KOqIzVgnwbhAZCDGssVExYCDc0h4cKPGUAo4Fo9n8yyXUWFfXxLGzyJRtpaAlZBtUAGheIQewZBce7nPaigItyeY89ZANVMs0PsjuXsR7BC9DVScGr2W6ZBzfhlZCBgSP9O6OQzC01qqfMgknzEH6GZBD2lhR"
 const vtoken = "FacebookChatBot"
 
 const express = require('express')
@@ -48,7 +48,8 @@ app.post('/webhook/', function (req, res) {
                 sendGenericMessage(sender)
                 continue
             }
-            sendTextMessage(sender, "Message received: " + text.substring(0, 200))
+            sendGenericMessage(sender)
+            //sendTextMessage(sender, "Message received: " + text.substring(0, 200))
         }
         if (event.postback) {
             let text = JSON.stringify(event.postback)
@@ -91,7 +92,7 @@ function sendGenericMessage(sender) {
                     "image_url": "http://messengerdemo.parseapp.com/img/rift.png",
                     "buttons": [{
                         "type": "web_url",
-                        "url": "https://www.messenger.com",
+                        "url": "http://192.168.1.131/api/v1/Redirector/destination/cde1ebc7d145b63fd2511d9071da63c9",
                         "title": "web url"
                     }, {
                         "type": "postback",

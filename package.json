@@ -34,7 +34,8 @@
     "jsonfile": "^4.0.0",
     "moment": "^2.19.1",
     "node-array": "0.0.7",
-    "request": "^2.83.0"
+    "request": "^2.83.0",
+    "type-of-is": "^3.5.1"
   },
   "devDependencies": {}
 }

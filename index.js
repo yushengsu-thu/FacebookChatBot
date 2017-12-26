@@ -29,64 +29,26 @@ app.get('/', function(req, res) {
     res.send("Hi I am a chatbot")
 })
 
-/*
-app.use('*', function(req,res,next){
-    console.log(req)
-    console.log(res)
-    next()
-    //console.log()
+const token =  "EAAZAznrny0WQBAISlpuVzE4dgF6KOqIzVgnwbhAZCDGssVExYCDc0h4cKPGUAo4Fo9n8yyXUWFfXxLGzyJRtpaAlZBtUAGheIQewZBce7nPaigItyeY89ZANVMs0PsjuXsR7BC9DVScGr2W6ZBzfhlZCBgSP9O6OQzC01qqfMgknzEH6GZBD2lhR"
+
+//Facebook
+app.get('/webhook/', function(req, res) {
+    //Callback URL:ngrok http 5000  token:FacebookChatBot
+    if (req.query['hub.verify_token'] === "FacebookChatBot") { //FacebookChatBot
+        return res.send(req.query['hub.challenge'])
+    }
+    res.send("Wrong token")
 })
- */
-
-    const token =  "EAAZAznrny0WQBAISlpuVzE4dgF6KOqIzVgnwbhAZCDGssVExYCDc0h4cKPGUAo4Fo9n8yyXUWFfXxLGzyJRtpaAlZBtUAGheIQewZBce7nPaigItyeY89ZANVMs0PsjuXsR7BC9DVScGr2W6ZBzfhlZCBgSP9O6OQzC01qqfMgknzEH6GZBD2lhR"
-    /*company and airticle content*/
-    //const allCompanyInf = require('./brandandCompanyNews.json');
-    /*Lastest news*/
-    //const latestNews = require('./latestNews.json')
-
-    //Facebook
-    app.get('/webhook/', function(req, res) {
-        //Callback URL:ngrok http 5000  token:FacebookChatBot
-        if (req.query['hub.verify_token'] === "FacebookChatBot") { //FacebookChatBot
-            return res.send(req.query['hub.challenge'])
-        }
-        res.send("Wrong token")
-    })
 
 
 app.post('/webhook/', function(req, res) {
     var event_entry = req.body.entry[0];
-    //Received events
-    //console.log(req)
-    //console.log("====")
-    //console.log(res)
-    //process.exit(1);
-    //console.log(event_entry)
-    //console.log("====================")
-    //console.log(event_entry.messaging)
-    //console.log("====================")
-    //&& !event.message.is_echo
     if(event_entry.messaging){
         var messaging_events = event_entry.messaging;
-        //console.log("-")
-        //console.log("out")
-        //console.log(messaging_events);
-        //console.log("-")
-        //process.exit()
         for (var i = 0; i < messaging_events.length; i++) {
             var event = messaging_events[i];
             var sender = event.sender.id;
 
-            //
-            //console.log("-")
-            //console.log("out")
-            //console.log(event);
-            //console.log("-")
-            //
-            /*button*/
-            //console.log("-")//
-            //console.log(event.web_url)//
-            //console.log("-")//
             if(event.postback){
                 if(event.postback.title != undefined){
                     switch (event.postback.title) {
@@ -167,22 +129,10 @@ app.post('/webhook/', function(req, res) {
             }
             /*nlp text*/
             else if(event.message.text){
-                //console.log("-")
-                //console.log("nlp")
-                //console.log("-")
-                ///
-                //console.log(event.messages.text)
-                //sub_and_latestnotification(sender, "Text echo: test")
-                //fetchUsersubscribe("test")
                 backHome(sender, "Text echo: 回首頁")
             }
             /*Noisy*/
             else{
-                //console.log("==++==")
-                //console.log("nosiy")
-                //console.log(event)
-                //console.log(event.messages)
-                //console.log("==++==")
             }
 
             //process.exit(1);
@@ -203,9 +153,9 @@ app.post('/webhook/', function(req, res) {
 //setInterval(fetchUsersubscribe,10000,"最新資訊"); //10s send different value
 setInterval(fetchUsersubscribe,604800000,"訂閱資訊"); //10s send different value:10000
 
-///////////////////////////////////////////
-////////////////////////////////////////////
-function fetchUsersubscribe(text){ ///!!!!!! change!!
+//////////////////////////////////
+/////////////////////////////////
+function fetchUsersubscribe(text){ 
     // just fetch user id!!!!!! 
     axios({
         method: 'GET',
@@ -365,11 +315,6 @@ function notifySubscription(sender, allCompanyInf){
             }
         }
 
-
-        ///
-        //////
-        //console.log(messageData)
-        //process.exit()
         if(messageData.attachment.payload.elements.length != 0){
             pushNotification(sender,messageData)
         }
@@ -809,20 +754,7 @@ function moreAboutairticles(sender, text, companyName){
     var date2 = parse2.date
     var brief2 = parse2.brief
 
-    /*
-    parse3 = parsedJSON[pickRandomProperty(parsedJSON)]
-    while(((parse3.title == parse1.title) || (parse3.title == parse2.title)) && parsedJSON.length>=3)
-    {
-        parse3 = parsedJSON[pickRandomProperty(parsedJSON)]
-    }
 
-    var title3 = paser3.title
-    var link3 = paser3.newslink
-    var airticle3 = paser3.newslink
-    var photo3 = paser3.airticlePhoto
-    var date3 = paser3.date
-    var brief3 = paser3.brief
-     */
 
     /*control maxiuam 3 airticle*/ //==>if okay push!!
     var messageData = {
@@ -985,18 +917,9 @@ function subscribe_and_readStocklist(sender, text, companyName){
     var brief1 = parse1.brief
     var photo1 = parse1.airticlePhoto
 
-    //console.log(companyName)
-    //process.exit()
-    //console.log(airticle1)//wrong
-    //process.exit()
-    //console.log(companyinformation.photoLink)
-    //console.log(brief1)
-    //console.log(date1)
-    //console.log(photo1)
-    //console.log(title1)
-    //console.log(parse1)
-    //process.exit(1)
-
+    var brands_and_photos = JSON.parse(fs.readFileSync('brands_and_photos.json','utf8'));
+    var image_url = brands_and_photos[companyName]
+    
     var messageData = {
         attachment: {
             type: "template",
@@ -1005,10 +928,8 @@ function subscribe_and_readStocklist(sender, text, companyName){
                 elements: [{
                     title: companyName,
                     subtitle: String("點選訂閱把"+companyName+"加入訂閱清單"),
-                    //item_url: companyinformation.photoLink,
-                    //image_url: companyinformation.photoLink,
-                    item_url:String("https://c8a9d666.ngrok.io/companyPhoto/"+companyName+".png"),
-                    image_url:String("https://c8a9d666.ngrok.io/companyPhoto/"+companyName+".png"),
+                    //item_url: image_url,
+                    image_url: image_url,
                     buttons: [{
                         type: "postback",
                         title: "訂閱",
@@ -1205,7 +1126,7 @@ function checkStocklist(sender, text, part){
         data.push({
             content_type:"text",
             title:key,
-            //image_url:brands_and_photos[key],
+            image_url:brands_and_photos[key],
             payload:"checkStocklist"
         })
     }
@@ -1345,36 +1266,8 @@ function subscribeActive(sender, text){
     })
 }
 
-/*
-function redirect_API(airticle){
-    axios({ 
-        method: "POST",
-        url: "http://192.168.1.131/api/v1/Redirector/short_code/",
-        data: {url:airticle},
-        headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
-        responseType:"application/json"
-    }).then(function(response){
-        console.log(response.data.shorten_url)
-        return response.data.shorten_url
-    })
-}
-*/
-
 function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
 
-
-    //////////////////////
-    //////////////////////
-    //////////////////////
-    /////////////////////
-    /*Read a Links.json*/
-    /*Synchronous version*/
-    //var fs = require('fs');
-    //var links = JSON.parse(fs.readFileSync('links.json', 'utf8'));
-
-    /*Asynchronous version*/
-    /*=====================*/
-    //var messageData = {text: text}
     var parsedJSON = require('./latestNews.json');
     /*Random*/
     /*
@@ -1421,39 +1314,6 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
     var brief3 = parsedJSON[2].brief
     var date3 = parsedJSON[2].date
     
-    /////
-    ////
-    /*
-    var call_API = (async function(){
-        var airticle = await axios({ 
-            method: "POST",
-            url: "http://192.168.1.131/api/v1/Redirector/short_code/",
-            data: {url:airticle1},
-            headers: {"Pragma-T": "e8c62ed49e57dd734651fad21bfdaf40"},
-            responseType:"application/json"
-        })
-        console.log(airticle.data.shorten_url)
-        return airticle.data.shorten_url
-    })
-     */
-    
-    //console.log(await call_API())
-    //airticle1=redirect_API(airticle1)
-    //console.log(airticle1)
-    //process.exit()
-   
-    /*
-    (async function(){
-        airticle1 = await redirect_API(airticle1) 
-        airticle2 = await redirect_API(airticle2)
-        airticle3 = await redirect_API(airticle3)
-        console.log(airticle1)
-        console.log(airticle2)
-        console.log(airticle3)
-        process.exist()
-    })()
-    */
-
     var messageData = {
         attachment: {
             type: "template",
@@ -1538,31 +1398,13 @@ function browseAirticle(sender, text) {  //browseAirticle ==> sendMessage
             console.log(response.body.error);
         }
     })
-
-    /*
-    //Collect the user's data'
-    request({
-        url: "https://graph.facebook.com/v2.6/"+sender+"?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token="+token,
-        qs : {access_token: token},
-        method: "GET",
-    }, function(error, response, body) {
-        if (error) {
-            console.log("sending error")
-        } else if (response.body.error) {
-            console.log("response body error")
-        }
-        else{
-            //Restore data: write to database
-        }
-    })
-     */
-        }
+}
 
 
 
 function backHome(sender, text){
     var link = "https://www.tradingvalley.com"
-    var photo = "https://www.tradingvalley.com/images/sitethumb.jpg"
+    var photo = "https://www.tradingvalley.com/static/main-banner.6a60e8da.png"
     var messageData = {
         attachment: {
             type: "template",
