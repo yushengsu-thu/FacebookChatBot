@@ -11,22 +11,22 @@ Start running
 ```
 node index.js
 ```
-You need to turn on your server. You can choose Heroku or ngrok 
-1. Use Heroku: 
+You need to turn on your server. You can choose Heroku or ngrok: 
+* Use Heroku: 
 <Heroku website> 
-* Turn on
-* Setting ==> Dyno formation 
+- Turn on
+- Setting ==> Dyno formation 
 
 <Facebook dev center> 
-* Edit Page Subscription ==> Callback URL 
+- Edit Page Subscription ==> Callback URL 
 
-2. Use ngrok: 
-* Turn on: ngrok http 5000 
+*Use ngrok: 
+- Turn on: ngrok http 5000 
 ```
 ngrok http 5000
 ```
 <Facebook dev center> 
-* Edit Page Subscription ==> Callback URL (website add: /webhooks)
+- Edit Page Subscription ==> Callback URL (website add: /webhooks)
 
 ### Prerequisites
 
