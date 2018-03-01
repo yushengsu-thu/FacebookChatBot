@@ -4,7 +4,12 @@ Chatbot will auto-push airticles to every user every week though Facebook Messan
 We use LSM modle and mlmodle to recommend airticles. (LSM and mlmldle File)
 
 * Recomend Framework:
+![alt text](https://github.com/CoolSheng/FacebookChatBot/blob/master/instrduce/Screen%20Shot%202018-03-02%20at%2012.31.40%20AM.png)
 
+*User Interface:
+![alt text](https://github.com/CoolSheng/FacebookChatBot/blob/master/instrduce/Screen%20Shot%202018-03-02%20at%2012.28.22%20AM.png)
+![alt text](https://github.com/CoolSheng/FacebookChatBot/blob/master/instrduce/Screen%20Shot%202018-03-02%20at%2012.28.35%20AM.png)
+![alt text](https://github.com/CoolSheng/FacebookChatBot/blob/master/instrduce/Screen%20Shot%202018-03-02%20at%2012.28.42%20AM.png)
 
 ## Getting Started
 Refer to : https://developers.facebook.com/docs/messenger-platform
