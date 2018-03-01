@@ -1,80 +1,64 @@
-# Project Title
+# Auto-push airticle chatbot (Facebook) 
 
-One Paragraph of project description goes here
+Chatbot will auto-push airticles to every user every week though Facebook Messanger. According to users' history of reading and behaviors, we recommend airticles to them.
+We use LSM modle and mlmodle to recommend airticles. (LSM and mlmldle File)
 
 ## Getting Started
+Refer to : https://developers.facebook.com/docs/messenger-platform
+You need to get Token and Verify Token first.: 
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Start running
+```
+node index.js
+```
+You need to turn on your server. You can choose Heroku or ngrok 
+1. Use Heroku: 
+<Heroku website> 
+* Turn on
+* Setting ==> Dyno formation 
+
+<Facebook dev center> 
+* Edit Page Subscription ==> Callback URL 
+
+2. Use ngrok: 
+* Turn on: ngrok http 5000 
+```
+ngrok http 5000
+```
+<Facebook dev center> 
+* Edit Page Subscription ==> Callback URL (website add: /webhooks)
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
+Nodejs, python3(crawler, mlmodle, and LSM)
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
+If you want to use ngrok as your local server, you need to install ngrok first.
+Linux
 ```
-Give the example
+apt-get install ngrok
 ```
-
-And repeat
-
+mac
 ```
-until finished
+brew install ngrok
 ```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
+After you install python3, you can use pip to install packge. Excute this bash file:
 ```
-Give an example
+bash pythonPackageInstall.sh
 ```
-
-### And coding style tests
-
-Explain what these tests test and why
-
+Install npm package:
 ```
-Give an example
+bash nodejsPackageInstall.sh
 ```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+version 0.0.1
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* **Yu-Sheng Su** - *Initial work* 
 
 ## License
 
@@ -82,35 +66,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
+* ML model is from kaggle context (Have cited authour in code)
 
-
-
-Facebook ChatBot:
-
-Get a Facebook Messenger Bot up and running with Heroku
-
-url: https://nameless-hamlet-50172.herokuapp.com/
-
-Token: EAAZAznrny0WQBAGS2QyDpFqwxtuZBdQcr4ikXAfAXcZCbXFfuv6WMDdZApJa8OYNfpdxHb3C7ZCD7ZCY2CGZBCApLChUalh4z6zifVcNjtn0kE9K1DQ9kABZBZAZCy1ZCu2sFHjixbehr4lrQ4l9se8FfPfBqkWRwNHZCt3jwHHnhwKZAcGWwZBffHwgIR
-
-curl -X POST "https://graph.facebook.com/v2.6/me/subscribed_apps?access_token=EAAZAznrny0WQBAEmB7LW5S5nZA688ZBJmOkPz6JTRo8pIFTG0d5O8nZAEZCHCPteLGf96dmPt1HQqfoHjWYouvNZArFQV32i2g9HhjrTJZA6vp4MkwhFrPndYFrm4HYRT8fBiRONuwOUdY3K7bW7mFYhzAXxW0PcZApTDgr4hx9CFR7nOyMiPjIf"
-
-Master:
-git push heroku master
-Branch Develop:
-git push heroku develop:master
-
-1. Use Heroku: change(A.Heroku website turn on:Setting ==> Dyno formation 
-B. <Facebook dev center> ==> Edit Page Subscription==> Callback URL) 
-https://nameless-hamlet-50172.herokuapp.com/webhook/
-
-2. Use ngrok: change (A.turn on: ngrok http 5000 B.npm start C.Reset webhooks <Facebook dev center> ==> Edit Page Subscription ==> 
-Callback URL)
-website add: /webhooks
-token:FacebookChatBot
-
-Verify Token: FacebookChatBot
 
