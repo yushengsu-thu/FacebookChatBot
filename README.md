@@ -7,8 +7,6 @@ We use LSM modle and mlmodle to recommend airticles. (LSM and mlmldle File)
 ![alt text](https://github.com/CoolSheng/FacebookChatBot/blob/master/introduce/Screen%20Shot%202018-03-02%20at%2012.41.16%20AM.png){width:60%}
 
 * User Interface:
-
-![](https://github.com/CoolSheng/FacebookChatBot/blob/master/introduce/Screen%20Shot%202018-03-02%20at%2012.40.55%20AM.png =10x20)
 ![alt text](https://github.com/CoolSheng/FacebookChatBot/blob/master/introduce/Screen%20Shot%202018-03-02%20at%2012.40.55%20AM.png)
 ![alt text](https://github.com/CoolSheng/FacebookChatBot/blob/master/introduce/Screen%20Shot%202018-03-02%20at%2012.41.01%20AM.png){width:50%}
 ![alt text](https://github.com/CoolSheng/FacebookChatBot/blob/master/introduce/Screen%20Shot%202018-03-02%20at%2012.41.08%20AM.png){width:50%}
