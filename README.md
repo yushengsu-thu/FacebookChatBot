@@ -13,14 +13,20 @@ node index.js
 ```
 You need to turn on your server. You can choose Heroku or ngrok: 
 * Use Heroku: 
-<Heroku website> 
-- Go to Heroku website and turn on Setting ==> Dyno formation 
+<Heroku website>
+
+```
+Go to Heroku website and turn on Setting ==> Dyno formation 
+
+```
 
 <Facebook dev center> 
+```
 - Edit Page Subscription ==> Callback URL 
+```
 
 * Use ngrok: 
-- Turn on: ngrok http 5000 
+Turn on: ngrok http 5000 
 ```
 ngrok http 5000
 ```
@@ -34,6 +40,7 @@ Nodejs, python3(crawler, mlmodle, and LSM)
 ### Installing
 
 If you want to use ngrok as your local server, you need to install ngrok first.
+
 Linux
 ```
 apt-get install ngrok
