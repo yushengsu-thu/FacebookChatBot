@@ -13,16 +13,15 @@ node index.js
 ```
 You need to turn on your server. You can choose Heroku or ngrok: 
 * Use Heroku: 
-<Heroku website>
-
+#Heroku website
 ```
 Go to Heroku website and turn on Setting ==> Dyno formation 
 
 ```
 
-<Facebook dev center> 
+#Facebook dev center 
 ```
-- Edit Page Subscription ==> Callback URL 
+Edit Page Subscription ==> Callback URL 
 ```
 
 * Use ngrok: 
