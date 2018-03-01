@@ -14,13 +14,12 @@ node index.js
 You need to turn on your server. You can choose Heroku or ngrok: 
 * Use Heroku: 
 <Heroku website> 
-- Turn on
-- Setting ==> Dyno formation 
+- Go to Heroku website and turn on Setting ==> Dyno formation 
 
 <Facebook dev center> 
 - Edit Page Subscription ==> Callback URL 
 
-*Use ngrok: 
+* Use ngrok: 
 - Turn on: ngrok http 5000 
 ```
 ngrok http 5000
