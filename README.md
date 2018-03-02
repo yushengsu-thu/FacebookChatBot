@@ -5,9 +5,12 @@ We use LSM modle and mlmodle to recommend airticles. (LSM and mlmldle File)
 
 * Recomend Framework:
 
-![](https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png | width=10)
-![](https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png | width=100)
-<img src="https://github.com/favicon.ico" width="48">
+<img src="https://github.com/CoolSheng/FacebookChatBot/blob/master/introduce/Screen%20Shot%202018-03-02%20at%2012.41.16%20AM.png" width="48">
+<img src= width="48">
+<img src= width="48">
+<img src= width="48">
+<img src= width="48">
+
 ![alt text](https://github.com/CoolSheng/FacebookChatBot/blob/master/introduce/Screen%20Shot%202018-03-02%20at%2012.41.16%20AM.png)
 
 * User Interface:
