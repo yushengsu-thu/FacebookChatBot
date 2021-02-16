@@ -28,7 +28,7 @@
   "homepage": "https://github.com/brandonbrown/fb-bot-heroku#readme",
   "dependencies": {
     "async": "^2.6.0",
-    "axios": "^0.16.2",
+    "axios": "^0.21.1",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
     "jsonfile": "^4.0.0",
